@@ -1098,3 +1098,6 @@ https://claude.ai/artifact/J6LQJE4TpgcXPqo7qNByad) replaces the earlier proposal
   infectious, whether and when symptoms start, how much virus they breathe out against the typical amount, and
   whether immunity cut their dose. The replay message from the worker carries `mobility`, `roommate`, `traits` and,
   per run, `how`.
+- **Removed the same night, at the owner's word:** the summary as dots and the interactive example did not justify
+  the space they took. The code is in commits 6440dbe and before on `claude/gallant-lovelace-gdwmp1`. The lamp totals
+  on the film's last card and the hover text on the plan stay.
