@@ -37,6 +37,7 @@ node shots/v1.mjs             # tabs, with and without a worker, phone width
 node shots/a2.mjs             # arrival-rate slider drives the results
 node shots/s1.mjs             # the "how the numbers were chosen" explainer opens and fits a phone
 node shots/n5.mjs             # slider text is short; the full note opens in a dialog
+node shots/p2.mjs             # the film's player: big play button, click on the picture, keys, clock
 node shots/f1.mjs 20 64 118   # film frames at those seconds -> shots/f-<t>.png
 ```
 

@@ -262,9 +262,21 @@ function filmBuild() {
   const ch = $('#filmchaps');
   CHAPTERS.forEach(([t0, name], i) => ch.append(el('button', { type: 'button', 'aria-pressed': 'false', onclick: () => filmSeek(t0) }, (i + 1) + ' · ' + name)));
   $('#filmplay').addEventListener('click', () => filmPlay(!F.playing));
-  $('#filmbig').addEventListener('click', () => { F.sound = !!F.narr; soundUI(); filmPlay(true); });
-  $('#filmquiet').addEventListener('click', () => { F.sound = false; soundUI(); filmPlay(true); });
-  $('#filmsound').addEventListener('click', () => { F.sound = !F.sound; soundUI(); if (F.playing) filmPlay(true); });   // carries on from the same place, with or without the voice
+  // The big button starts the film with its narration the first time, and after that carries on as the film was left.
+  $('#filmbig').addEventListener('click', (e) => { e.stopPropagation(); if (F.t <= 0 || F.t >= FD) { F.sound = !!F.narr && !F.muted; soundUI(); } filmPlay(true); });
+  $('#filmquiet').addEventListener('click', (e) => { e.stopPropagation(); F.sound = false; F.muted = true; soundUI(); filmPlay(true); });
+  // As in any video player: a click on the picture plays or pauses.
+  $('.filmstage').addEventListener('click', () => { if (!F.D) return; if (F.playing) filmPlay(false); else $('#filmbig').click(); });
+  // Keys, while the film has the focus: space or K plays and pauses, the arrows step back and forward, M turns the sound on and off.
+  $('#view-film').addEventListener('keydown', (e) => {
+    if (!F.D || e.altKey || e.ctrlKey || e.metaKey) return;
+    const tag = e.target.tagName, k = e.key.toLowerCase();
+    if (tag === 'SELECT' || tag === 'TEXTAREA' || (tag === 'INPUT' && e.target.id !== 'filmseek')) return;
+    if (k === 'k' || (k === ' ' && tag !== 'BUTTON')) { e.preventDefault(); if (F.playing) filmPlay(false); else $('#filmbig').click(); }
+    else if ((k === 'arrowleft' || k === 'arrowright') && tag !== 'INPUT' && !e.target.closest('[role=tablist]')) { e.preventDefault(); const d = k === 'arrowleft' ? -1 : 1; filmSeek(F.narr && F.sound ? fFromAudio(Math.max(0, Math.min(fTrack().total - 0.05, fToAudio(F.t) + 10 * d))) : F.t + 5 * d); }   // ten seconds of narration, or five of the silent film
+    else if (k === 'm' && F.narr) $('#filmsound').click();
+  });
+  $('#filmsound').addEventListener('click', () => { F.sound = !F.sound; F.muted = !F.sound; soundUI(); if (F.playing) filmPlay(true); });   // carries on from the same place, with or without the voice
   $('#filmrate').addEventListener('change', (e) => { F.trk = +e.target.value; soundUI(); if (F.playing && F.sound) filmPlay(true); });   // the same place in the film, on the track spoken at the new speed
   $('#filmseek').max = FD * 10; $('#filmseek').addEventListener('input', (e) => filmSeek(+e.target.value / 10));
   $('#filmskip').addEventListener('click', () => goView('model'));
@@ -342,8 +354,8 @@ function filmData(m) {
     const sel = $('#filmrate'); sel.textContent = '';
     F.narr.tracks.forEach((k, i) => sel.append(el('option', { value: i }, k.rate + '×'))); sel.value = F.trk;
     $('#filmquiet').hidden = false; $('#filmsound').hidden = false; $('#filmratelab').hidden = false;
-  } else $('#filmbig').textContent = '▶  Play the explanation (about two minutes)';
-  $('#filmplay').disabled = false; $('#filmbig').disabled = false; soundUI();
+  } else { $('#filmbiglab').textContent = 'Play the explanation (about two minutes)'; $('#filmlen').textContent = 'About two minutes'; }
+  $('#filmplay').disabled = false; $('#filmbig').disabled = false; soundUI(); filmUI();
   filmRender(F.t);
 }
 
@@ -377,10 +389,27 @@ function sndFail(why) {   // no sound here: say so, and carry on silently
   if (F.playing) filmPlay(true);
 }
 function soundUI() {
-  const b = $('#filmsound'); b.textContent = F.sound ? 'Sound on' : 'Sound off'; b.setAttribute('aria-pressed', String(!!F.sound));
+  const b = $('#filmsound'); $('#filmsoundlab').textContent = F.sound ? 'Sound on' : 'Sound off'; b.setAttribute('aria-pressed', String(!!F.sound)); b.title = F.sound ? 'Turn the narration off (M)' : 'Turn the narration on (M)';
+  $('#filmsoundico').setAttribute('d', F.sound ? ICO.sound : ICO.muted);
   $('#filmrate').disabled = !F.sound;
-  if (F.narr) { const half = Math.round(fTrack().total / 30) / 2; $('#filmbig').textContent = `▶  Play with narration (${half % 1 ? (Math.floor(half) || '') + '½' : half} minutes)`; }
+  if (F.narr) { const half = Math.round(fTrack().total / 30) / 2, mins = `${half % 1 ? (Math.floor(half) || '') + '½' : half} minutes`; $('#filmbiglab').textContent = `Play with narration (${mins})`; $('#filmlen').textContent = `Narrated · ${mins}`; }
+  if (F.D) filmUI();
   $('#filmtext').setAttribute('aria-live', F.sound ? 'off' : 'polite');   // a screen reader should not talk over the narration
+}
+// The player's controls: the play button in the bar and the large one over the picture (shown whenever the film is
+// not playing), and the clock. With narration on, the clock runs in the narration's time, which is what a viewer hears.
+const ICO = { play: 'M8 5v14l11-7z', pause: 'M6 5h4v14H6zM14 5h4v14h-4z', again: 'M12 5V1L7 6l5 5V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z',
+  sound: 'M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z',
+  muted: 'M3 9v6h4l5 5V4L7 9H3zm18.6 0L20.2 7.6 18 9.8l-2.2-2.2L14.4 9l2.2 2.2-2.2 2.2 1.4 1.4 2.2-2.2 2.2 2.2 1.4-1.4-2.2-2.2z' };
+const fClock = (x) => { const n = Math.max(0, Math.round(x)); return Math.floor(n / 60) + ':' + String(n % 60).padStart(2, '0'); };
+function filmUI() {
+  const end = F.t >= FD, word = F.playing ? 'Pause' : end ? 'Play again' : 'Play', ico = F.playing ? ICO.pause : end ? ICO.again : ICO.play;
+  F.uiT = Math.floor(F.t); F.uiEnd = end;
+  $('#filmplaylab').textContent = word; $('#filmplayico').setAttribute('d', ico); $('#filmplay').title = word + ' (K)';
+  $('#filmbigico').setAttribute('d', end ? ICO.again : ICO.play);
+  const po = $('#filmposter'); po.hidden = F.playing; po.classList.toggle('start', F.t <= 0);
+  const voiced = !!(F.narr && F.sound);
+  $('#filmtime').textContent = voiced ? fClock(end ? fTrack().total : fToAudio(F.t)) + ' / ' + fClock(fTrack().total) : fClock(F.t) + ' / ' + fClock(FD);
 }
 function filmSeek(tt) {
   F.t = Math.max(0, Math.min(FD, tt));
@@ -389,8 +418,7 @@ function filmSeek(tt) {
 }
 function filmPlay(on) {
   F.playing = on && !!F.D; cancelAnimationFrame(F.raf);
-  $('#filmposter').hidden = F.playing || F.t > 0;
-  $('#filmplay').textContent = F.playing ? 'Pause' : F.t >= FD ? 'Play again' : 'Play';
+  filmUI();
   const S = F.snd, voiced = !!(F.narr && F.sound);
   if (!F.playing || !voiced) sndStop();
   if (!F.playing) return;
@@ -425,7 +453,7 @@ function filmRender(tt) {
   let cap = F.caps[0]; for (const c of F.caps) if (tt >= c[0]) cap = c;
   if (F.capShown !== cap) { F.capShown = cap; $('#filmtext').textContent = cap[2]; $('#filmchap').textContent = (cap[1] + 1) + ' of ' + CHAPTERS.length + ' · ' + CHAPTERS[cap[1]][1]; [...$('#filmchaps').children].forEach((x, i) => x.setAttribute('aria-pressed', String(i === cap[1]))); }
   $('#filmseek').value = Math.round(tt * 10);
-  if (!F.playing) { $('#filmposter').hidden = tt > 0; $('#filmplay').textContent = tt >= FD ? 'Play again' : 'Play'; }
+  if (!F.playing || F.uiT !== Math.floor(tt) || (tt >= FD) !== F.uiEnd) filmUI();
 
   // camera: keyframed through the room chapters and the day, then down to the left of two small plans
   const tau = F.tau0 + Math.max(0, Math.min(1, (t - 27) / 13.5)) * 6, gT = Math.floor(tau);
