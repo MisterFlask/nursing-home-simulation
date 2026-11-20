@@ -245,14 +245,14 @@ function filmBuild() {
     const o = { g, t0, lo, hi, mid: R.central.cut, big: svg('text', { class: 'ft fbig', x: 196, y: y + 18, 'text-anchor': 'end' }, ''),
       line: svg('line', { class: 'frange', x1: FX(lo), x2: FX(lo), y1: y, y2: y }), dot: svg('circle', { class: 'fmid', cx: FX(R.central.cut), cy: y, r: 0 }),
       ends: end(FX(lo), lo, 'more face to face,', 'lamps act weakly'), ends2: end(FX(hi), hi, 'more through room air,', 'lamps act strongly') };
-    g.append(o.big, svg('text', { class: 'ft fh', x: 224, y: y - 2 }, name), svg('text', { class: 'ft fs', x: 224, y: y + 24 }, sub), o.line, o.dot, o.ends, o.ends2);
+    g.append(o.big, svg('text', { class: 'ft fh', x: 224, y: y - 2 }, name), svg('text', { class: 'ft fl', x: 224, y: y + 27 }, svg('tspan', { class: 'fcount' }, sub[0]), sub[1]), sub[2] ? svg('text', { class: 'ft fs', x: 224, y: y + 48 }, sub[2]) : null, o.line, o.dot, o.ends, o.ends2);
     F.rows.push(o); return g;
   };
   F.final.append(svg('text', { class: 'ft fe', x: 80, y: 84 }, 'OUR BEST ESTIMATE, FOR A NURSING HOME LIKE THIS ONE'),
     svg('text', { class: 'ft ftitle', x: 80, y: 130 }, 'Fewer reported infections among residents over a winter'));
   for (const v of [0, 0.2, 0.4, 0.6, 0.8]) F.final.append(svg('line', { class: 'fgrid', x1: FX(v), x2: FX(v), y1: 214, y2: 510 }), svg('text', { class: 'ft fs', x: FX(v), y: 204, 'text-anchor': 'middle' }, fPct(v)));
-  F.final.append(row(280, 112.2, 'Lamps in the common areas', `${FILM.lamps.common} lamps, one per 250 square feet`, FILM.ranges.common),
-    row(420, 114.1, 'Common areas and bedrooms', `${FILM.lamps.both} lamps`, FILM.ranges.both),
+  F.final.append(row(280, 112.2, 'Lamps in the common areas', [`${FILM.lamps.common} lamps`, ' in total', 'one for every 250 square feet of floor'], FILM.ranges.common),
+    row(420, 114.1, 'Common areas and bedrooms', [`${FILM.lamps.both} lamps`, ' in total', `${FILM.lamps.common} in the common areas, ${FILM.lamps.both - FILM.lamps.common} in the bedrooms`], FILM.ranges.both),
     svg('text', { class: 'ft fs', x: 80, y: 560 }, 'Large figure: our central assumptions. Bar: from the less helpful end of both unknowns to the more helpful end.'),
     svg('text', { class: 'ft fs', x: 80, y: 584 }, `A model result from ${FILM.n} simulated winters, each run with and without lamps. No trial has measured this.`),
     svg('text', { class: 'ft fs', x: 80, y: 608 }, 'Bedroom lamps are dimmed further, because residents spend about 20 hours a day there and exposure limits assume 8.'));
@@ -334,6 +334,7 @@ function filmData(m) {
     F.chWas.textContent = `shared air without lamps: ${oneIn(ch.air(1, F.m.lam0, 1))} · ${oneIn(ch.air(1, F.m.lam0, 100))}`;
     const open = (p) => m.a.tE[p] > gNow, resHere = []; for (let p = 0; p < N; p++) if (m.a.loc[gNow * N + p] === F.ri && !m.staff[p] && open(p) && p !== X) resHere.push(p);
     const mates = mo.mates.filter(open);
+    F.m.nRes = resHere.length + 1;
     F.shSubA.textContent = `each of ${resHere.length} residents in the room`; F.shSubC.textContent = `each of ${mates.length} tablemates, as well`;
     F.chNote.textContent = `High emitter: 100 times as much, about 1 in ${Math.round(1 / tail / 5) * 5}.`;
     F.rings = svg('g', { opacity: 0 }); F.ringsC = svg('g', { opacity: 0 });
@@ -345,7 +346,7 @@ function filmData(m) {
   const cum = (arm) => { const c = new Array(m.T / 48).fill(0); for (let p = 0; p < N; p++) if (!m.staff[p] && arm.tE[p] < 1e9 && hash(m.seed * 100003 + p) < FILM.report.central) c[Math.floor(arm.tE[p] / 48)]++; let s = 0; return c.map((v) => (s += v)); };
   F.cumA = cum(m.a); F.cumB = cum(m.b); F.season = { a: F.cumA[F.cumA.length - 1], b: F.cumB[F.cumB.length - 1] };
   if (F.season.a !== FILM.season.a || F.season.b !== FILM.season.b) console.warn('film season differs from build', F.season, FILM.season);
-  F.caps = filmCaptions(); explainBuild();
+  F.caps = filmCaptions(); explainBuild(); toyBuild();
   // Narration, if the track was made from exactly these captions. Otherwise the film plays silently.
   F.narr = NARR && NARR.texts.length === F.caps.length && NARR.texts.every((t, i) => t === F.caps[i][2]) ? NARR : null;
   if (NARR && !F.narr) console.warn('The narration was recorded from different captions, so the film will play without sound. Run web/captions.mjs and web/narrate.py again.');
@@ -746,6 +747,81 @@ function explainOpen() {
 }
 for (const b of document.querySelectorAll('.explainopen')) b.addEventListener('click', explainOpen);
 
+// ---------- one lunch you can change ----------
+// The film's lunch, by the same functions the film quotes (F.ch): one infectious resident for an hour in the dining
+// room. The reader picks who is infectious, how much they breathe out, and how many lamps the room has. The room's air
+// is evenly mixed in the model, so the drawing gives lamps and seats no positions that matter: only who shares a table.
+const TOY = { n: 0, hi: true, who: 0, seats: [], nodes: [] };
+function toyBuild() {
+  const g = $('#toy'); if (!g || !F.ch) return;
+  const c = Sim.anchoredConfig(), m = F.m, N = m.nRes, nT = Math.ceil(N / 4), cols = Math.ceil(nT / (nT > 8 ? 3 : nT > 3 ? 2 : 1)), rws = Math.ceil(nT / cols);
+  const X0 = 14, Y0 = 40, W = 532, H = 306, cw = W / cols, chh = H / rws, off = [[0, -24], [24, 0], [0, 24], [-24, 0]];
+  g.textContent = ''; TOY.seats = []; TOY.nodes = [];
+  g.append(svg('rect', { class: 'haze', id: 'toyhaze', x: X0, y: Y0, width: W, height: H, rx: 3 }), svg('rect', { class: 'wl', x: X0, y: Y0, width: W, height: H, rx: 3 }));
+  TOY.lampG = svg('g', {}); TOY.linkG = svg('g', {}); g.append(TOY.lampG);
+  for (let t = 0; t < nT; t++) {
+    const cx = X0 + cw * (t % cols + 0.5), cy = Y0 + chh * (Math.floor(t / cols) + 0.5) + 4;
+    g.append(svg('rect', { class: 'tbl', x: cx - 12, y: cy - 12, width: 24, height: 24, rx: 4 }));
+    for (let k = 0; k < 4 && TOY.seats.length < N; k++) TOY.seats.push({ x: cx + off[k][0], y: cy + off[k][1], t });
+  }
+  g.append(TOY.linkG);
+  TOY.who = Math.min(N - 1, Math.floor(nT / 2) * 4 + 1);
+  TOY.seats.forEach((q, i) => {
+    const pick = () => { TOY.who = i; toyDraw(); };
+    const e = svg('g', { class: 'p', tabindex: 0, role: 'button', transform: `translate(${q.x},${q.y})` }, svg('circle', { class: 'halo', r: 15 }), svg('circle', { class: 'body', r: 9.5 }), svg('circle', { class: 'dose', r: 8.7 }), svg('circle', { class: 'mate', r: 12.5 }));
+    e.addEventListener('click', pick); e.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); pick(); } });
+    g.append(e); TOY.nodes.push(e);
+  });
+  const L = $('#toylamps'); L.max = Math.max(4, m.nLamps * 2); L.value = TOY.n; L.oninput = () => { TOY.n = +L.value; toyDraw(); };
+  const E = $('#toyemit'); E.textContent = '';
+  for (const [hi, name] of [[true, 'High emitter'], [false, 'Typical emitter']]) E.append(el('button', { type: 'button', 'data-hi': String(hi), onclick: () => { TOY.hi = hi; toyDraw(); } }, name));
+  $('#toynote').textContent = `The page's standard for a room this size is ${m.nLamps} lamps. In the model a room's air is evenly mixed, so it makes no difference where a lamp is mounted or how far apart people sit; only who shares a table matters. Real rooms are not evenly mixed.`;
+  toyDraw();
+}
+function toyDraw() {
+  const c = Sim.anchoredConfig(), m = F.m, ch = F.ch, N = m.nRes, S = TOY.seats, k = TOY.hi ? 100 : 1;
+  const dA = TOY.n ? Sim.lampAchFor(c, m.room, TOY.n) : 0, lam = m.lam0 + dA;
+  const pA = ch.air(1, lam, k), pA0 = ch.air(1, m.lam0, k), pC = ch.close(1, k), ref = ch.air(1, m.lam0, 100), refC = ch.close(1, 100);
+  const mates = S.filter((q, i) => i !== TOY.who && q.t === S[TOY.who].t).length, others = N - 1;
+  const eAir = others * pA, eAir0 = others * pA0, eFace = mates * pC * (1 - pA), eFace0 = mates * pC * (1 - pA0), tot = eAir + eFace, tot0 = eAir0 + eFace0;
+  // the picture
+  $('#toyhaze').setAttribute('opacity', (0.3 * pA / ref).toFixed(3));
+  const me = S[TOY.who]; TOY.linkG.textContent = '';
+  TOY.nodes.forEach((e, i) => {
+    const src = i === TOY.who, mate = !src && S[i].t === me.t;
+    e.setAttribute('class', 'p' + (src ? ' src' : ''));
+    e.children[0].style.display = src ? '' : 'none';
+    e.children[2].setAttribute('opacity', src ? 0 : Math.min(0.9, 0.9 * pA / ref).toFixed(3));
+    e.children[3].style.display = mate ? '' : 'none'; e.children[3].setAttribute('opacity', Math.max(0.22, Math.min(1, pC / refC)).toFixed(2));
+    e.setAttribute('aria-label', src ? 'The infectious resident' : (mate ? 'A tablemate' : 'A resident elsewhere in the room') + '. Select to make this resident the infectious one.');
+    if (mate) TOY.linkG.append(svg('line', { class: 'link', x1: me.x, y1: me.y, x2: S[i].x, y2: S[i].y }));
+  });
+  TOY.lampG.textContent = '';
+  for (let i = 0; i < TOY.n; i++) { const x = 14 + 532 * (i + 0.5) / TOY.n; TOY.lampG.append(svg('path', { class: 'lampbeam', d: `M${x - 7},40 L${x - 52},150 L${x + 52},150 L${x + 7},40 z` }), svg('rect', { class: 'lampcase', x: x - 11, y: 31, width: 22, height: 9, rx: 2.5 })); }
+  $('#toylampsout').textContent = TOY.n;
+  for (const b of $('#toyemit').children) b.setAttribute('aria-pressed', String((b.dataset.hi === 'true') === TOY.hi));
+  // the numbers
+  const f2 = (v) => (v >= 0.095 ? v.toFixed(2) : v >= 0.0095 ? v.toFixed(3) : Number(v.toPrecision(1)).toString()), h = (t) => el('h3', {}, t), P = (...x) => el('p', {}, ...x);
+  const bar = (...parts) => el('div', { class: 'toybar' }, ...parts.filter(([, v]) => v > 0).map(([cls, v]) => el('span', { class: cls, style: `flex:${v} 1 0` })));
+  const sw = (cls) => el('i', { class: 'sw', style: `background:var(--${cls})` });
+  const cutAir = 1 - eAir / eAir0, cutAll = 1 - tot / tot0, oneInN = Math.round(1 / ch.highShare / 5) * 5;
+  const box = $('#toyread'); box.textContent = '';
+  box.append(
+    el('div', {}, h('Air cleaning'),
+      P('The room\'s air is cleared the equivalent of ', el('b', {}, fNum(lam)), ' times an hour', TOY.n ? `, up from ${fNum(m.lam0)} without lamps.` : '.'),
+      bar(['v', m.vent], ['d', m.lam0 - m.vent], ['l', dA]),
+      el('div', { class: 'toykey' }, el('span', {}, sw('base'), `ventilation ${fNum(m.vent)}`), el('span', {}, sw('outside'), `virus dying off and settling ${fNum(m.lam0 - m.vent)}`), TOY.n ? el('span', {}, sw('lamp'), `lamps +${fNum(dA)}`) : null)),
+    el('div', {}, h('Chance of infection over the hour'),
+      el('div', { class: 'toyline' }, el('i', { class: 'a' }), el('span', {}, `Each of the ${others} other residents, through the room's air: `, el('b', {}, oneIn(pA)), TOY.n ? ` (without lamps, ${oneIn(pA0)})` : '')),
+      el('div', { class: 'toyline' }, el('i', { class: 'c' }), el('span', {}, `Each of the ${mates} tablemates, face to face, on top of that: `, el('b', {}, oneIn(pC)), '. Lamps do not change this.'))),
+    el('div', {}, h('Infections from this lunch, on average'),
+      el('div', { class: 'toybig' }, f2(tot), el('small', {}, `${f2(eAir)} through room air + ${f2(eFace)} face to face`)),
+      bar(['a', eAir], ['c', eFace], ['gone', tot0 - tot]),
+      P(TOY.n ? `Without lamps it was ${f2(tot0)}. The lamps remove ${fPct(cutAir)} of the room-air part and none of the face-to-face part, so this lunch causes ${fPct(cutAll)} fewer infections.`
+        : 'Each person\'s chance through the room\'s air is smaller than a tablemate\'s, but the air reaches everyone in the room. Add lamps to see which part shrinks.'),
+      P(TOY.hi ? `This resident is a high emitter, breathing out 100 times the typical amount of virus. In the model about 1 infectious person in ${oneInN} is.` : `A typical infectious person breathes out a hundredth as much as a high emitter, so one lunch with them rarely infects anyone. In the model about 1 infectious person in ${oneInN} is a high emitter.`)));
+}
+
 // ---------- the second explainer: how the split between room-air and non-room-air spread was chosen ----------
 // The text is the owner's document, in web/app.html. This fills its one section about the simulator, from the
 // figures in src/params.js (NON_ROOM_AIR), so it follows the fit.
@@ -790,5 +866,6 @@ for (const k of ['film', 'model']) {
   $('#tab-' + k).addEventListener('click', () => goView(k));
   $('#tab-' + k).addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { const o = k === 'film' ? 'model' : 'film'; goView(o); $('#tab-' + o).focus(); } });
 }
+if (FILM) drawDots('F', nRes, 'COVID-19', FILM.n, (sc) => [{ k: 'none', v: FILM.ranges.common[sc].a }, { k: 'common', v: FILM.ranges.common[sc].b, lamps: FILM.lamps.common + ' lamps' }, { k: 'both', v: FILM.ranges.both[sc].b, lamps: FILM.lamps.both + ' lamps' }]);
 window.addEventListener('hashchange', () => showView(location.hash === '#model' ? 'model' : 'film'));
 showView(location.hash === '#model' ? 'model' : 'film');

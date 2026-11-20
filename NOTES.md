@@ -1075,3 +1075,20 @@ https://claude.ai/artifact/J6LQJE4TpgcXPqo7qNByad) replaces the earlier proposal
   (4:33) with sound on and film time (2:08) with it off. No fullscreen: the captions sit below the picture.
   `shots/p2.mjs` checks it; `shots/f1.mjs` hides the play button when it takes frames.
 
+
+## 2026-11-20 (night): a trial of two pictures in place of text, and lamp totals on the film's last card
+
+- **Summary as dots** (`drawDots` in `web/app.js`). One dot for each of the 112 residents, a row without lamps and a
+  row for each set of lamps: filled dots are reported infections in an average winter, rings are residents infected
+  without lamps and not with them. Three buttons switch between the cautious, central and favourable cases. It sits
+  above the film (from `FILM.ranges`, the build's 200 winters) and at the top of Results (live, from the current
+  settings). Counts are means rounded to whole people, and the caption says so.
+- **Interactive example** (`toyBuild`, `toyDraw` in `web/film.js`; panel `#toypanel` under the film). The film's lunch,
+  from the same functions the film quotes (`F.ch`): select who is infectious, set the number of lamps, switch between
+  a high and a typical emitter. It shows the air cleaning as equivalent air changes, each person's chance through room
+  air and face to face, and the average infections from the lunch split by route. Lamps and seats have no positions
+  that matter, because the model's room air is evenly mixed; the note under the picture says so.
+- **Film, last card.** Each row now gives its lamp total in larger type (54 in total; 126 in total, 54 in the common
+  areas and 72 in the bedrooms). The totals were there before in small grey type. No caption changed, so the narration
+  is still valid; the totals are shown, not spoken.
+- Not published and not on `main`. The owner has not yet said whether either picture stays.

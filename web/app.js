@@ -606,6 +606,35 @@ worker.onmessage = (ev) => {
   }
 };
 
+// ---------- residents as dots ----------
+// The headline as people: one dot for each resident, and one row of dots without lamps and for each set of lamps.
+// get(case) returns [{ k, v }] (average reported resident infections, 'none' first), or null while that case is not ready.
+const DOT_CASES = [['cautious', 'Cautious', 'more spread face to face, lamps act weakly'], ['central', 'Central', 'our best estimate'], ['favourable', 'Favourable', 'more spread through room air, lamps act strongly']];
+const DOT_LEAD = { common: 'With lamps in the common areas', both: 'With lamps in the bedrooms as well', bedrooms: 'With lamps in the bedrooms only', custom: 'With your placement' };
+const dotCase = { F: 'central', M: 'central' };
+function drawDots(which, total, disease, seasons, get) {
+  const box = $('#dots' + which); if (!box) return;
+  if (!get(dotCase[which])) dotCase[which] = 'central';
+  const rows = get(dotCase[which]); if (!rows) return;
+  const base = Math.round(rows[0].v), per = 4, cols = Math.ceil(total / per), s = 18;
+  const lead = $('.dotlead', box); lead.textContent = '';
+  lead.append('In an average winter, about ', el('b', {}, base), ` of the ${total} residents have a reported ${disease} infection. `);
+  rows.slice(1).forEach((r) => lead.append(DOT_LEAD[r.k] + ', about ', el('b', {}, Math.max(0, base - Math.round(r.v))), ' of them are spared. '));
+  const seg = $('.dotcase', box); seg.textContent = '';
+  for (const [k, name, sub] of DOT_CASES) seg.append(el('button', { type: 'button', 'aria-pressed': String(k === dotCase[which]), disabled: get(k) ? null : '', onclick: () => { dotCase[which] = k; drawDots(which, total, disease, seasons, get); } }, name, el('small', {}, sub)));
+  const out = $('.dotrows', box); out.textContent = '';
+  for (const r of rows) {
+    const inf = Math.min(total, Math.round(r.v)), spared = r.k === 'none' ? 0 : Math.max(0, base - inf);
+    const g = svg('svg', { class: 'dots', viewBox: `0 0 ${cols * s} ${per * s}`, role: 'img', 'aria-label': `${ARM_NAME[r.k]}: ${inf} of ${total} residents infected` + (spared ? `, ${spared} spared` : '') });
+    for (let i = 0; i < total; i++) g.append(svg('circle', { class: i < inf ? 'inf k-' + r.k : i < inf + spared ? 'spared k-' + r.k : null, cx: Math.floor(i / per) * s + s / 2, cy: (i % per) * s + s / 2, r: i >= inf && i < inf + spared ? 5.4 : 6.4 }));
+    out.append(el('div', { class: 'dotrow' }, el('div', { class: 'dothd' }, el('span', { class: 'nm' }, el('i', { class: 'sw k-' + r.k }), ARM_NAME[r.k], r.lamps ? el('small', {}, r.lamps) : null),
+      el('span', { class: 'vl' }, el('b', {}, inf), r.k === 'none' ? ` of ${total} infected` : ' infected', spared ? ', ' : null, spared ? el('b', {}, spared) : null, spared ? ' spared' : null)), g));
+  }
+  const key = $('.dotkey', box); key.textContent = '';
+  key.append(el('span', {}, el('i', {}), 'reported infection'), el('span', {}, el('i', { class: 'sp' }), 'infected without lamps, not with them'), el('span', {}, el('i', { class: 'no' }), 'not infected'));
+  $('.cap', box).textContent = `Each dot is one of the ${total} residents. The counts are averages over ${seasons} simulated winters, rounded to whole people; a single winter can have almost no infections or a large outbreak. Cautious and favourable are the two ends of our range, and which is closer to the truth has not been measured.`;
+}
+
 // ---------- results ----------
 const BIG = 10;
 const shareBig = (a) => (a.length ? a.filter((v) => v >= BIG).length / a.length : 0);
@@ -637,6 +666,7 @@ function drawResults() {
     line('Residents admitted to hospital, average season', (A) => fmt(mean(A.hosp))),
     line('All resident infections, reported or not', (A) => fmt1(mean(A.res))),
     line('Seasons with ' + BIG + ' or more reported resident infections', (A) => pct(shareBig(A.rep))))));
+  drawDots('M', nRes, PATHOGEN_LABEL[state.pathogen] === 'Influenza' ? 'influenza' : PATHOGEN_LABEL[state.pathogen], n, (sc) => { const Q = results[sc]; return Q && Q.n >= (sc === 'central' ? 1 : 20) && keys.every((k) => Q.arms[k]) ? [{ k: 'none', v: mean(Q.a.rep) }, ...keys.map((k) => ({ k, v: mean(Q.arms[k].rep), lamps: lampsIn(k) }))] : null; });
   drawHist(R, keys); drawReach(R, keys); drawDumbbell(keys); drawRoutes(R); drawRank(R); drawTable(keys);
   $('#dumbcap').textContent = dumbCap();
 }

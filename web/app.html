@@ -205,6 +205,66 @@ dialog.explain::backdrop { background: rgba(20, 22, 31, .5); }
 .view[hidden] { display: none; }   /* the page does not rely on the host for this */
 .wrap[data-view="film"] .top .lede, .wrap[data-view="film"] #pathfield { display: none; }   /* the explanation tab is the film and nothing else */
 
+/* residents as dots: the headline as people */
+.dotsblock { display: flex; flex-direction: column; gap: 12px; }
+.dotlead { font-size: 19px; line-height: 1.4; max-width: 62ch; text-wrap: pretty; }
+.dotlead b { font-weight: 600; }
+.dotrows { display: flex; flex-direction: column; gap: 14px; max-width: 660px; }
+.dotrow { display: flex; flex-direction: column; gap: 5px; }
+.dothd { display: flex; flex-wrap: wrap; gap: 2px 12px; align-items: baseline; justify-content: space-between; font-size: 14px; }
+.dothd .nm { font-weight: 600; display: inline-flex; align-items: center; }
+  .dothd .nm small { font: 400 13px/1 var(--f-text); color: var(--ink-2); margin-left: 8px; }
+.dothd .vl { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.dothd .vl b { color: var(--ink); font-weight: 600; }
+svg.dots { display: block; width: 100%; height: auto; }
+.dots circle { fill: var(--hair); }
+.dots .inf.k-none { fill: var(--base); } .dots .inf.k-common { fill: var(--lamp); } .dots .inf.k-both { fill: var(--lamp-b); } .dots .inf.k-bedrooms, .dots .inf.k-custom { fill: var(--ink-2); }
+.dots .spared { fill: var(--surface); stroke-width: 2; }
+.dots .spared.k-common { stroke: var(--lamp); } .dots .spared.k-both { stroke: var(--lamp-b); } .dots .spared.k-bedrooms, .dots .spared.k-custom { stroke: var(--ink-2); }
+.dotkey { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--ink-2); }
+.dotkey span { display: inline-flex; align-items: center; gap: 6px; }
+.dotkey i { width: 11px; height: 11px; border-radius: 50%; background: var(--base); flex: none; }
+.dotkey i.sp { background: var(--surface); border: 2px solid var(--ink-2); }
+.dotkey i.no { background: var(--hair); }
+.dotsblock .cap { font-size: 13px; color: var(--ink-2); max-width: 78ch; }
+.dotcase button small { font: 400 11.5px/1.2 var(--f-text); opacity: .8; }
+
+/* one lunch you can change */
+.toy .bd > p { max-width: 78ch; }
+.toygrid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px 28px; align-items: start; }
+@media (max-width: 860px) { .toygrid { grid-template-columns: minmax(0, 1fr); } }
+.toyleft { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+#toy { display: block; width: 100%; height: auto; border: 1px solid var(--hair); border-radius: 8px; background: var(--room); touch-action: manipulation; }
+#toy .haze { fill: var(--air); pointer-events: none; }
+#toy .tbl { fill: var(--furn); stroke: var(--furn-edge); }
+#toy .p { cursor: pointer; outline: none; }
+#toy .p .body { fill: var(--surface); stroke: var(--person); stroke-width: 1.5; }
+#toy .p .dose { fill: var(--air); pointer-events: none; }
+#toy .p .mate { fill: none; stroke: var(--close); stroke-width: 3.5; pointer-events: none; }
+#toy .p.src .body { fill: var(--infectious); stroke: var(--infectious); }
+#toy .p.src .halo { fill: none; stroke: var(--infectious); stroke-width: 1.5; opacity: .5; }
+#toy .p:focus-visible { outline: none; } #toy .p:focus-visible .body { stroke: var(--focus); stroke-width: 3; }
+#toy .link { stroke: var(--close); stroke-width: 2; stroke-dasharray: 3 3; opacity: .7; pointer-events: none; }
+#toy .lampcase { fill: var(--lamp-case); } #toy .lampbeam { fill: var(--lamp); opacity: .16; pointer-events: none; }
+#toy .wl { fill: none; stroke: var(--wall); stroke-width: 3; }
+.toyctl { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; }
+.toyctl label { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 14px; font-weight: 500; }
+.toyctl input[type=range] { width: 170px; accent-color: var(--lamp); }
+.toyread { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.toyread > div { display: flex; flex-direction: column; gap: 7px; }
+.toyread p { font-size: 14.5px; }
+.toyline { display: flex; gap: 9px; align-items: baseline; font-size: 14.5px; }
+.toyline i { width: 11px; height: 11px; border-radius: 50%; flex: none; transform: translateY(1px); }
+.toyline i.a { background: var(--air); } .toyline i.c { border: 3px solid var(--close); }
+.toyline b { font-weight: 600; font-variant-numeric: tabular-nums; }
+.toybar { display: flex; height: 22px; gap: 2px; }
+.toybar span { border-radius: 3px; min-width: 2px; transition: flex-grow .25s; }
+.toybar .v { background: var(--base); } .toybar .d { background: var(--outside); } .toybar .l { background: var(--lamp); } .toybar .a { background: var(--air); } .toybar .c { background: var(--close); } .toybar .gone { background: none; border: 1.5px dashed var(--hair-2); }
+.toykey { display: flex; flex-wrap: wrap; gap: 3px 14px; font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.toykey span { display: inline-flex; align-items: center; }
+.toybig { font: 600 26px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+.toybig small { font: 400 14px/1.3 var(--f-text); color: var(--ink-2); margin-left: 6px; }
+
 /* film */
 .filmstage { position: relative; border: 1px solid var(--hair); border-radius: 8px 8px 0 0; overflow: hidden; background: var(--surface); cursor: pointer; }
 /* The opening text, in the owner's words. */
@@ -262,7 +322,7 @@ dialog.explain::backdrop { background: rgba(20, 22, 31, .5); }
 #film .fe { font: 500 15px var(--f-mono); letter-spacing: .08em; fill: var(--ink-3); }
 #film .fe.fgroup { fill: var(--ink); font-weight: 600; }
 #film .fsub { font: 400 14.5px var(--f-text); letter-spacing: 0; fill: var(--ink-3); }
-#film .fl { font-size: 17px; }
+#film .fl { font-size: 17px; } #film .fcount { font-weight: 600; }
 #film .fs { font-size: 14.5px; fill: var(--ink-3); }
 #film .fh { font: 600 21px var(--f-display); font-stretch: 108%; fill: var(--ink); }
 #film .ftitle { font: 650 30px var(--f-display); font-stretch: 108%; fill: var(--ink); }
@@ -420,6 +480,14 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
         <p>It's hard to give specific, reliable numbers to these questions, because sicknesses are both infrequent and very random; existing human studies on far-UVC germicidal lamps are encouraging but have enormous error bars. And no study has attempted to answer what the appropriate arrangement of lamps is within a building.</p>
         <p>So: this is a simulated nursing home of 112 residents and their staff, followed through 200 winters of COVID-19 with and without far-UVC lamps. You can move the lamps and change every assumption that went into the model, from "how much virus is transmitted face-to-face versus via room air" to "how quickly does far-UVC light kill this specific pathogen".</p>
       </div>
+      <div class="dotsblock" id="dotsF">
+        <h3>Summary</h3>
+        <p class="dotlead"></p>
+        <div class="seg wrapseg dotcase" role="group" aria-label="Which assumptions to show"></div>
+        <div class="dotrows"></div>
+        <div class="dotkey"></div>
+        <p class="cap"></p>
+      </div>
       <div class="filmstage">
         <svg id="film" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Animated explanation of the model. The text beneath it carries the same content."></svg>
         <div class="filmposter start" id="filmposter">
@@ -447,6 +515,23 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
         <div class="seg wrapseg" role="group" aria-label="Chapters" id="filmchaps"></div>
         <button type="button" class="btn" id="filmskip">Open the model</button>
         <span class="small muted" id="filmnote" role="status" hidden></span>
+      </div>
+    </div>
+  </section>
+  <section class="panel toy" id="toypanel">
+    <div class="hd"><h2>Interactive example</h2></div>
+    <div class="bd">
+      <p>One lunch in the model's dining room, worked out with the model's own rules. One resident is infectious for the hour. Select any resident to make them the infectious one, then add lamps and watch what changes and what does not.</p>
+      <div class="toygrid">
+        <div class="toyleft">
+          <svg id="toy" viewBox="0 0 560 360" role="group" aria-label="A dining room at lunch. Select a resident to make them the infectious one."></svg>
+          <div class="toyctl">
+            <label>Lamps in this room <input type="range" id="toylamps" min="0" max="8" value="0"> <output id="toylampsout" class="num">0</output></label>
+            <div class="seg" role="group" aria-label="How much virus the infectious resident breathes out" id="toyemit"></div>
+          </div>
+          <p class="small muted" id="toynote"></p>
+        </div>
+        <div class="toyread" id="toyread"><p class="muted">Preparing one simulated winter…</p></div>
       </div>
     </div>
   </section>
@@ -506,6 +591,13 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
       </div>
       <div class="bd">
         <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+        <div class="dotsblock" id="dotsM">
+          <p class="dotlead"></p>
+          <div class="seg wrapseg dotcase" role="group" aria-label="Which assumptions to show"></div>
+          <div class="dotrows"></div>
+          <div class="dotkey"></div>
+          <p class="cap"></p>
+        </div>
         <p class="sentence" id="sentence">Simulating seasons…</p>
         <div class="cmpwrap" id="tiles"></div>
 
