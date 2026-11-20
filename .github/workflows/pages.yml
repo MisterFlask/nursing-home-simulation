@@ -1,0 +1,38 @@
+# Builds the page and publishes it as this repository's GitHub Pages site.
+# One-time setup by the repository owner: Settings -> Pages -> Build and deployment -> Source: "GitHub Actions".
+# The build has no dependencies: it inlines the engine, the page text, the film data and the narration (all committed)
+# into one file, dist/publish/index.html, which becomes the site's index.html.
+name: Publish to GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - run: node web/build.mjs
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/publish
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

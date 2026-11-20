@@ -69,6 +69,10 @@ The file to publish is `dist/publish/index.html`, to the existing artifact (slug
 `27df8ff9-4516-49c0-b423-e439aff886ad`, title "Nursing Home Simulation", shared publicly). Read the artifact's
 current version first and pass it as the base version. Only publish when the owner asks.
 
+The page is also a GitHub Pages site. `.github/workflows/pages.yml` runs the unit tests, builds, and publishes
+`dist/publish/` on every push to `main` (the repository's Pages source must be set to "GitHub Actions"). Nothing is
+built by hand for it; merging to `main` is what publishes.
+
 ## Rules that are easy to break
 
 - **Illuminate is the canonical source for lamp calculations.** The lamp constant and its range, the lamp's output,
