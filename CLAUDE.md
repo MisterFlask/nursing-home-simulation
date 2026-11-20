@@ -71,7 +71,10 @@ current version first and pass it as the base version. Only publish when the own
 
 The page is also a GitHub Pages site. `.github/workflows/pages.yml` runs the unit tests, builds, and publishes
 `dist/publish/` on every push to `main` (the repository's Pages source must be set to "GitHub Actions"). Nothing is
-built by hand for it; merging to `main` is what publishes.
+built by hand for it; merging to `main` is what publishes. The site is https://misterflask.github.io/nursing-home-simulation/.
+
+After every push to `main`, tell the owner in these words, "PUSH TO MASTER OCCURRED", and give the site's address as
+a link (the owner asked for this on 20 November 2026).
 
 ## Rules that are easy to break
 
