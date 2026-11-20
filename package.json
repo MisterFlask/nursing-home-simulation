@@ -1,0 +1,14 @@
+{
+  "name": "nh-sim",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Agent-based model of airborne infection in a nursing home, with and without far-UVC lamps.",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "build": "node web/build.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

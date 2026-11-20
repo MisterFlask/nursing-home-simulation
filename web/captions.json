@@ -1,0 +1,81 @@
+{
+ "dur": 128,
+ "captions": [
+  {
+   "t": 0,
+   "text": "One room in the model: a dining room at noon, with 24 people sitting down to lunch."
+  },
+  {
+   "t": 4.5,
+   "text": "One of them is infectious. The model spreads the virus they breathe out evenly through the room's air, so everyone here breathes a little of it, wherever they sit. Most of it is cleared away first: by ventilation, by the virus dying off, and by settling."
+  },
+  {
+   "t": 9,
+   "text": "People at the same table are also face to face. The model treats that as breathing from a small pocket of air around the infectious person, and counts it separately between each pair."
+  },
+  {
+   "t": 13,
+   "text": "Of every 100,000 virus particles this person breathes out over the hour, each resident in the room breathes in about 25 through the shared air. Each tablemate breathes in about 470 more, face to face. Shared air reaches many people a little; face to face reaches a few people a lot."
+  },
+  {
+   "t": 19.5,
+   "text": "The more someone breathes in, the bigger their chance of infection. This person breathes out a typical amount of virus, so even after the full hour the chances are small: about 1 in 5,300 for each resident through the room's air, and about 1 in 280 more for each tablemate. Stay twice as long and the chance roughly doubles."
+  },
+  {
+   "t": 26,
+   "text": "People differ. In the model, about one infectious person in 20 breathes out a hundred times as much virus; the same hour then gives each resident in the room about a 1 in 54 chance, and each tablemate about 1 in 3.5 more. What a person breathes in adds up all winter, across every room and contact. Immunity from past infection and vaccines is assumed to halve it."
+  },
+  {
+   "t": 32,
+   "text": "Now the same lunch again, with far-UVC lamps on, mounted high on the walls. They inactivate virus in the room's air. In the model, 4 lamps clear this room's air as much as 15.8 extra air changes an hour, on top of 3.9, so less is left to breathe. Each resident now breathes in about 6.3 of every 100,000 particles the infectious person breathes out, not 25, and their chance over the hour falls from 1 in 5,300 to 1 in 21,000."
+  },
+  {
+   "t": 39,
+   "text": "Face to face, each tablemate still breathes in about 470 of every 100,000: the model gives lamps no effect on that. Lamps act on the air a room shares, and on nothing else."
+  },
+  {
+   "t": 45,
+   "text": "Lamps off again, and step back to the whole home: 112 residents and their staff. The model tracks which room each person is in, every half hour."
+  },
+  {
+   "t": 52.5,
+   "text": "Virus builds up wherever an infectious person spends time, and clears after they leave. Who shares a room with whom, and for how long, decides where infection can spread."
+  },
+  {
+   "t": 60,
+   "text": "Now a whole winter, run twice: once without lamps, and once with a lamp for every 250 square feet of the common areas, 54 in all. Every 5 days one staff member arrives infected. Most arrivals go nowhere. A few start an outbreak."
+  },
+  {
+   "t": 68,
+   "text": "It is the same winter both times: the same people and the same arrivals. In this one, 19 residents had a reported infection without lamps and 12 with them."
+  },
+  {
+   "t": 75,
+   "text": "Winters differ too much for one to say much, so the model runs 200, each twice."
+  },
+  {
+   "t": 82,
+   "text": "On average, 19.1 of 112 residents have a reported infection without lamps and 14.9 with lamps in the common areas: 22% fewer."
+  },
+  {
+   "t": 87,
+   "text": "Where does that difference come from? Of those 19.1 infections, about 10.8 reach residents through the air of a shared room, and about 8.3 face to face. Lamps act only on the first kind, and cut it by about 30%. The face-to-face kind falls a little as well, because fewer people are infectious."
+  },
+  {
+   "t": 95.5,
+   "text": "Two things in this picture have not been measured well. One is the split: the more that spreads face to face, the less lamps have to work on. The other is how strongly lamps act on virus in a real room, outside the lab."
+  },
+  {
+   "t": 105.6,
+   "text": "Take the less helpful end of both, and the model has about 10% fewer infections. Take the more helpful end of both, and it has about 41% fewer."
+  },
+  {
+   "t": 111,
+   "text": "So our best estimate for a nursing home like this one is about 22% fewer reported infections among residents with Aerolamps in the common areas, and about 34% fewer with lamps in the bedrooms as well. Bedrooms matter because, in the model, more than half of the infections residents catch through shared air are caught there."
+  },
+  {
+   "t": 120.5,
+   "text": "All of this comes from a model; no trial has measured it yet. You can change every assumption in the simulator."
+  }
+ ]
+}

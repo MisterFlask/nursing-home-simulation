@@ -1,0 +1,1762 @@
+{
+ "pathogen": "covid",
+ "scenario": "central",
+ "config": {
+  "pathogen": "covid",
+  "days": 120,
+  "facility": {
+   "rooms": {
+    "bedroomSingle": {
+     "area": 14,
+     "height": 2.4
+    },
+    "bedroomDouble": {
+     "area": 24,
+     "height": 2.4
+    },
+    "lounge": {
+     "area": 25,
+     "height": 2.4
+    },
+    "station": {
+     "area": 134,
+     "height": 2.4
+    },
+    "dining": {
+     "area": 100,
+     "height": 2.7
+    },
+    "activity": {
+     "area": 80,
+     "height": 2.7
+    },
+    "therapy": {
+     "area": 110,
+     "height": 2.7
+    },
+    "breakroom": {
+     "area": 20,
+     "height": 2.4
+    },
+    "kitchen": {
+     "area": 70,
+     "height": 2.7
+    },
+    "office": {
+     "area": 60,
+     "height": 2.4
+    },
+    "lobby": {
+     "area": 70,
+     "height": 3
+    }
+   },
+   "ach": {
+    "bedroom": 1.5,
+    "lounge": 3,
+    "station": 2,
+    "dining": 3,
+    "activity": 3,
+    "therapy": 4,
+    "breakroom": 1,
+    "kitchen": 6,
+    "office": 2,
+    "lobby": 2
+   },
+   "wings": 4,
+   "residentsPerWing": 28,
+   "singlesPerWing": 4,
+   "doublesPerWing": 14,
+   "diningRooms": 2
+  },
+  "ventilation": {
+   "scale": 1
+  },
+  "air": {
+   "decay": 0.63,
+   "deposition": 0.24
+  },
+  "lamp": {
+   "outputMw": 100,
+   "mountingTable": [
+    [
+     2.15,
+     0.2
+    ],
+    [
+     2.3,
+     0.4
+    ],
+    [
+     2.45,
+     0.7
+    ],
+    [
+     2.6,
+     1
+    ]
+   ],
+   "susceptibility": 4.4,
+   "pathFactor": 1,
+   "followMountingRule": 1,
+   "realWorldFactor": 0.75,
+   "maxEach": 23.8,
+   "maxEachBedroom": 6.3,
+   "ecadr": 228.09599999999986
+  },
+  "transmission": {
+   "beta": {
+    "care": 42,
+    "table": 85,
+    "break": 85,
+    "therapy": 42,
+    "visit": 42,
+    "medpass": 42,
+    "roommate": 85
+   },
+   "closeShare": 0.55,
+   "G": 2.9,
+   "roommateHours": 0,
+   "nearFieldUV": 0
+  },
+  "emission": {
+   "activity": {
+    "rest": 1,
+    "social": 5,
+    "work": 10
+   },
+   "median": 0.219,
+   "gsd": 15.8,
+   "visitorRel": 1
+  },
+  "breathing": {
+   "rest": 0.29,
+   "social": 0.35,
+   "work": 1
+  },
+  "disease": {
+   "latent": {
+    "mean": 2,
+    "shape": 4
+   },
+   "presymptomatic": {
+    "mean": 1.5,
+    "shape": 3.5
+   },
+   "infectious": {
+    "mean": 5.5,
+    "shape": 7.6
+   },
+   "pSymptomatic": {
+    "resident": 0.8,
+    "staff": 0.65
+   },
+   "peakDays": 1,
+   "tailLevel": 0.1,
+   "asymRelInf": 0.32
+  },
+  "immune": {
+   "share": {
+    "resident": 1,
+    "staff": 1
+   },
+   "protection": 0.3,
+   "protectionStaff": 0.3
+  },
+  "importation": {
+   "staffDailyHazard": 0.0002081,
+   "visitorInfectiousProb": 0.001249,
+   "visitsPerResidentPerDay": 0.25,
+   "visitMinutes": 75,
+   "visitLoungeShare": 0.3,
+   "visitLobbyShare": 0.1,
+   "visitCloseShare": 0.5
+  },
+  "people": {
+   "mobility": {
+    "communal": 0.6,
+    "limited": 0.3,
+    "roombound": 0.1
+   },
+   "limitedMealRoom": "bedroom",
+   "tableSize": 4,
+   "pActivity": 0.4,
+   "pActivityPM": 0.25,
+   "pActivityLimited": 0.05,
+   "activityCapacity": 20,
+   "therapyShare": 0.12,
+   "pTherapy60": 1,
+   "therapyPerTherapist": 2,
+   "pLoungeIdle": 0.35,
+   "pLoungeIdleLimited": 0.05
+  },
+  "staff": {
+   "staffing": {
+    "cna": {
+     "day": 14,
+     "evening": 11,
+     "night": 8
+    },
+    "aideFloat": {
+     "day": 1,
+     "evening": 0,
+     "night": 0
+    },
+    "nurse": {
+     "day": 5,
+     "evening": 4,
+     "night": 3
+    },
+    "rn": {
+     "day": 3,
+     "evening": 2,
+     "night": 1
+    },
+    "therapist": {
+     "day": 5,
+     "evening": 0,
+     "night": 0
+    },
+    "dietary": {
+     "day": 5,
+     "evening": 4,
+     "night": 0
+    },
+    "housekeeping": {
+     "day": 6,
+     "evening": 1,
+     "night": 0
+    },
+    "activities": {
+     "day": 2,
+     "evening": 1,
+     "night": 0
+    },
+    "admin": {
+     "day": 9,
+     "evening": 0,
+     "night": 0
+    }
+   },
+   "weekdaysOnly": {
+    "therapist": true,
+    "admin": true
+   },
+   "careEpisodesPerShift": {
+    "day": 2,
+    "evening": 2,
+    "night": 1
+   },
+   "workDaysPerWeek": 5,
+   "floatShare": 0.15,
+   "breakroomCapacity": 4,
+   "breakTableSize": 4,
+   "careMinutes": 10,
+   "medpassMinutes": 3,
+   "mealAssistMinutes": 5
+  },
+  "schedule": {
+   "startWeekday": 0,
+   "cycleDays": 28,
+   "shifts": {
+    "day": [
+     14,
+     16
+    ],
+    "evening": [
+     30,
+     16
+    ],
+    "night": [
+     46,
+     16
+    ]
+   },
+   "wake": 14,
+   "morningCareEnd": 16,
+   "bed": 40,
+   "meals": [
+    [
+     16,
+     18
+    ],
+    [
+     24,
+     26
+    ],
+    [
+     34,
+     36
+    ]
+   ],
+   "activities": [
+    [
+     20,
+     22
+    ],
+    [
+     30,
+     32
+    ]
+   ],
+   "therapyWindows": [
+    [
+     18,
+     22
+    ],
+    [
+     26,
+     30
+    ]
+   ],
+   "medpass": [
+    16,
+    24,
+    34,
+    42
+   ],
+   "visiting": [
+    28,
+    38
+   ],
+   "roommateSlot": 2
+  },
+  "control": {
+   "staffExclusion": {
+    "enabled": true,
+    "exclusionDays": 7,
+    "staysHomeShare": 0.7,
+    "delayDaysMax": 1
+   },
+   "residentIsolation": {
+    "enabled": true,
+    "isolationDelayDays": 1,
+    "isolationDays": 10
+   },
+   "outbreakMode": {
+    "enabled": true,
+    "outbreakMask": "surgical",
+    "countStaff": true,
+    "trigger": 1,
+    "windowDays": 3,
+    "responseDelayDays": 1,
+    "outbreakDays": 14,
+    "facilityWideWings": 2
+   },
+   "staffMask": "none",
+   "masks": {
+    "none": {
+     "in": 0,
+     "out": 0
+    },
+    "surgical": {
+     "in": 0.3,
+     "out": 0.5
+    },
+    "n95": {
+     "in": 0.8,
+     "out": 0.8
+    }
+   },
+   "maskCompliance": 0.7
+  },
+  "scenario": "central"
+ },
+ "seeds": {
+  "rank": [
+   1,
+   300
+  ],
+  "confirm": [
+   10001,
+   12000
+  ],
+  "placements": [
+   20001,
+   22000
+  ]
+ },
+ "baseline": {
+  "residentInfected": {
+   "n": 2000,
+   "mean": 19.8025,
+   "sd": 30.492283998443458,
+   "se": 0.6818281980974866,
+   "median": 2,
+   "q05": 0,
+   "q25": 0,
+   "q75": 29,
+   "q95": 91,
+   "min": 0,
+   "max": 112,
+   "pZero": 0.317
+  },
+  "routes": {
+   "room": 34795,
+   "close": 42449,
+   "community": 5926
+  },
+  "attackRate": 0.1768080357142857
+ },
+ "topRooms": [
+  {
+   "roomId": "dining-1",
+   "type": "dining",
+   "infectionsRoom": 1.9133333333333333,
+   "infectionsClose": 2.4166666666666665,
+   "lambda": 3.87,
+   "firstLampAverted": 0.44939501779359414
+  },
+  {
+   "roomId": "breakroom",
+   "type": "breakroom",
+   "infectionsRoom": 1.6066666666666667,
+   "infectionsClose": 2.7066666666666666,
+   "lambda": 1.8699999999999999,
+   "firstLampAverted": 1.0537651821862346
+  },
+  {
+   "roomId": "w0-station",
+   "type": "station",
+   "infectionsRoom": 1.37,
+   "infectionsClose": 0,
+   "lambda": 2.87,
+   "firstLampAverted": 0.2142184003860833
+  },
+  {
+   "roomId": "w3-lounge",
+   "type": "lounge",
+   "infectionsRoom": 1.0433333333333332,
+   "infectionsClose": 0.06666666666666667,
+   "lambda": 3.87,
+   "firstLampAverted": 0.4425923942153185
+  },
+  {
+   "roomId": "w1-station",
+   "type": "station",
+   "infectionsRoom": 0.9666666666666667,
+   "infectionsClose": 0,
+   "lambda": 2.87,
+   "firstLampAverted": 0.15115166937217556
+  },
+  {
+   "roomId": "w0-lounge",
+   "type": "lounge",
+   "infectionsRoom": 0.9633333333333334,
+   "infectionsClose": 0.15,
+   "lambda": 3.87,
+   "firstLampAverted": 0.40865559721478295
+  },
+  {
+   "roomId": "w2-lounge",
+   "type": "lounge",
+   "infectionsRoom": 0.9366666666666666,
+   "infectionsClose": 0.11,
+   "lambda": 3.87,
+   "firstLampAverted": 0.3973433315479377
+  },
+  {
+   "roomId": "dining-2",
+   "type": "dining",
+   "infectionsRoom": 0.8666666666666667,
+   "infectionsClose": 1.9133333333333333,
+   "lambda": 3.87,
+   "firstLampAverted": 0.20355871886120988
+  },
+  {
+   "roomId": "w1-lounge",
+   "type": "lounge",
+   "infectionsRoom": 0.8566666666666667,
+   "infectionsClose": 0.09333333333333334,
+   "lambda": 3.87,
+   "firstLampAverted": 0.3634065345474021
+  },
+  {
+   "roomId": "w2-station",
+   "type": "station",
+   "infectionsRoom": 0.7266666666666667,
+   "infectionsClose": 0,
+   "lambda": 2.87,
+   "firstLampAverted": 0.11362435835563542
+  },
+  {
+   "roomId": "office",
+   "type": "office",
+   "infectionsRoom": 0.71,
+   "infectionsClose": 0,
+   "lambda": 2.87,
+   "firstLampAverted": 0.20785608674223754
+  },
+  {
+   "roomId": "w3-station",
+   "type": "station",
+   "infectionsRoom": 0.5933333333333334,
+   "infectionsClose": 0,
+   "lambda": 2.87,
+   "firstLampAverted": 0.09277585223533535
+  },
+  {
+   "roomId": "kitchen",
+   "type": "kitchen",
+   "infectionsRoom": 0.45,
+   "infectionsClose": 0,
+   "lambda": 6.87,
+   "firstLampAverted": 0.08914457228614314
+  },
+  {
+   "roomId": "therapy",
+   "type": "therapy",
+   "infectionsRoom": 0.36,
+   "infectionsClose": 0.48,
+   "lambda": 4.87,
+   "firstLampAverted": 0.06534453781512606
+  },
+  {
+   "roomId": "activity",
+   "type": "activity",
+   "infectionsRoom": 0.33666666666666667,
+   "infectionsClose": 0,
+   "lambda": 3.87,
+   "firstLampAverted": 0.09336134453781512
+  }
+ ],
+ "rank": [
+  {
+   "lamps": 4,
+   "allocation": {
+    "breakroom": 1,
+    "dining-1": 1,
+    "w3-lounge": 1,
+    "w0-lounge": 1
+   },
+   "predictedAverted": 2.35440819140993,
+   "residentAverted": {
+    "n": 2000,
+    "mean": 1.1815,
+    "sd": 7.7017021403018795,
+    "se": 0.17221529528170623,
+    "median": 0,
+    "q05": -1,
+    "q25": 0,
+    "q75": 0,
+    "q95": 6.0499999999999545,
+    "min": -63,
+    "max": 99,
+    "pZero": 0.724
+   },
+   "residentAvertedCI95": [
+    0.8439580212478558,
+    1.5190419787521443
+   ],
+   "totalAverted": {
+    "n": 2000,
+    "mean": 2.757,
+    "sd": 15.457600710001897,
+    "se": 0.34564245956613254,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 1,
+    "q95": 14,
+    "min": -148,
+    "max": 196,
+    "pZero": 0.638
+   },
+   "totalAvertedCI95": [
+    2.0795407792503804,
+    3.43445922074962
+   ],
+   "relativeReduction": 0.0596641838151748,
+   "pWorse": 0.0565
+  },
+  {
+   "lamps": 8,
+   "allocation": {
+    "breakroom": 2,
+    "dining-1": 2,
+    "w3-lounge": 1,
+    "w0-lounge": 1,
+    "w2-lounge": 1,
+    "w1-lounge": 1
+   },
+   "predictedAverted": 3.6125993104259573,
+   "residentAverted": {
+    "n": 2000,
+    "mean": 2.067,
+    "sd": 9.733544161350942,
+    "se": 0.21764866406776887,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 1,
+    "q95": 11,
+    "min": -59,
+    "max": 103,
+    "pZero": 0.663
+   },
+   "residentAvertedCI95": [
+    1.6404086184271733,
+    2.493591381572827
+   ],
+   "totalAverted": {
+    "n": 2000,
+    "mean": 4.3735,
+    "sd": 19.310837681882024,
+    "se": 0.4318034575915266,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 2,
+    "q95": 23,
+    "min": -134,
+    "max": 196,
+    "pZero": 0.5985
+   },
+   "totalAvertedCI95": [
+    3.527165223120608,
+    5.2198347768793925
+   ],
+   "relativeReduction": 0.10438076000504992,
+   "pWorse": 0.0495
+  },
+  {
+   "lamps": 12,
+   "allocation": {
+    "breakroom": 2,
+    "dining-1": 3,
+    "w3-lounge": 1,
+    "w0-lounge": 1,
+    "w2-lounge": 1,
+    "w1-lounge": 1,
+    "w0-station": 1,
+    "office": 1,
+    "dining-2": 1
+   },
+   "predictedAverted": 4.427682035294011,
+   "residentAverted": {
+    "n": 2000,
+    "mean": 2.481,
+    "sd": 10.27012057808221,
+    "se": 0.22964687749711257,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 1,
+    "q95": 13,
+    "min": -59,
+    "max": 103,
+    "pZero": 0.647
+   },
+   "residentAvertedCI95": [
+    2.0308921201056593,
+    2.9311078798943404
+   ],
+   "totalAverted": {
+    "n": 2000,
+    "mean": 5.372,
+    "sd": 20.309747879515168,
+    "se": 0.4541397686447812,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 3,
+    "q95": 26,
+    "min": -108,
+    "max": 196,
+    "pZero": 0.5695
+   },
+   "totalAvertedCI95": [
+    4.481886053456229,
+    6.262113946543771
+   ],
+   "relativeReduction": 0.12528721121070563,
+   "pWorse": 0.045
+  },
+  {
+   "lamps": 20,
+   "allocation": {
+    "breakroom": 2,
+    "dining-1": 4,
+    "w3-lounge": 2,
+    "w0-lounge": 2,
+    "w2-lounge": 2,
+    "w1-lounge": 2,
+    "w0-station": 2,
+    "office": 1,
+    "dining-2": 2,
+    "w1-station": 1
+   },
+   "predictedAverted": 5.650195493343435,
+   "residentAverted": {
+    "n": 2000,
+    "mean": 3.2715,
+    "sd": 11.21185268233066,
+    "se": 0.2507046475140471,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 2,
+    "q95": 17.049999999999955,
+    "min": -51,
+    "max": 103,
+    "pZero": 0.6155
+   },
+   "residentAvertedCI95": [
+    2.7801188908724677,
+    3.7628811091275325
+   ],
+   "totalAverted": {
+    "n": 2000,
+    "mean": 6.853,
+    "sd": 22.200626678372206,
+    "se": 0.4964211039593561,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 5,
+    "q95": 37,
+    "min": -106,
+    "max": 195,
+    "pZero": 0.545
+   },
+   "totalAvertedCI95": [
+    5.880014636239662,
+    7.825985363760338
+   ],
+   "relativeReduction": 0.1652064133316501,
+   "pWorse": 0.041
+  },
+  {
+   "lamps": 40,
+   "allocation": {
+    "breakroom": 3,
+    "dining-1": 5,
+    "w3-lounge": 3,
+    "w0-lounge": 3,
+    "w2-lounge": 3,
+    "w1-lounge": 2,
+    "w0-station": 4,
+    "office": 2,
+    "dining-2": 3,
+    "w1-station": 2,
+    "w3-bed-13": 1,
+    "w2-station": 1,
+    "w0-bed-08": 1,
+    "activity": 1,
+    "w3-station": 1,
+    "w1-bed-11": 1,
+    "kitchen": 1,
+    "w1-bed-07": 1,
+    "w2-bed-14": 1,
+    "w0-bed-12": 1
+   },
+   "predictedAverted": 7.611922129728279,
+   "residentAverted": {
+    "n": 2000,
+    "mean": 4.538,
+    "sd": 13.063149656168983,
+    "se": 0.2921009063144685,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 3,
+    "q95": 26.049999999999955,
+    "min": -36,
+    "max": 105,
+    "pZero": 0.585
+   },
+   "residentAvertedCI95": [
+    3.965482223623642,
+    5.1105177763763585
+   ],
+   "totalAverted": {
+    "n": 2000,
+    "mean": 9.482,
+    "sd": 25.747662943916467,
+    "se": 0.5757352460434957,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 7,
+    "q95": 55,
+    "min": -73,
+    "max": 199,
+    "pZero": 0.5075
+   },
+   "totalAvertedCI95": [
+    8.353558917754748,
+    10.61044108224525
+   ],
+   "relativeReduction": 0.2291629844716575,
+   "pWorse": 0.037
+  }
+ ],
+ "placements": [
+  {
+   "name": "shared rooms",
+   "lampCount": 15,
+   "lamps": {
+    "w0-lounge": 1,
+    "w1-lounge": 1,
+    "w2-lounge": 1,
+    "w3-lounge": 1,
+    "dining-1": 3,
+    "dining-2": 3,
+    "activity": 2,
+    "therapy": 3
+   },
+   "residentAverted": {
+    "n": 2000,
+    "mean": 2.264,
+    "sd": 10.507688126076017,
+    "se": 0.23495904936273354,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 1,
+    "q95": 12,
+    "min": -71,
+    "max": 104,
+    "pZero": 0.644
+   },
+   "residentAvertedCI95": [
+    1.803480263249042,
+    2.7245197367509575
+   ],
+   "totalAverted": {
+    "n": 2000,
+    "mean": 4.0135,
+    "sd": 20.283022907326743,
+    "se": 0.4535421800996801,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 1,
+    "q95": 20,
+    "min": -144,
+    "max": 211,
+    "pZero": 0.616
+   },
+   "relativeReduction": 0.11771128499753036,
+   "pWorse": 0.0425,
+   "residentInfectedWithLamps": {
+    "n": 2000,
+    "mean": 16.9695,
+    "sd": 28.112732571137528,
+    "se": 0.6286198106233595,
+    "median": 2,
+    "q05": 0,
+    "q25": 0,
+    "q75": 20,
+    "q95": 84.04999999999995,
+    "min": 0,
+    "max": 112,
+    "pZero": 0.332
+   }
+  },
+  {
+   "name": "shared rooms + break room",
+   "lampCount": 16,
+   "lamps": {
+    "w0-lounge": 1,
+    "w1-lounge": 1,
+    "w2-lounge": 1,
+    "w3-lounge": 1,
+    "dining-1": 3,
+    "dining-2": 3,
+    "activity": 2,
+    "therapy": 3,
+    "breakroom": 1
+   },
+   "residentAverted": {
+    "n": 2000,
+    "mean": 2.8835,
+    "sd": 11.325858258103157,
+    "se": 0.2532538896864602,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 1,
+    "q95": 16,
+    "min": -68,
+    "max": 104,
+    "pZero": 0.6315
+   },
+   "residentAvertedCI95": [
+    2.3871223762145384,
+    3.379877623785462
+   ],
+   "totalAverted": {
+    "n": 2000,
+    "mean": 5.7295,
+    "sd": 21.812318041858383,
+    "se": 0.4877382588844045,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 3,
+    "q95": 31,
+    "min": -123,
+    "max": 211,
+    "pZero": 0.565
+   },
+   "relativeReduction": 0.14992071125900108,
+   "pWorse": 0.0425,
+   "residentInfectedWithLamps": {
+    "n": 2000,
+    "mean": 16.35,
+    "sd": 27.439587560361606,
+    "se": 0.6135678305952617,
+    "median": 2,
+    "q05": 0,
+    "q25": 0,
+    "q75": 19,
+    "q95": 83,
+    "min": 0,
+    "max": 112,
+    "pZero": 0.3345
+   }
+  },
+  {
+   "name": "every room",
+   "lampCount": 105,
+   "lamps": {
+    "w0-bed-01": 1,
+    "w0-bed-02": 1,
+    "w0-bed-03": 1,
+    "w0-bed-04": 1,
+    "w0-bed-05": 1,
+    "w0-bed-06": 1,
+    "w0-bed-07": 1,
+    "w0-bed-08": 1,
+    "w0-bed-09": 1,
+    "w0-bed-10": 1,
+    "w0-bed-11": 1,
+    "w0-bed-12": 1,
+    "w0-bed-13": 1,
+    "w0-bed-14": 1,
+    "w0-bed-15": 1,
+    "w0-bed-16": 1,
+    "w0-bed-17": 1,
+    "w0-bed-18": 1,
+    "w0-lounge": 1,
+    "w0-station": 3,
+    "w1-bed-01": 1,
+    "w1-bed-02": 1,
+    "w1-bed-03": 1,
+    "w1-bed-04": 1,
+    "w1-bed-05": 1,
+    "w1-bed-06": 1,
+    "w1-bed-07": 1,
+    "w1-bed-08": 1,
+    "w1-bed-09": 1,
+    "w1-bed-10": 1,
+    "w1-bed-11": 1,
+    "w1-bed-12": 1,
+    "w1-bed-13": 1,
+    "w1-bed-14": 1,
+    "w1-bed-15": 1,
+    "w1-bed-16": 1,
+    "w1-bed-17": 1,
+    "w1-bed-18": 1,
+    "w1-lounge": 1,
+    "w1-station": 3,
+    "w2-bed-01": 1,
+    "w2-bed-02": 1,
+    "w2-bed-03": 1,
+    "w2-bed-04": 1,
+    "w2-bed-05": 1,
+    "w2-bed-06": 1,
+    "w2-bed-07": 1,
+    "w2-bed-08": 1,
+    "w2-bed-09": 1,
+    "w2-bed-10": 1,
+    "w2-bed-11": 1,
+    "w2-bed-12": 1,
+    "w2-bed-13": 1,
+    "w2-bed-14": 1,
+    "w2-bed-15": 1,
+    "w2-bed-16": 1,
+    "w2-bed-17": 1,
+    "w2-bed-18": 1,
+    "w2-lounge": 1,
+    "w2-station": 3,
+    "w3-bed-01": 1,
+    "w3-bed-02": 1,
+    "w3-bed-03": 1,
+    "w3-bed-04": 1,
+    "w3-bed-05": 1,
+    "w3-bed-06": 1,
+    "w3-bed-07": 1,
+    "w3-bed-08": 1,
+    "w3-bed-09": 1,
+    "w3-bed-10": 1,
+    "w3-bed-11": 1,
+    "w3-bed-12": 1,
+    "w3-bed-13": 1,
+    "w3-bed-14": 1,
+    "w3-bed-15": 1,
+    "w3-bed-16": 1,
+    "w3-bed-17": 1,
+    "w3-bed-18": 1,
+    "w3-lounge": 1,
+    "w3-station": 3,
+    "dining-1": 3,
+    "dining-2": 3,
+    "activity": 2,
+    "therapy": 3,
+    "breakroom": 1,
+    "kitchen": 2,
+    "office": 1,
+    "lobby": 2
+   },
+   "residentAverted": {
+    "n": 2000,
+    "mean": 5.3245,
+    "sd": 14.952859049254437,
+    "se": 0.33435609292105795,
+    "median": 0,
+    "q05": 0,
+    "q25": 0,
+    "q75": 4,
+    "q95": 34,
+    "min": -82,
+    "max": 105,
+    "pZero": 0.533
+   },
+   "residentAvertedCI95": [
+    4.669162057874726,
+    5.979837942125273
+   ],
+   "totalAverted": {
+    "n": 2000,
+    "mean": 11.1045,
+    "sd": 29.144335228101085,
+    "se": 0.6516871472907586,
+    "median": 1,
+    "q05": 0,
+    "q25": 0,
+    "q75": 9,
+    "q95": 68,
+    "min": -137,
+    "max": 213,
+    "pZero": 0.4505
+   },
+   "relativeReduction": 0.2768346894740946,
+   "pWorse": 0.035,
+   "residentInfectedWithLamps": {
+    "n": 2000,
+    "mean": 13.909,
+    "sd": 24.686685383372403,
+    "se": 0.5520110665637115,
+    "median": 2,
+    "q05": 0,
+    "q25": 0,
+    "q75": 14,
+    "q95": 75,
+    "min": 0,
+    "max": 111,
+    "pZero": 0.352
+   }
+  }
+ ],
+ "placementBaseline": {
+  "n": 2000,
+  "mean": 19.2335,
+  "sd": 30.285616834456615,
+  "se": 0.6772069798235698,
+  "median": 2,
+  "q05": 0,
+  "q25": 0,
+  "q75": 26,
+  "q95": 90,
+  "min": 0,
+  "max": 112,
+  "pZero": 0.3175
+ },
+ "trial": {
+  "placement": {
+   "breakroom": 2,
+   "dining-1": 3,
+   "w3-lounge": 1,
+   "w0-lounge": 1,
+   "w2-lounge": 1,
+   "w1-lounge": 1,
+   "w0-station": 1,
+   "office": 1,
+   "dining-2": 1
+  },
+  "facilityVariation": {
+   "ventilationGsd": 1.6,
+   "importationGsd": 2,
+   "immunitySd": 0.1
+  },
+  "poolSize": 2000,
+  "trialsPerCell": 400,
+  "poolMeans": {
+   "control": {
+    "n": 4000,
+    "mean": 21.85925,
+    "sd": 31.873875280845123,
+    "se": 0.5039702187180484,
+    "median": 3,
+    "q05": 0,
+    "q25": 0,
+    "q75": 36,
+    "q95": 92,
+    "min": 0,
+    "max": 112,
+    "pZero": 0.31025
+   },
+   "lamps": {
+    "n": 4000,
+    "mean": 19.769,
+    "sd": 30.4864887367972,
+    "se": 0.4820337113467435,
+    "median": 3,
+    "q05": 0,
+    "q25": 0,
+    "q75": 29,
+    "q95": 90,
+    "min": 0,
+    "max": 111,
+    "pZero": 0.31525
+   },
+   "lampsPaired": {
+    "n": 2000,
+    "mean": 19.3205,
+    "sd": 29.539974353279142,
+    "se": 0.6605339070753254,
+    "median": 3,
+    "q05": 0,
+    "q25": 0,
+    "q75": 28,
+    "q95": 87,
+    "min": 0,
+    "max": 111,
+    "pZero": 0.3165
+   }
+  },
+  "cells": [
+   {
+    "design": "parallel",
+    "facilitiesPerArm": 5,
+    "totalFacilities": 10,
+    "seasons": 1,
+    "power": 0.0375,
+    "effect": {
+     "n": 400,
+     "mean": 2.041999999999999,
+     "sd": 20.604329204196063,
+     "se": 1.0302164602098032,
+     "median": 0.8000000000000003,
+     "q05": -29.249999999999996,
+     "q25": -12.850000000000001,
+     "q75": 16.25,
+     "q95": 38.199999999999996,
+     "min": -57.800000000000004,
+     "max": 60.6,
+     "pZero": 0.005
+    },
+    "relativeEffect": {
+     "n": 400,
+     "mean": -2.021611239681008,
+     "sd": 10.164918819359064,
+     "se": 0.5082459409679532,
+     "median": 0.04718660968660968,
+     "q05": -10.242361111111109,
+     "q25": -1.1229636333717294,
+     "q75": 0.6136755485893417,
+     "q95": 0.9414472914472913,
+     "min": -115,
+     "max": 0.9934426229508196,
+     "pZero": 0.005
+    },
+    "meanControl": 21.88150000000001,
+    "meanTreated": 19.839500000000008
+   },
+   {
+    "design": "parallel",
+    "facilitiesPerArm": 10,
+    "totalFacilities": 20,
+    "seasons": 1,
+    "power": 0.04,
+    "effect": {
+     "n": 400,
+     "mean": 1.1727499999999997,
+     "sd": 13.443947774627711,
+     "se": 0.6721973887313856,
+     "median": 1,
+     "q05": -20.12,
+     "q25": -8.025000000000002,
+     "q75": 10.2,
+     "q95": 22.799999999999997,
+     "min": -44.6,
+     "max": 49.099999999999994,
+     "pZero": 0.0025
+    },
+    "relativeEffect": {
+     "n": 400,
+     "mean": -0.34339929285868626,
+     "sd": 1.5789267512170855,
+     "se": 0.07894633756085427,
+     "median": 0.04356060606060608,
+     "q05": -2.3002439024390244,
+     "q25": -0.4886638237384505,
+     "q75": 0.4094497607655503,
+     "q95": 0.739980435271915,
+     "min": -14.61111111111111,
+     "max": 0.9730538922155689,
+     "pZero": 0.0025
+    },
+    "meanControl": 21.336249999999993,
+    "meanTreated": 20.163499999999992
+   },
+   {
+    "design": "parallel",
+    "facilitiesPerArm": 20,
+    "totalFacilities": 40,
+    "seasons": 1,
+    "power": 0.0525,
+    "effect": {
+     "n": 400,
+     "mean": 2.010625,
+     "sd": 9.915494108612027,
+     "se": 0.4957747054306013,
+     "median": 3,
+     "q05": -15.0525,
+     "q25": -4.375,
+     "q75": 9.1625,
+     "q95": 17.164999999999985,
+     "min": -34.400000000000006,
+     "max": 35.550000000000004,
+     "pZero": 0.0025
+    },
+    "relativeEffect": {
+     "n": 400,
+     "mean": -0.025606526210421872,
+     "sd": 0.6227295817837826,
+     "se": 0.03113647908918913,
+     "median": 0.12345007058663446,
+     "q05": -1.0761056017153574,
+     "q25": -0.2478129647449916,
+     "q75": 0.3711672626088827,
+     "q95": 0.6162899902030335,
+     "min": -3.8518518518518516,
+     "max": 0.8940520446096654,
+     "pZero": 0.0025
+    },
+    "meanControl": 21.681749999999987,
+    "meanTreated": 19.67112500000001
+   },
+   {
+    "design": "parallel",
+    "facilitiesPerArm": 40,
+    "totalFacilities": 80,
+    "seasons": 1,
+    "power": 0.0475,
+    "effect": {
+     "n": 400,
+     "mean": 1.1305625000000001,
+     "sd": 7.2029167717770175,
+     "se": 0.36014583858885085,
+     "median": 0.8250000000000011,
+     "q05": -11.076250000000003,
+     "q25": -3.6812500000000004,
+     "q75": 6.18125,
+     "q95": 12.932499999999994,
+     "min": -17.9,
+     "max": 27.425000000000004,
+     "pZero": 0
+    },
+    "relativeEffect": {
+     "n": 400,
+     "mean": -0.008228875969337772,
+     "sd": 0.3621113906803657,
+     "se": 0.018105569534018283,
+     "median": 0.04222889418044192,
+     "q05": -0.6616755122309168,
+     "q25": -0.18518829075595802,
+     "q75": 0.25999904371486104,
+     "q95": 0.4668130167282941,
+     "min": -1.8115942028985508,
+     "max": 0.7422192151556157,
+     "pZero": 0
+    },
+    "meanControl": 21.501437499999994,
+    "meanTreated": 20.370874999999998
+   },
+   {
+    "design": "parallel",
+    "facilitiesPerArm": 80,
+    "totalFacilities": 160,
+    "seasons": 1,
+    "power": 0.0825,
+    "effect": {
+     "n": 400,
+     "mean": 2.2848124999999992,
+     "sd": 5.003911123428523,
+     "se": 0.25019555617142614,
+     "median": 2.150000000000002,
+     "q05": -5.653749999999999,
+     "q25": -0.9781249999999995,
+     "q75": 5.384375,
+     "q95": 10.383749999999981,
+     "min": -13.337500000000002,
+     "max": 17.099999999999998,
+     "pZero": 0
+    },
+    "relativeEffect": {
+     "n": 400,
+     "mean": 0.07829655357912209,
+     "sd": 0.22552222584978432,
+     "se": 0.011276111292489215,
+     "median": 0.10180622358958222,
+     "q05": -0.32127603690551915,
+     "q25": -0.05008904784481696,
+     "q75": 0.2255770215914696,
+     "q95": 0.4038351654250591,
+     "min": -0.9780018331805685,
+     "max": 0.5675,
+     "pZero": 0
+    },
+    "meanControl": 22.035531249999995,
+    "meanTreated": 19.750718750000004
+   },
+   {
+    "design": "crossover",
+    "facilities": 5,
+    "totalFacilities": 5,
+    "seasons": 2,
+    "power": 0,
+    "effect": {
+     "n": 400,
+     "mean": 1.9280000000000022,
+     "sd": 17.846474655912022,
+     "se": 0.8923237327956011,
+     "median": 1.199999999999998,
+     "q05": -26.41,
+     "q25": -10.25,
+     "q75": 12.85,
+     "q95": 33.44999999999996,
+     "min": -43.800000000000004,
+     "max": 54.2,
+     "pZero": 0.0025
+    },
+    "relativeEffect": {
+     "n": 400,
+     "mean": -0.7602769575997129,
+     "sd": 2.8280141301441017,
+     "se": 0.1414007065072051,
+     "median": 0.11670692431562002,
+     "q05": -5.735952380952381,
+     "q25": -0.728146853146853,
+     "q75": 0.5387185534591195,
+     "q95": 0.9258177162146429,
+     "min": -24.333333333333332,
+     "max": 1,
+     "pZero": 0.0025
+    },
+    "meanControl": 21.9505,
+    "meanTreated": 20.022500000000008
+   },
+   {
+    "design": "crossover",
+    "facilities": 10,
+    "totalFacilities": 10,
+    "seasons": 2,
+    "power": 0.065,
+    "effect": {
+     "n": 400,
+     "mean": 2.296,
+     "sd": 13.773771304179897,
+     "se": 0.6886885652089949,
+     "median": 2.549999999999999,
+     "q05": -20.8,
+     "q25": -6.825,
+     "q75": 11.599999999999998,
+     "q95": 24.139999999999965,
+     "min": -43.300000000000004,
+     "max": 38.8,
+     "pZero": 0
+    },
+    "relativeEffect": {
+     "n": 400,
+     "mean": -0.42779855541319295,
+     "sd": 4.033307654373139,
+     "se": 0.20166538271865697,
+     "median": 0.12592527831205924,
+     "q05": -2.2173254670599793,
+     "q25": -0.4175519216996898,
+     "q75": 0.4805443916697114,
+     "q95": 0.7640311047274861,
+     "min": -75,
+     "max": 0.9892183288409704,
+     "pZero": 0
+    },
+    "meanControl": 21.836000000000002,
+    "meanTreated": 19.540000000000003
+   },
+   {
+    "design": "crossover",
+    "facilities": 20,
+    "totalFacilities": 20,
+    "seasons": 2,
+    "power": 0.0475,
+    "effect": {
+     "n": 400,
+     "mean": 2.3412500000000014,
+     "sd": 8.934700365095358,
+     "se": 0.4467350182547679,
+     "median": 2.450000000000001,
+     "q05": -13.305,
+     "q25": -2.712500000000001,
+     "q75": 8.975,
+     "q95": 15.70999999999999,
+     "min": -28.700000000000003,
+     "max": 24.05,
+     "pZero": 0.0025
+    },
+    "relativeEffect": {
+     "n": 400,
+     "mean": -0.0017241473450800033,
+     "sd": 0.6009953714127044,
+     "se": 0.03004976857063522,
+     "median": 0.12062676173105621,
+     "q05": -0.9367671192732245,
+     "q25": -0.17220832464734903,
+     "q75": 0.35431884917477896,
+     "q95": 0.5828529508839237,
+     "min": -5.978494623655914,
+     "max": 0.8612612612612612,
+     "pZero": 0.0025
+    },
+    "meanControl": 22.16225,
+    "meanTreated": 19.821000000000005
+   },
+   {
+    "design": "crossover",
+    "facilities": 40,
+    "totalFacilities": 40,
+    "seasons": 2,
+    "power": 0.035,
+    "effect": {
+     "n": 400,
+     "mean": 2.003874999999999,
+     "sd": 5.7747826492423044,
+     "se": 0.28873913246211524,
+     "median": 2.05,
+     "q05": -6.883749999999999,
+     "q25": -2.2625,
+     "q75": 6.18125,
+     "q95": 11.72625,
+     "min": -18.375,
+     "max": 17.5,
+     "pZero": 0
+    },
+    "relativeEffect": {
+     "n": 400,
+     "mean": 0.05055135956526885,
+     "sd": 0.28912352246593453,
+     "se": 0.014456176123296726,
+     "median": 0.09644801659320718,
+     "q05": -0.40814367816091945,
+     "q25": -0.10576777856693853,
+     "q75": 0.25379368481458187,
+     "q95": 0.43226600213807265,
+     "min": -1.6875000000000002,
+     "max": 0.5698275862068966,
+     "pZero": 0
+    },
+    "meanControl": 22.146937499999986,
+    "meanTreated": 20.14306249999998
+   }
+  ],
+  "altOutcome": {
+   "outcome": "residents infected per detected outbreak (outbreak = first case until 14 days without a case; homes test all residents during an outbreak)",
+   "cells": [
+    {
+     "design": "parallel",
+     "facilitiesPerArm": 5,
+     "seasons": 1,
+     "power": 0.005,
+     "effect": {
+      "n": 302,
+      "mean": 3.575515084621045,
+      "sd": 27.274742442316356,
+      "se": 1.569485062656844,
+      "median": 4,
+      "q05": -42.61666666666667,
+      "q25": -14.79166666666667,
+      "q75": 22.541666666666664,
+      "q95": 47.329166666666666,
+      "min": -86.58333333333333,
+      "max": 78.33333333333333,
+      "pZero": 0
+     },
+     "meanControl": null,
+     "meanTreated": null
+    },
+    {
+     "design": "parallel",
+     "facilitiesPerArm": 10,
+     "seasons": 1,
+     "power": 0.0475,
+     "effect": {
+      "n": 397,
+      "mean": 4.075594904908507,
+      "sd": 20.209399220737478,
+      "se": 1.014280672087931,
+      "median": 3.125,
+      "q05": -29.24666666666667,
+      "q25": -9.783333333333331,
+      "q75": 16.857142857142854,
+      "q95": 37.39873015873015,
+      "min": -55,
+      "max": 70.66666666666667,
+      "pZero": 0
+     },
+     "meanControl": null,
+     "meanTreated": null
+    },
+    {
+     "design": "parallel",
+     "facilitiesPerArm": 20,
+     "seasons": 1,
+     "power": 0.045,
+     "effect": {
+      "n": 400,
+      "mean": 2.3240229778051478,
+      "sd": 13.830885639454786,
+      "se": 0.6915442819727393,
+      "median": 2.0178571428571423,
+      "q05": -20.088717532467534,
+      "q25": -7.161195286195281,
+      "q75": 11.517307692307693,
+      "q95": 25.030769230769202,
+      "min": -36.5,
+      "max": 43.885714285714286,
+      "pZero": 0
+     },
+     "meanControl": 35.263957928849464,
+     "meanTreated": 32.9399349510443
+    },
+    {
+     "design": "parallel",
+     "facilitiesPerArm": 40,
+     "seasons": 1,
+     "power": 0.0425,
+     "effect": {
+      "n": 400,
+      "mean": 2.723309326324223,
+      "sd": 9.341616870571105,
+      "se": 0.4670808435285553,
+      "median": 3.4059753389434295,
+      "q05": -13.817936507936505,
+      "q25": -3.704342532467531,
+      "q75": 9.157738095238093,
+      "q95": 17.640164002663987,
+      "min": -18.379710144927536,
+      "max": 32.59424603174604,
+      "pZero": 0
+     },
+     "meanControl": 35.025355934816055,
+     "meanTreated": 32.302046608491864
+    },
+    {
+     "design": "parallel",
+     "facilitiesPerArm": 80,
+     "seasons": 1,
+     "power": 0.045,
+     "effect": {
+      "n": 400,
+      "mean": 3.1012413013782894,
+      "sd": 6.457348003893004,
+      "se": 0.3228674001946502,
+      "median": 3.2556935817805392,
+      "q05": -7.776980644036267,
+      "q25": -1.1802588894506263,
+      "q75": 7.766584967320261,
+      "q95": 13.445530995934948,
+      "min": -13.625376344086018,
+      "max": 19.558704453441294,
+      "pZero": 0
+     },
+     "meanControl": 35.20738369481689,
+     "meanTreated": 32.10614239343861
+    },
+    {
+     "design": "crossover",
+     "facilities": 5,
+     "seasons": 2,
+     "power": 0,
+     "effect": {
+      "n": 235,
+      "mean": 4.91789598108747,
+      "sd": 29.367272687707555,
+      "se": 1.9157096403207252,
+      "median": 5.083333333333334,
+      "q05": -43.03333333333333,
+      "q25": -12.583333333333332,
+      "q75": 25.33333333333333,
+      "q95": 50.72499999999999,
+      "min": -67.25,
+      "max": 83.5,
+      "pZero": 0.00851063829787234
+     },
+     "meanControl": null,
+     "meanTreated": null
+    },
+    {
+     "design": "crossover",
+     "facilities": 10,
+     "seasons": 2,
+     "power": 0.0075,
+     "effect": {
+      "n": 369,
+      "mean": 3.6423006194347662,
+      "sd": 24.412773106082273,
+      "se": 1.2708782047032863,
+      "median": 2,
+      "q05": -33.25714285714286,
+      "q25": -11.75,
+      "q75": 18.166666666666668,
+      "q95": 49,
+      "min": -67.75,
+      "max": 84,
+      "pZero": 0.005420054200542005
+     },
+     "meanControl": null,
+     "meanTreated": null
+    },
+    {
+     "design": "crossover",
+     "facilities": 20,
+     "seasons": 2,
+     "power": 0.0575,
+     "effect": {
+      "n": 399,
+      "mean": 2.5020863430637856,
+      "sd": 17.430284601446107,
+      "se": 0.8726056697361428,
+      "median": 2.6666666666666643,
+      "q05": -27.075,
+      "q25": -8.595370370370368,
+      "q75": 13.986111111111112,
+      "q95": 31.127922077922058,
+      "min": -65.66666666666667,
+      "max": 45.5,
+      "pZero": 0
+     },
+     "meanControl": null,
+     "meanTreated": null
+    },
+    {
+     "design": "crossover",
+     "facilities": 40,
+     "seasons": 2,
+     "power": 0.0375,
+     "effect": {
+      "n": 400,
+      "mean": 2.43669735750118,
+      "sd": 12.21860345929261,
+      "se": 0.6109301729646305,
+      "median": 1.2288925438596507,
+      "q05": -16.35875,
+      "q25": -5.836538461538463,
+      "q75": 11.010416666666666,
+      "q95": 23.236084529505572,
+      "min": -35.4,
+      "max": 37.416666666666664,
+      "pZero": 0
+     },
+     "meanControl": 36.06866588897434,
+     "meanTreated": 33.63196853147313
+    }
+   ]
+  },
+  "n80": {
+   "infections": {
+    "delta": 2.1144999999999996,
+    "sigma": 31.18802143797514,
+    "sigmaDiff": 40.53529258217286,
+    "meanDiff": 2.1145,
+    "pFacilityWithOutbreak": 1,
+    "pBothSeasonsWithOutbreak": 1,
+    "parallelPerArm": 2077,
+    "crossoverTotal": 1755,
+    "paired": {
+     "delta": 2.7115,
+     "deltaSE": 0.24673786426455097,
+     "deltaCI95": [
+      2.2278937860414803,
+      3.19510621395852
+     ],
+     "nPairs": 2000,
+     "sigma": 31.18802143797514,
+     "sigmaDiff": 40.53529258217286,
+     "bootstrap": 400,
+     "refused": null,
+     "parallelPerArm": 2077,
+     "parallelPerArmCI95": [
+      1512,
+      2991
+     ],
+     "crossoverTotal": 1755,
+     "crossoverTotalCI95": [
+      1264,
+      2554
+     ]
+    },
+    "unpaired": {
+     "delta": 2.1144999999999996,
+     "parallelPerArm": 3416,
+     "crossoverTotal": 2885
+    },
+    "parallelExtrapolated": true,
+    "crossoverExtrapolated": true
+   },
+   "outbreakSize": {
+    "delta": 2.7016769638128864,
+    "sigma": 32.66929600207447,
+    "sigmaDiff": 45.30808830097074,
+    "meanDiff": 2.588981097279852,
+    "pFacilityWithOutbreak": 0.55725,
+    "pBothSeasonsWithOutbreak": 0.3615,
+    "parallelPerArm": 2116,
+    "crossoverTotal": 3137,
+    "paired": {
+     "delta": 3.7699128343853325,
+     "deltaSE": 0.4069520274759166,
+     "deltaCI95": [
+      2.9722868605325363,
+      4.567538808238129
+     ],
+     "nPairs": 1109,
+     "sigma": 32.66929600207447,
+     "sigmaDiff": 45.30808830097074,
+     "bootstrap": 400,
+     "refused": null,
+     "parallelPerArm": 2116,
+     "parallelPerArmCI95": [
+      1409,
+      3447
+     ],
+     "crossoverTotal": 3137,
+     "crossoverTotalCI95": [
+      2101,
+      5435
+     ]
+    },
+    "unpaired": {
+     "delta": 2.7016769638128864,
+     "parallelPerArm": 4120,
+     "crossoverTotal": 6650
+    },
+    "parallelExtrapolated": true,
+    "crossoverExtrapolated": true
+   }
+  }
+ },
+ "minutes": 6.7
+}

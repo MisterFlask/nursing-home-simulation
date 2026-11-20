@@ -1,0 +1,147 @@
+{
+ "pathogen": "covid",
+ "targets": {
+  "attackRate": 0.18737142857142858,
+  "outbreakMedianAR": 0.21
+ },
+ "rows": [
+  {
+   "scenario": "cautious",
+   "seeds": [
+    50001,
+    50400
+   ],
+   "n": 400,
+   "attackRate": 0.18296875,
+   "symptomaticAttackRate": 0.14703125,
+   "staffAttackRate": 0.15826335877862596,
+   "closeShare": 0.887425768138394,
+   "incidencePer10kResidentWeeks": 106.73177083333333,
+   "outbreaksPerSeason": 0.5575,
+   "introductionsPerSeason": 2.99,
+   "outbreaksPerIntroduction": 0.18645484949832775,
+   "outbreakMedianAR": 0.19642857142857142,
+   "outbreakQ25AR": 0.03571428571428571,
+   "outbreakQ75AR": 0.5982142857142857,
+   "outbreakMedianDurationDays": 24.375,
+   "outbreakMeanDurationDays": 25.756913303437976,
+   "outbreakShareOver42Days": 0.14349775784753363,
+   "outbreakMedianStaffAR": 0.20610687022900764
+  },
+  {
+   "scenario": "cautious",
+   "seeds": [
+    70001,
+    70400
+   ],
+   "n": 400,
+   "attackRate": 0.21819196428571427,
+   "symptomaticAttackRate": 0.1747767857142857,
+   "staffAttackRate": 0.18158396946564886,
+   "closeShare": 0.8759096131750287,
+   "incidencePer10kResidentWeeks": 127.27864583333333,
+   "outbreaksPerSeason": 0.6225,
+   "introductionsPerSeason": 3.01,
+   "outbreaksPerIntroduction": 0.20681063122923588,
+   "outbreakMedianAR": 0.16964285714285715,
+   "outbreakQ25AR": 0.026785714285714284,
+   "outbreakQ75AR": 0.6964285714285714,
+   "outbreakMedianDurationDays": 24.125,
+   "outbreakMeanDurationDays": 25.521168005354763,
+   "outbreakShareOver42Days": 0.14056224899598393,
+   "outbreakMedianStaffAR": 0.1297709923664122
+  },
+  {
+   "scenario": "central",
+   "seeds": [
+    50001,
+    50400
+   ],
+   "n": 400,
+   "attackRate": 0.1784375,
+   "symptomaticAttackRate": 0.14330357142857142,
+   "staffAttackRate": 0.1682442748091603,
+   "closeShare": 0.5727004868050217,
+   "incidencePer10kResidentWeeks": 104.08854166666667,
+   "outbreaksPerSeason": 0.6,
+   "introductionsPerSeason": 3.6275,
+   "outbreaksPerIntroduction": 0.16540317022742937,
+   "outbreakMedianAR": 0.15178571428571427,
+   "outbreakQ25AR": 0.03571428571428571,
+   "outbreakQ75AR": 0.5267857142857143,
+   "outbreakMedianDurationDays": 23.135416666666664,
+   "outbreakMeanDurationDays": 24.689409722222226,
+   "outbreakShareOver42Days": 0.15833333333333333,
+   "outbreakMedianStaffAR": 0.12213740458015267
+  },
+  {
+   "scenario": "central",
+   "seeds": [
+    70001,
+    70400
+   ],
+   "n": 400,
+   "attackRate": 0.19611607142857143,
+   "symptomaticAttackRate": 0.15714285714285714,
+   "staffAttackRate": 0.1894847328244275,
+   "closeShare": 0.5485711026182192,
+   "incidencePer10kResidentWeeks": 114.40104166666667,
+   "outbreaksPerSeason": 0.6175,
+   "introductionsPerSeason": 3.565,
+   "outbreaksPerIntroduction": 0.17321178120617112,
+   "outbreakMedianAR": 0.19642857142857142,
+   "outbreakQ25AR": 0.03571428571428571,
+   "outbreakQ75AR": 0.6160714285714286,
+   "outbreakMedianDurationDays": 23.770833333333332,
+   "outbreakMeanDurationDays": 25.55718623481783,
+   "outbreakShareOver42Days": 0.12550607287449392,
+   "outbreakMedianStaffAR": 0.17557251908396945
+  },
+  {
+   "scenario": "favourable",
+   "seeds": [
+    50001,
+    50400
+   ],
+   "n": 400,
+   "attackRate": 0.1939732142857143,
+   "symptomaticAttackRate": 0.15533482142857144,
+   "staffAttackRate": 0.18448473282442748,
+   "closeShare": 0.2572424432889549,
+   "incidencePer10kResidentWeeks": 113.15104166666667,
+   "outbreaksPerSeason": 0.545,
+   "introductionsPerSeason": 2.7525,
+   "outbreaksPerIntroduction": 0.1980018165304269,
+   "outbreakMedianAR": 0.26339285714285715,
+   "outbreakQ25AR": 0.03571428571428571,
+   "outbreakQ75AR": 0.6607142857142857,
+   "outbreakMedianDurationDays": 23.28125,
+   "outbreakMeanDurationDays": 24.155772171253837,
+   "outbreakShareOver42Days": 0.10550458715596331,
+   "outbreakMedianStaffAR": 0.20229007633587787
+  },
+  {
+   "scenario": "favourable",
+   "seeds": [
+    70001,
+    70400
+   ],
+   "n": 400,
+   "attackRate": 0.20703125,
+   "symptomaticAttackRate": 0.16604910714285714,
+   "staffAttackRate": 0.20146946564885496,
+   "closeShare": 0.2389632283215678,
+   "incidencePer10kResidentWeeks": 120.76822916666667,
+   "outbreaksPerSeason": 0.515,
+   "introductionsPerSeason": 2.6725,
+   "outbreaksPerIntroduction": 0.19270346117867165,
+   "outbreakMedianAR": 0.3080357142857143,
+   "outbreakQ25AR": 0.05357142857142857,
+   "outbreakQ75AR": 0.7589285714285714,
+   "outbreakMedianDurationDays": 23.40625,
+   "outbreakMeanDurationDays": 24.647552588996763,
+   "outbreakShareOver42Days": 0.12135922330097088,
+   "outbreakMedianStaffAR": 0.24427480916030533
+  }
+ ]
+}

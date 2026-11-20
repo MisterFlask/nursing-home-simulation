@@ -1,0 +1,11 @@
+node_modules/
+dist/
+__pycache__/
+*.pyc
+# screenshots and the test copy of the page (written by web/build.mjs)
+shots/*.png
+shots/page.html
+# backups and one-off patch scripts from before the project was under version control
+web/parts/
+# optional hand-recorded narration clips
+web/voice/

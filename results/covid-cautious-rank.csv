@@ -1,0 +1,6 @@
+lamps,rooms,predicted_averted_all,resident_averted_mean,ci95_low,ci95_high,all_averted_mean,relative_reduction,p_worse
+4,breakroom:2 w0-lounge:1 w3-lounge:1,0.366,-0.001,-0.138,0.136,0.131,0,0.031
+8,breakroom:2 w0-lounge:1 w3-lounge:1 w2-lounge:1 w1-lounge:1 dining-1:2,0.572,0.104,-0.081,0.289,0.283,0.005,0.033
+12,breakroom:3 w0-lounge:2 w3-lounge:2 w2-lounge:2 w1-lounge:1 dining-1:2,0.736,0.234,0.029,0.438,0.564,0.012,0.035
+20,breakroom:3 w0-lounge:3 w3-lounge:3 w2-lounge:3 w1-lounge:2 dining-1:4 office:2,0.991,0.363,0.15,0.576,0.812,0.018,0.033
+40,breakroom:5 w0-lounge:4 w3-lounge:4 w2-lounge:4 w1-lounge:4 dining-1:8 office:4 dining-2:3 w0-station:2 w1-station:2,1.429,0.652,0.39,0.915,1.415,0.032,0.04

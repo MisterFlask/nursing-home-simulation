@@ -1,0 +1,178 @@
+{
+ "pathogen": "covid",
+ "scenario": "central",
+ "lamps": 12,
+ "rankSeeds": [
+  1,
+  300
+ ],
+ "confirmSeeds": [
+  30001,
+  31500
+ ],
+ "rows": [
+  {
+   "variant": "as set (lounge 25 m², lounge 3/h, break room 1/h)",
+   "allocation": {
+    "breakroom": 2,
+    "dining-1": 3,
+    "w3-lounge": 1,
+    "w0-lounge": 1,
+    "w2-lounge": 1,
+    "w1-lounge": 1,
+    "w0-station": 1,
+    "office": 1,
+    "dining-2": 1
+   },
+   "byType": {
+    "breakroom": 2,
+    "dining": 4,
+    "lounge": 4,
+    "station": 1,
+    "office": 1
+   },
+   "baseline": 20.168666666666667,
+   "residentAverted": 2.3333333333333335,
+   "ci95": [
+    1.8218814465630258,
+    2.844785220103641
+   ],
+   "relativeReduction": 0.11569100585065939
+  },
+  {
+   "variant": "lounge 15 m²",
+   "allocation": {
+    "breakroom": 2,
+    "w3-lounge": 2,
+    "w1-lounge": 2,
+    "w0-lounge": 2,
+    "w2-lounge": 1,
+    "dining-1": 2,
+    "w0-station": 1
+   },
+   "byType": {
+    "breakroom": 2,
+    "lounge": 7,
+    "dining": 2,
+    "station": 1
+   },
+   "baseline": 21.966666666666665,
+   "residentAverted": 3.714,
+   "ci95": [
+    3.1350903852383993,
+    4.292909614761601
+   ],
+   "relativeReduction": 0.1690743550834597
+  },
+  {
+   "variant": "lounge 40 m²",
+   "allocation": {
+    "breakroom": 2,
+    "dining-1": 3,
+    "w3-lounge": 1,
+    "w2-lounge": 1,
+    "w0-station": 1,
+    "w1-lounge": 1,
+    "office": 1,
+    "dining-2": 1,
+    "w0-lounge": 1
+   },
+   "byType": {
+    "breakroom": 2,
+    "dining": 4,
+    "lounge": 4,
+    "station": 1,
+    "office": 1
+   },
+   "baseline": 19.250666666666667,
+   "residentAverted": 1.9133333333333333,
+   "ci95": [
+    1.4102827139842926,
+    2.416383952682374
+   ],
+   "relativeReduction": 0.0993904972987949
+  },
+  {
+   "variant": "lounge ventilation 6/h",
+   "allocation": {
+    "breakroom": 2,
+    "dining-1": 3,
+    "w3-lounge": 1,
+    "w0-station": 1,
+    "dining-2": 1,
+    "office": 1,
+    "w2-lounge": 1,
+    "w1-lounge": 1,
+    "w0-lounge": 1
+   },
+   "byType": {
+    "breakroom": 2,
+    "dining": 4,
+    "lounge": 4,
+    "station": 1,
+    "office": 1
+   },
+   "baseline": 19.200666666666667,
+   "residentAverted": 1.91,
+   "ci95": [
+    1.408916095303025,
+    2.4110839046969748
+   ],
+   "relativeReduction": 0.09947571264886634
+  },
+  {
+   "variant": "break-room ventilation 4/h",
+   "allocation": {
+    "dining-1": 3,
+    "w3-lounge": 2,
+    "w2-lounge": 1,
+    "w0-lounge": 1,
+    "w1-lounge": 1,
+    "breakroom": 1,
+    "w0-station": 1,
+    "dining-2": 1,
+    "office": 1
+   },
+   "byType": {
+    "dining": 4,
+    "lounge": 5,
+    "breakroom": 1,
+    "station": 1,
+    "office": 1
+   },
+   "baseline": 19.737333333333332,
+   "residentAverted": 2.0246666666666666,
+   "ci95": [
+    1.5614355970718143,
+    2.487897736261519
+   ],
+   "relativeReduction": 0.10258055799500088
+  },
+  {
+   "variant": "combined cautious (lounge 40 m², lounge 6/h, break room 4/h)",
+   "allocation": {
+    "dining-1": 4,
+    "breakroom": 1,
+    "w0-station": 2,
+    "dining-2": 2,
+    "office": 1,
+    "w1-station": 1,
+    "w3-bed-13": 1
+   },
+   "byType": {
+    "dining": 6,
+    "breakroom": 1,
+    "station": 3,
+    "office": 1,
+    "bedroom": 1
+   },
+   "baseline": 17.904666666666667,
+   "residentAverted": 1.116,
+   "ci95": [
+    0.713323728030893,
+    1.5186762719691074
+   ],
+   "relativeReduction": 0.062330118777227494
+  }
+ ]
+}

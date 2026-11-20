@@ -1,0 +1,13 @@
+import { chromium, CHROME, PAGE } from './lib.mjs';
+import fs from 'node:fs';
+const b = await chromium.launch({ ...CHROME, args: ['--no-sandbox'] }); const p = await b.newPage({ viewport: { width: 1480, height: 1000 } });
+p.on('pageerror', (e) => console.log('PAGEERR', String(e.stack || e).slice(0, 800)));
+fs.writeFileSync('shots/page.html', '<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;font:14px system-ui}[hidden]{display:none!important}</style></head><body>' + fs.readFileSync('dist/index.html', 'utf8') + '</body></html>');
+await p.goto(PAGE); await p.waitForTimeout(24000);
+console.log(await p.textContent('#runstat'), '|', await p.textContent('#sentence'));
+await p.locator('#results').screenshot({ path: 'shots/r1.png' });
+await p.click('#mode button[data-mode=replay]'); await p.waitForTimeout(9000); console.log(await p.textContent('#timelab'), '|', await p.textContent('#outsidecount'));
+await p.locator('#curve').screenshot({ path: 'shots/r2.png' });
+await p.click('#arrivals button[data-arr=random]'); await p.waitForTimeout(24000); console.log(await p.textContent('#sentence')); console.log((await p.textContent('#arrnote')).slice(0, 80));
+await p.setViewportSize({ width: 400, height: 800 }); await p.waitForTimeout(300); console.log('phone scrollW', await p.evaluate(() => document.documentElement.scrollWidth));
+await b.close();

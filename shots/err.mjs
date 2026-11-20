@@ -1,0 +1,10 @@
+import { chromium, CHROME, PAGE } from './lib.mjs';
+import fs from 'fs';
+fs.writeFileSync('shots/page.html', '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>' + fs.readFileSync('dist/index.html', 'utf8') + '</body></html>');
+const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1280, height: 900 } });
+p.on('pageerror', (e) => console.log('PAGEERROR', e.message, (e.stack || '').split('\n').slice(0, 4).join(' | ')));
+p.on('console', (m) => { if (m.type() === 'error') console.log('CONSOLE', m.text().slice(0, 300)); });
+await p.goto(PAGE);
+await p.waitForTimeout(8000);
+console.log('ready', await p.evaluate(() => !!(window.__film && window.__film.ready && window.__film.ready())));
+await b.close();

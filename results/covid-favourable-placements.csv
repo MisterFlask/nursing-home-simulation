@@ -1,0 +1,4 @@
+placement,lamps,resident_averted_mean,ci95_low,ci95_high,relative_reduction,p_worse
+shared rooms,15,7.768,6.97,8.565,0.348,0.017
+shared rooms + break room,16,9.357,8.476,10.238,0.419,0.015
+every room,105,16.598,15.389,17.807,0.743,0.003

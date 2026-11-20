@@ -1,0 +1,17 @@
+import { chromium, CHROME, PAGE } from './lib.mjs';
+const b = await chromium.launch({ ...CHROME, args: ['--no-sandbox'] }); const p = await b.newPage({ viewport: { width: 1440, height: 950 } });
+p.on('pageerror', (e) => console.log('PAGEERR', String(e.stack || e).slice(0, 700))); p.on('console', (m) => { if ((m.type() === 'error' || m.type() === 'warning') && !/net::|Failed to load/.test(m.text())) console.log('CONSOLE', m.text().slice(0, 300)); });
+await p.goto(PAGE);
+await p.waitForFunction(() => window.__film && window.__film.ready(), null, { timeout: 60000 });
+const st = async (label) => { const s = await p.evaluate(() => window.__film.state()); console.log(label.padEnd(36), `film ${s.t.toFixed(2)}s  audio ${s.audio.toFixed(2)}s of ${s.total}s  rate ${s.rate}  sound ${s.sound} playing ${s.playing}`); return s; };
+console.log('speeds:', (await p.locator('#filmrate option').allTextContents()).join(' '), '| selected', await p.locator('#filmrate').inputValue(), '| poster:', await p.textContent('#filmbig'));
+await p.click('#filmbig'); await p.waitForTimeout(8000); const a = await st('1x after 8 s');
+await p.selectOption('#filmrate', { label: '1.4×' }); await p.waitForTimeout(4000); const c = await st('switched to 1.4x (+4 s)');
+await p.waitForTimeout(6000); const d = await st('1.4x (+6 s more)'); console.log('   in 6 s: audio +' + (d.audio - c.audio).toFixed(2) + ' s, film +' + (d.t - c.t).toFixed(2) + ' s');
+await p.selectOption('#filmrate', { label: '0.9×' }); await p.waitForTimeout(5000); await st('switched to 0.9x (+5 s)');
+await p.click('#filmsound'); await p.waitForTimeout(300); console.log('sound off: speed disabled =', await p.locator('#filmrate').isDisabled());
+await p.click('#filmsound'); await p.locator('#filmchaps button').nth(5).click(); await p.waitForTimeout(3000); await st('chapter 6 at 0.9x (+3 s)');
+await p.click('#filmplay'); await p.selectOption('#filmrate', { label: '1.2×' }); console.log('paused; poster/label for 1.2x:', await p.evaluate(() => document.querySelector('#filmbig').textContent));
+await p.evaluate(() => window.__film.render(102)); await p.click('#filmplay'); await p.waitForTimeout(9000); await st('1.2x played to the end');
+await p.locator('.filmctl').screenshot({ path: 'shots/n-ctl.png' });
+await b.close();

@@ -1,0 +1,10 @@
+{"emission":0.52,"closeShare":0.1733,"G":0.3,"trueAR":0.1678,"staffAR":0.3248,"seconds":17}
+{"emission":0.52,"closeShare":0.1165,"G":0.18,"trueAR":0.1523,"staffAR":0.3163,"seconds":17}
+{"emission":0.52,"closeShare":0.3269,"G":0.8,"trueAR":0.2253,"staffAR":0.363,"seconds":18}
+{"emission":0.52,"closeShare":0.2494,"G":0.51,"trueAR":0.1921,"staffAR":0.3407,"seconds":18}
+{"emission":0.52,"closeShare":0.4924,"G":1.8,"trueAR":0.3367,"staffAR":0.438,"seconds":17}
+{"emission":0.52,"closeShare":0.4154,"G":1.23,"trueAR":0.278,"staffAR":0.3966,"seconds":18}
+{"emission":0.52,"closeShare":0.5654,"G":2.67,"trueAR":0.4194,"staffAR":0.4935,"seconds":17}
+{"emission":0.52,"closeShare":0.6387,"G":4.2,"trueAR":0.5475,"staffAR":0.584,"seconds":17}
+{"emission":0.52,"closeShare":0.0703,"G":0.1,"trueAR":0.142,"staffAR":0.3096,"seconds":18}
+{"emission":0.52,"closeShare":0.705,"G":6.75,"trueAR":0.717,"staffAR":0.6931,"seconds":19}

@@ -1,0 +1,26 @@
+import { chromium, CHROME, PAGE } from './lib.mjs';
+import fs from 'node:fs';
+fs.writeFileSync('shots/page.html', '<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;font:14px system-ui}[hidden]{display:none!important}</style></head><body>' + fs.readFileSync('dist/index.html', 'utf8') + '</body></html>');
+const b = await chromium.launch({ ...CHROME, args: ['--no-sandbox'] });
+const p = await b.newPage({ viewport: { width: 1280, height: 1000 } });
+p.on('pageerror', (e) => console.log('PAGEERR', String(e.stack || e).slice(0, 600)));
+p.on('console', (m) => { if (m.type() === 'error') console.log('CONSOLE', m.text().slice(0, 200)); });
+await p.goto(PAGE + '#model');
+await p.waitForFunction(() => window.__film && window.__film.ready(), null, { timeout: 60000 });
+
+const done = () => p.waitForFunction(() => /200 seasons simulated|seasons simulated/.test(document.querySelector('#runstat').textContent) && !/of 200/.test(document.querySelector('#runstat').textContent), null, { timeout: 300000 });
+await done(); console.log('DOWN  :', (await p.textContent('#sentence')).replace(/, depending.*measured well\./, ''));
+await p.evaluate(() => { const g = document.getElementById('p-lamp-aimAcross'); let d = g.closest('details'); while (d) { d.open = true; d = d.parentElement.closest('details'); } g.scrollIntoView({ block: 'center' }); });
+await p.waitForTimeout(300);
+const row = p.locator('#p-lamp-aimAcross').locator('xpath=..');
+await row.screenshot({ path: 'shots/w-aim.png' });
+await p.locator('#p-lamp-aimAcross button', { hasText: 'Straight across' }).click();
+await p.waitForTimeout(2500); await done(); console.log('ACROSS:', (await p.textContent('#sentence')).replace(/, depending.*measured well\./, ''));
+console.log('pressed:', await p.locator('#p-lamp-aimAcross button[aria-pressed=true]').textContent(), '| row changed:', await row.evaluate((e) => e.className));
+await row.screenshot({ path: 'shots/w-aim2.png' });
+const lampGroup = await p.evaluate(() => { const r = document.getElementById('p-lamp-aimAcross').closest('.prow'); return [...r.parentElement.children].map((e) => (e.querySelector('label, .lbl') || {}).textContent).join(' | '); });
+console.log('group:', lampGroup);
+await p.locator('#p-lamp-aimAcross').locator('xpath=..').locator('.m button').click(); await p.waitForTimeout(300);
+console.log('after reset:', await p.locator('#p-lamp-aimAcross button[aria-pressed=true]').textContent());
+await p.setViewportSize({ width: 400, height: 800 }); await p.waitForTimeout(300); console.log('phone scrollW', await p.evaluate(() => document.documentElement.scrollWidth));
+await b.close();

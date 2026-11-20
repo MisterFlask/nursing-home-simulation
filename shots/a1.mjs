@@ -1,0 +1,12 @@
+import { chromium, CHROME, PAGE } from './lib.mjs';
+import fs from 'node:fs';
+const b = await chromium.launch({ ...CHROME, args: ['--no-sandbox'] }); const p = await b.newPage({ viewport: { width: 1280, height: 1100 } });
+p.on('pageerror', (e) => console.log('PAGEERR', String(e.stack || e).slice(0, 600)));
+fs.writeFileSync('shots/page.html', '<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;font:14px system-ui}[hidden]{display:none!important}</style></head><body>' + fs.readFileSync('dist/index.html', 'utf8') + '</body></html>');
+await p.goto(PAGE);
+await p.waitForFunction(() => /seasons simulated/.test(document.querySelector('#runstat').textContent), null, { timeout: 150000 });
+console.log(await p.textContent('#sentence')); console.log(await p.textContent('#fitted'));
+const rows = await p.locator('.prow').evaluateAll((els) => els.map((e) => [e.querySelector('.l')?.textContent, e.querySelector('.n')?.textContent || '(no note)', e.querySelector('.src')?.textContent || '']));
+console.log(rows.length, 'slider rows;', rows.filter((r) => r[1] === '(no note)').length, 'without a note');
+for (const i of [0, 1, 3, 8, 9, 10, 30, 31, 52, 53, 54, 80, 81, 83, 84]) if (rows[i]) console.log(i, '|', rows[i][0], '|', rows[i][1].slice(0, 170), '|', rows[i][2].slice(0, 40));
+await b.close();

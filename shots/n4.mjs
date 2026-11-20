@@ -1,0 +1,15 @@
+import { chromium, CHROME, PAGE } from './lib.mjs';
+const b = await chromium.launch({ ...CHROME, args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required'] });
+const p = await b.newPage({ viewport: { width: 1280, height: 1000 } });
+p.on('pageerror', (e) => console.log('PAGEERR', String(e.stack || e).slice(0, 600)));
+await p.goto(PAGE);
+await p.waitForFunction(() => window.__film && window.__film.ready(), null, { timeout: 60000 });
+const st = async (l) => { const s = await p.evaluate(() => window.__film.state()); console.log(l.padEnd(34), 'film', s.t.toFixed(2) + 's', 'audio', (s.audio || 0).toFixed(2) + 's of', (s.total || 0).toFixed(1), 'playing', s.playing, '|', (await p.textContent('#filmchap')), '|', (await p.textContent('#filmtext')).slice(0, 60)); };
+await p.click('#filmbig'); await p.waitForTimeout(1500);
+await p.locator('#filmchaps button').nth(6).click(); await p.waitForTimeout(4000); await st('chapter 7 (+4 s)');
+await p.waitForTimeout(8000); await st('chapter 7 (+12 s)');
+await p.evaluate(() => window.__film.render(126)); await p.waitForTimeout(500); await p.click('#filmplay'); await p.waitForTimeout(200);
+const s0 = await p.evaluate(() => window.__film.state()); if (!s0.playing) await p.click('#filmplay');
+await p.waitForTimeout(16000); await st('from 126 s, +16 s');
+console.log('button:', await p.textContent('#filmplay'), '| seek max', await p.getAttribute('#filmseek', 'max'), '| chapters', (await p.locator('#filmchaps button').allTextContents()).join(' '));
+await b.close();

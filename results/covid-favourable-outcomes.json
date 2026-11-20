@@ -1,0 +1,89 @@
+{
+ "pathogen": "covid",
+ "scenario": "favourable",
+ "placement": {
+  "breakroom": 1,
+  "dining-1": 1,
+  "w0-lounge": 1,
+  "dining-2": 1,
+  "w1-lounge": 1,
+  "w2-lounge": 1,
+  "w0-station": 1,
+  "w3-lounge": 1,
+  "w1-station": 1,
+  "w2-station": 1,
+  "office": 1,
+  "w3-station": 1
+ },
+ "poolSize": 2000,
+ "rows": [
+  {
+   "outcome": "resident infections per season",
+   "meanControl": 24.149,
+   "meanLamps": 15.2865,
+   "effect": 8.8625,
+   "relativeEffect": 0.36699242204646154,
+   "sd": 31.98079581874536,
+   "shareOfSeasonsWithValue": 1,
+   "parallelPerArmFor80": 205,
+   "crossoverTotalFor80": 179,
+   "simulatedParallelPower": {
+    "20": 0.12,
+    "40": 0.2725,
+    "80": 0.355,
+    "160": 0.7175
+   }
+  },
+  {
+   "outcome": "log(1 + resident infections per season)",
+   "meanControl": 1.7574946625845582,
+   "meanLamps": 1.4119060819954221,
+   "effect": 0.3455885805891361,
+   "relativeEffect": 0.1966370583913559,
+   "sd": 1.7248899013407135,
+   "shareOfSeasonsWithValue": 1,
+   "parallelPerArmFor80": 392,
+   "crossoverTotalFor80": 317,
+   "simulatedParallelPower": {
+    "20": 0.09,
+    "40": 0.1825,
+    "80": 0.16,
+    "160": 0.46
+   }
+  },
+  {
+   "outcome": "season has an outbreak of 10+ residents (yes/no)",
+   "meanControl": 0.35325,
+   "meanLamps": 0.2725,
+   "effect": 0.08074999999999999,
+   "relativeEffect": 0.22859164897381454,
+   "sd": 0.46196043727943786,
+   "shareOfSeasonsWithValue": 1,
+   "parallelPerArmFor80": 514,
+   "crossoverTotalFor80": 449,
+   "simulatedParallelPower": {
+    "20": 0.085,
+    "40": 0.1225,
+    "80": 0.16,
+    "160": 0.36
+   }
+  },
+  {
+   "outcome": "residents infected per detected outbreak",
+   "meanControl": 44.690818858560796,
+   "meanLamps": 30.880714417915975,
+   "effect": 13.810104440644821,
+   "relativeEffect": 0.3090143522398094,
+   "sd": 34.88254457982697,
+   "shareOfSeasonsWithValue": 0.477,
+   "parallelPerArmFor80": 210,
+   "crossoverTotalFor80": 385,
+   "simulatedParallelPower": {
+    "20": 0.2475,
+    "40": 0.44,
+    "80": 0.6775,
+    "160": 0.94
+   }
+  }
+ ]
+}

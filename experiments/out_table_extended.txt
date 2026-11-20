@@ -1,0 +1,11 @@
+{"closeShare":0.1142,"G":0.18,"trueAR":0.1248,"staffAR":0.2363}
+{"closeShare":0.1689,"G":0.3,"trueAR":0.138,"staffAR":0.2446}
+{"closeShare":0.2511,"G":0.51,"trueAR":0.1601,"staffAR":0.2596}
+{"closeShare":0.3265,"G":0.8,"trueAR":0.1865,"staffAR":0.2817}
+{"closeShare":0.4147,"G":1.23,"trueAR":0.2231,"staffAR":0.3066}
+{"closeShare":0.4878,"G":1.8,"trueAR":0.2852,"staffAR":0.3518}
+{"closeShare":0.562,"G":2.67,"trueAR":0.3685,"staffAR":0.4148}
+{"closeShare":0.6393,"G":4.2,"trueAR":0.4986,"staffAR":0.5096}
+{"closeShare":0.7075,"G":6.75,"trueAR":0.6708,"staffAR":0.6352}
+{"closeShare":0.7372,"G":9,"trueAR":0.7578,"staffAR":0.6961}
+{"closeShare":0.7643,"G":12,"trueAR":0.8317,"staffAR":0.7438}

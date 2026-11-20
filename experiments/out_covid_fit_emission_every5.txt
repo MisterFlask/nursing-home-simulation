@@ -1,0 +1,8 @@
+{"closeShare": 0.267, "G": 0.6, "emissionMedian": 0.659, "trueAR": 0.2709, "staffAR": 0.4013}
+{"closeShare": 0.3557, "G": 1, "emissionMedian": 0.552, "trueAR": 0.2686, "staffAR": 0.3934}
+{"closeShare": 0.4559, "G": 1.6, "emissionMedian": 0.451, "trueAR": 0.2683, "staffAR": 0.3898}
+{"closeShare": 0.5502, "G": 2.6, "emissionMedian": 0.346, "trueAR": 0.2671, "staffAR": 0.3786}
+{"closeShare": 0.6625, "G": 4.5, "emissionMedian": 0.237, "trueAR": 0.265, "staffAR": 0.3693}
+{"closeShare": 0.7518, "G": 8, "emissionMedian": 0.155, "trueAR": 0.267, "staffAR": 0.3632}
+{"closeShare": 0.8232, "G": 14, "emissionMedian": 0.097, "trueAR": 0.2666, "staffAR": 0.3596}
+{"closeShare": 0.8866, "G": 25, "emissionMedian": 0.0594, "trueAR": 0.2717, "staffAR": 0.3602}

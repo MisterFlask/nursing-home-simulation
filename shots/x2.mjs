@@ -1,0 +1,11 @@
+import { chromium, CHROME, PAGE } from './lib.mjs';
+const b = await chromium.launch({ ...CHROME, args: ['--no-sandbox'] });
+const p = await b.newPage({ viewport: { width: 1280, height: 1000 } });
+p.on('pageerror', (e) => console.log('PAGEERR', String(e.stack || e).slice(0, 600)));
+await p.goto(PAGE);
+await p.waitForFunction(() => window.__film && window.__film.ready(), null, { timeout: 60000 });
+await p.click('.explainopen'); await p.waitForTimeout(400);
+const t = await p.evaluate(() => document.querySelector('#explain').innerText);
+const i = t.indexOf('7'); console.log(t.slice(t.search(/What (the )?lamps? change/i) - 5).slice(0, 2600));
+await p.locator('#explain').screenshot({ path: 'shots/x-explain.png' });
+await b.close();

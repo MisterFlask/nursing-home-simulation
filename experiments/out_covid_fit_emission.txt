@@ -1,0 +1,8 @@
+{"closeShare":0.3608,"G":1,"emissionMedian":0.552,"trueAR":0.2208,"staffAR":0.3139}
+{"closeShare":0.2696,"G":0.6,"emissionMedian":0.638,"trueAR":0.2166,"staffAR":0.3123}
+{"closeShare":0.4577,"G":1.6,"emissionMedian":0.442,"trueAR":0.2141,"staffAR":0.3006}
+{"closeShare":0.5469,"G":2.6,"emissionMedian":0.338,"trueAR":0.2145,"staffAR":0.2949}
+{"closeShare":0.7508,"G":8,"emissionMedian":0.152,"trueAR":0.2194,"staffAR":0.2864}
+{"closeShare":0.6535,"G":4.5,"emissionMedian":0.237,"trueAR":0.2208,"staffAR":0.2905}
+{"closeShare":0.8256,"G":14,"emissionMedian":0.097,"trueAR":0.2205,"staffAR":0.2821}
+{"closeShare":0.8873,"G":25,"emissionMedian":0.0581,"trueAR":0.2141,"staffAR":0.2755}

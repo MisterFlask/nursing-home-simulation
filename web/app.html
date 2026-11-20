@@ -1,0 +1,619 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Nursing Home Simulation</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: the floor plan is the instrument. Plan on the left, what the model
+   reports on the right, every assumption underneath. Drafting vernacular:
+   mono room labels, volumes in m³, air changes per hour. */
+:root {
+  --page: #f3f4f8;
+  --surface: #ffffff;
+  --ink: #14161f;
+  --ink-2: #474c60;
+  --ink-3: #777c92;
+  --hair: #dcdfe9;
+  --hair-2: #c3c7d6;
+  --wall: #2b2f3f;
+  --room: #fbfbfd;
+  --lamp: #6250d6;          /* ultraviolet: lamps and the with-lamps series */
+  --lamp-b: #12957f;        /* a second set of lamps, where two are compared */
+  --lamp-wash: rgba(98, 80, 214, .13);
+  --base: #8a8fa3;          /* without-lamps series */
+  --close: #eb6834;         /* close-range route */
+  --air: #2a78d6;           /* shared-room-air route */
+  --outside: #c9ccd8;
+  --person: #6f7489;
+  --edge: #1d2030; --furn: #e9ebf2; --furn-edge: #b3b8ca; --lamp-case: #2b2f3f; --lamp-lens: #b9aefc;
+  --c-res: #c9b79a; --c-aide: #4f8fd6; --c-nurse: #2f9e8f; --c-other: #8b8fa3; --hair-grey: #e9e9ee; --hair-dark: #3a2e2a;
+  --sk0: #f1c9a5; --sk1: #d9a273; --sk2: #a86f47; --sk3: #6f4a33;
+  --infected: #c98500;
+  --infectious: #d03b3b;
+  --on-fill: #ffffff;
+  --focus: #6250d6;
+  --f-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-text: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0e1016; --surface: #171a23; --ink: #eceef5; --ink-2: #b9bdcc; --ink-3: #868ba3;
+    --hair: #2a2e3c; --hair-2: #3a3f52; --wall: #c5c9dc; --room: #1b1e29;
+    --lamp: #9085e9; --lamp-b: #23a18b; --lamp-wash: rgba(144, 133, 233, .2); --base: #7d8298;
+    --close: #d95926; --air: #3987e5; --outside: #474c60; --person: #9aa0b8; --edge: #0b0d13; --furn: #262a39; --furn-edge: #4a5068; --lamp-case: #0b0d13; --infected: #eda100; --infectious: #e66767; --on-fill: #ffffff; --focus: #9085e9;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #0e1016; --surface: #171a23; --ink: #eceef5; --ink-2: #b9bdcc; --ink-3: #868ba3;
+  --hair: #2a2e3c; --hair-2: #3a3f52; --wall: #c5c9dc; --room: #1b1e29;
+  --lamp: #9085e9; --lamp-b: #23a18b; --lamp-wash: rgba(144, 133, 233, .2); --base: #7d8298;
+  --close: #d95926; --air: #3987e5; --outside: #474c60; --person: #9aa0b8; --edge: #0b0d13; --furn: #262a39; --furn-edge: #4a5068; --lamp-case: #0b0d13; --infected: #eda100; --infectious: #e66767; --on-fill: #ffffff; --focus: #9085e9;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--page); color: var(--ink);
+  font: 400 15px/1.5 var(--f-text);
+  padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1480px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--f-display); font-stretch: 112%; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(26px, 3.2vw, 38px); font-weight: 650; letter-spacing: -.01em; line-height: 1.1; }
+h2 { font-size: 20px; font-weight: 600; }
+h3 { font-size: 15px; font-weight: 600; }
+p { margin: 0; }
+a { color: inherit; text-decoration-color: var(--hair-2); text-underline-offset: 2px; }
+a:hover { text-decoration-color: currentColor; }
+.eyebrow { font: 500 11px/1 var(--f-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); }
+.muted { color: var(--ink-2); }
+.small { font-size: 13px; }
+.num { font-variant-numeric: tabular-nums; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* header */
+.top { display: flex; flex-wrap: wrap; gap: 16px 40px; align-items: flex-end; justify-content: space-between; }
+.top .lede { max-width: 62ch; color: var(--ink-2); margin-top: 10px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label, .field .lab { font: 500 11px/1 var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.seg { display: inline-flex; border: 1px solid var(--hair-2); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { border: 0; background: none; color: var(--ink-2); font: 500 13px/1 var(--f-text); padding: 9px 13px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--hair-2); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--surface); }
+.wrapseg { flex-wrap: wrap; align-self: flex-start; max-width: 100%; }
+.wrapseg button { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 9px 14px; text-align: left; }
+.wrapseg button small { font: 400 11px/1 var(--f-mono); opacity: .75; }
+
+/* stage */
+.col { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.stage { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 1020px) { .stage { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--hair); border-radius: 10px; min-width: 0; }
+.panel > .hd { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--hair); }
+.panel > .bd { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+
+/* plan */
+.planscroll { overflow-x: auto; }
+#plan { display: block; width: 100%; min-width: 700px; height: auto; }
+#plan2 { display: block; width: 100%; min-width: 560px; height: auto; }
+#plan .room { cursor: default; }
+.placegrid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 1020px) { .placegrid { grid-template-columns: minmax(0, 1fr); } }
+.panel > .hd .wrapseg { flex: 0 1 auto; }
+:is(#plan, #plan2, #fcam) .room rect.shell { fill: var(--room); stroke: var(--wall); stroke-width: 1.4; }
+:is(#plan, #plan2, #fcam) .room { cursor: pointer; }
+:is(#plan, #plan2, #fcam) .room.lit rect.shell { fill: var(--lamp-wash); }
+:is(#plan, #plan2, #fcam) .room:hover rect.shell { stroke-width: 2.4; }
+:is(#plan, #plan2, #fcam) .room.sel rect.shell { stroke: var(--lamp); stroke-width: 3; }
+:is(#plan, #plan2, #fcam) .room:focus-visible { outline: none; }
+:is(#plan, #plan2, #fcam) .room:focus-visible rect.shell { stroke: var(--focus); stroke-width: 3; }
+:is(#plan, #plan2, #fcam) text { font-family: var(--f-mono); fill: var(--ink-2); pointer-events: none; }
+:is(#plan, #plan2, #fcam) text.nm { font-size: 14px; font-weight: 500; fill: var(--ink); }
+:is(#plan, #plan2, #fcam) text.vol { font-size: 12px; fill: var(--ink-3); }
+:is(#plan, #plan2, #fcam) text.wing { font-size: 12px; letter-spacing: .12em; fill: var(--ink-3); }
+:is(#plan, #plan2, #fcam) .svc { fill: url(#hatch); stroke: var(--wall); stroke-width: 1.4; }
+:is(#plan, #plan2, #fcam) .yard { fill: none; stroke: var(--hair-2); stroke-dasharray: 3 5; }
+:is(#plan, #plan2, #fcam) .lampdot { fill: var(--lamp); stroke: var(--surface); stroke-width: 1.5; }
+:is(#plan, #plan2, #fcam) .lampn { font-size: 13px; font-weight: 500; fill: var(--lamp); }
+:is(#plan, #plan2, #fcam) .ev-close { fill: var(--close); stroke: var(--surface); stroke-width: 1; }
+:is(#plan, #plan2, #fcam) .ev-room { fill: var(--air); stroke: var(--surface); stroke-width: 1; }
+:is(#plan, #plan2, #fcam) .corr { fill: var(--room); stroke: none; }
+:is(#plan, #plan2, #fcam) .door { stroke: var(--room); stroke-width: 3.2; }
+#people > * { cursor: default; }
+.check { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-2); }
+.check input { accent-color: var(--lamp); }
+.pawn .halo { fill: none; stroke: none; }
+.pawn .body { stroke: var(--edge); stroke-width: .7; fill: var(--c-other); }
+.pawn.k-resident .body { fill: var(--c-res); } .pawn.k-aide .body { fill: var(--c-aide); } .pawn.k-nurse .body { fill: var(--c-nurse); }
+.pawn .head { stroke: var(--edge); stroke-width: .7; }
+.pawn .sk0 { fill: var(--sk0); } .pawn .sk1 { fill: var(--sk1); } .pawn .sk2 { fill: var(--sk2); } .pawn .sk3 { fill: var(--sk3); }
+.pawn .hair { fill: var(--hair-dark); stroke: var(--edge); stroke-width: .5; }
+.pawn.k-resident .hair { fill: var(--hair-grey); }
+.pawn.st-e .halo { stroke: var(--infected); stroke-width: 1.7; }
+.pawn.st-i .halo { stroke: var(--infectious); stroke-width: 1.7; fill: var(--infectious); fill-opacity: .28; }
+.pawn.st-r .halo { stroke: var(--person); stroke-width: 1; stroke-dasharray: 2 2; }
+:is(#plan, #plan2, #fcam) .furniture { pointer-events: none; }
+:is(#plan, #plan2, #fcam) .furn { fill: var(--furn); stroke: var(--furn-edge); stroke-width: 1; }
+:is(#plan, #plan2, #fcam) .furn.chair { stroke-width: .8; }
+:is(#plan, #plan2, #fcam) .furn.pillow { fill: var(--room); stroke-width: .6; }
+:is(#plan, #plan2, #fcam) .furn-l { fill: none; stroke: var(--furn-edge); stroke-width: 1.4; stroke-linecap: round; }
+:is(#plan, #plan2, #fcam) .lampcase { fill: var(--lamp-case); stroke: var(--lamp); stroke-width: .8; }
+:is(#plan, #plan2, #fcam) .lamplens { fill: var(--lamp-lens); } :is(#plan, #plan2, #fcam) .lampcore { fill: var(--on-fill); }
+.lg0 { stop-color: var(--lamp); stop-opacity: .5; } .lg1 { stop-color: var(--lamp); stop-opacity: 0; }
+.legend svg { vertical-align: -6px; margin-right: 2px; overflow: visible; }
+#hatch line { stroke: var(--hair-2); stroke-width: 1; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { border: 1px solid var(--hair-2); background: var(--surface); color: var(--ink); font: 500 13px/1 var(--f-text); padding: 9px 12px; border-radius: 8px; cursor: pointer; }
+.btn:hover { border-color: var(--ink-3); }
+.btn.primary { background: var(--lamp); border-color: var(--lamp); color: var(--on-fill); }
+.btn[disabled] { opacity: .55; cursor: default; }
+.count { font: 500 13px/1 var(--f-mono); color: var(--lamp); }
+.inspector { border: 1px dashed var(--hair-2); border-radius: 8px; padding: 12px 14px; display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; justify-content: space-between; }
+.inspector dl { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 0; font: 400 12px/1.4 var(--f-mono); color: var(--ink-2); }
+.inspector dl div { display: flex; gap: 6px; }
+.inspector dt { color: var(--ink-3); }
+.inspector dd { margin: 0; color: var(--ink); }
+.stepper { display: inline-flex; align-items: center; border: 1px solid var(--hair-2); border-radius: 8px; overflow: hidden; }
+.stepper button { border: 0; background: none; color: var(--ink); width: 34px; height: 34px; font: 500 16px/1 var(--f-text); cursor: pointer; }
+.stepper button:hover { background: var(--page); }
+.stepper output { min-width: 34px; text-align: center; font: 500 13px/1 var(--f-mono); }
+.groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px 20px; }
+.grow { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 4px 0; border-bottom: 1px solid var(--hair); }
+.grow .nm { font-size: 13px; }
+.grow .nm small { display: block; color: var(--ink-3); font: 400 11px/1.3 var(--f-mono); }
+.suggest { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.suggest input { width: 64px; padding: 8px; border: 1px solid var(--hair-2); border-radius: 8px; background: var(--surface); color: var(--ink); font: 500 13px/1 var(--f-mono); }
+
+/* the longer explanation */
+.filmcaphd { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; }
+.linkbtn { appearance: none; border: 0; background: none; padding: 0; color: var(--lamp); font: 500 13.5px/1.3 var(--f-text); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; text-align: left; }
+.linkbtn:hover { color: var(--ink); }
+.linkbtn:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 3px; }
+dialog.explain { width: min(780px, calc(100vw - 32px)); max-height: min(88vh, 920px); padding: 0; border: 1px solid var(--hair-2); border-radius: 10px; background: var(--surface); color: var(--ink); box-shadow: 0 24px 70px rgba(20, 22, 31, .4); }
+dialog.explain::backdrop { background: rgba(20, 22, 31, .5); }
+.explain .xhd { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 20px; background: var(--surface); border-bottom: 1px solid var(--hair); }
+.explain .xhd h2 { font: 650 18px/1.2 var(--f-display); font-stretch: 108%; text-wrap: balance; }
+.explain .xbd { display: flex; flex-direction: column; gap: 10px; padding: 14px 20px 24px; }
+.explain h3 { margin-top: 12px; font: 600 15.5px/1.3 var(--f-display); font-stretch: 108%; }
+.explain p { max-width: 72ch; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+.explain ol.ticks { margin: 0; padding-left: 1.6em; display: flex; flex-direction: column; gap: 8px; list-style: lower-alpha; }
+.explain ol.ticks li { padding-left: 4px; max-width: 70ch; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+.explain ol.ticks b { font-weight: 600; color: var(--ink); }
+.explain .calc { padding: 8px 12px; border-radius: 6px; background: var(--page); color: var(--ink); font: 500 13.5px/1.5 var(--f-mono); overflow-wrap: anywhere; }
+.explain .tablewrap { overflow-x: auto; }
+.explain th, .explain td { padding: 7px 10px 7px 0; border-bottom: 1px solid var(--hair); text-align: left; vertical-align: top; }
+.explain th { font: 500 11.5px var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+
+/* the two views */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--hair); margin-top: -8px; }
+.tabs button { appearance: none; border: 0; border-bottom: 3px solid transparent; margin-bottom: -1px; background: none; padding: 12px 16px; color: var(--ink-3); font: 600 15px/1.1 var(--f-display); font-stretch: 108%; cursor: pointer; }
+.tabs button:hover { color: var(--ink); }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--lamp); }
+.tabs button:focus-visible { outline: 2px solid var(--lamp); outline-offset: -2px; border-radius: 4px; }
+.view { display: flex; flex-direction: column; gap: 28px; min-width: 0; }
+.view[hidden] { display: none; }   /* the page does not rely on the host for this */
+.wrap[data-view="film"] .top .lede, .wrap[data-view="film"] #pathfield { display: none; }   /* the explanation tab is the film and nothing else */
+
+/* film */
+.filmstage { position: relative; border: 1px solid var(--hair); border-radius: 8px; overflow: hidden; background: var(--surface); }
+/* The opening text, in the owner's words. */
+.filmintro { display: flex; flex-direction: column; gap: 12px; padding-bottom: 4px; }
+.filmintro p { max-width: 78ch; font-size: 17px; line-height: 1.5; }
+/* The picture, caption and controls share one width, sized so the caption stays in the window on short screens. */
+.film .bd { --fw: min(100%, max(760px, calc((100vh - 460px) * 1.7778))); }
+.film .bd > * { width: var(--fw); margin-inline: auto; }
+#film { display: block; width: 100%; height: auto; aspect-ratio: 1200 / 675; pointer-events: none; }
+.filmposter { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 16px; }
+.filmbig { max-width: 100%; padding: 16px 24px; border: 0; border-radius: 999px; background: var(--lamp); color: var(--on-fill); font: 600 17px/1.2 var(--f-display); font-stretch: 108%; cursor: pointer; box-shadow: 0 8px 28px rgba(20, 22, 31, .28); }
+.filmquiet { padding: 9px 16px; border: 1px solid var(--hair-2); border-radius: 999px; background: var(--surface); color: var(--ink); font: 500 14px/1.2 var(--f-text); cursor: pointer; box-shadow: 0 4px 14px rgba(20, 22, 31, .16); }
+.filmquiet:hover { border-color: var(--ink-3); }
+.filmbig[disabled] { background: var(--ink-3); cursor: default; }
+.filmcap { display: flex; flex-direction: column; gap: 8px; min-height: 8.2em; }
+.filmcap p { max-width: 86ch; }
+#filmtext { font-size: 17px; line-height: 1.45; }
+.filmctl { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.filmctl input[type=range] { flex: 1 1 150px; min-width: 0; accent-color: var(--lamp); }
+.filmctl .wrapseg button { flex-direction: row; padding: 9px 10px; }
+.ratelab { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-2); }
+.ratelab select { padding: 8px 8px; border: 1px solid var(--hair-2); border-radius: 8px; background: var(--surface); color: var(--ink); font: 500 13px var(--f-text); }
+.ratelab select:disabled { opacity: .5; }
+@media (max-width: 560px) { .filmcap { min-height: 15em; } #filmtext { font-size: 15.5px; } }
+#film .fbg { fill: var(--surface); }
+#film .fhaze, #film .fair, #film .fparts circle { fill: var(--air); }
+#film .fwash { fill: var(--lamp-wash); }
+#film .flinks line { stroke: var(--close); stroke-linecap: round; }
+#film .fklink { stroke: var(--close); stroke-width: 4; stroke-linecap: round; }
+#film .fring { fill: none; stroke: var(--infectious); stroke-width: 1.2; }
+#film .fdose { fill: none; stroke-width: .8; } #film .fdose.air { stroke: var(--air); } #film .fdose.close { stroke: var(--close); stroke-width: 1.5; }
+#film .fnum { fill: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; } #film .fnum.flampt { fill: var(--lamp); }
+#film .mshell { fill: var(--room); stroke: var(--wall); stroke-width: 2.2; }
+#film .mshell.lit { fill: var(--lamp-wash); }
+#film .mcorr { fill: var(--room); }
+#film .md { fill: var(--person); opacity: .32; }
+#film .md.st-e { fill: var(--infected); opacity: 1; r: 8px; }
+#film .md.st-i { fill: var(--infectious); opacity: 1; r: 9px; }
+#film .md.st-r { fill: none; stroke: var(--person); stroke-width: 1.6; opacity: .8; }
+#film .ft { font-family: var(--f-text); fill: var(--ink-2); }
+#film .fe { font: 500 15px var(--f-mono); letter-spacing: .08em; fill: var(--ink-3); }
+#film .fe.fgroup { fill: var(--ink); font-weight: 600; }
+#film .fsub { font: 400 14.5px var(--f-text); letter-spacing: 0; fill: var(--ink-3); }
+#film .fl { font-size: 17px; }
+#film .fs { font-size: 14.5px; fill: var(--ink-3); }
+#film .fh { font: 600 21px var(--f-display); font-stretch: 108%; fill: var(--ink); }
+#film .ftitle { font: 650 30px var(--f-display); font-stretch: 108%; fill: var(--ink); }
+#film .fbig { font: 650 54px var(--f-display); font-stretch: 105%; fill: var(--ink); }
+#film .fmed { font: 650 30px var(--f-display); font-stretch: 105%; }
+#film .ft.b, #film .flampt { fill: var(--lamp); }
+#film .ftrack { fill: var(--hair); }
+#film .ftick { stroke: var(--ink-2); stroke-width: 2; } #film .ftick.flampt { stroke: var(--lamp); }
+#film .fvent { fill: var(--ink-3); } #film .fdecay { fill: var(--hair-2); } #film .flamp { fill: var(--lamp); }
+#film .frange { stroke: var(--lamp); stroke-width: 12; stroke-linecap: round; opacity: .32; }
+#film .fmid { fill: var(--lamp); stroke: var(--surface); stroke-width: 3; }
+#film .fgrid { stroke: var(--hair); stroke-width: 1; }
+#film .fsair { fill: var(--air); } #film .fsface { fill: var(--close); }
+#film .fsval { font: 600 19px var(--f-text); fill: #fff; font-variant-numeric: tabular-nums; }
+#film .fghost { fill: none; stroke: var(--ink-3); stroke-width: 1.2; stroke-dasharray: 4 4; }
+#film .fread { font: 700 34px var(--f-display); font-stretch: 108%; fill: var(--ink); font-variant-numeric: tabular-nums; }
+#film .ftrack { stroke: var(--hair-2); stroke-width: 5; stroke-linecap: round; } #film .ftick { stroke: var(--ink-3); stroke-width: 1.5; }
+#film .fknob { fill: var(--ink-3); stroke: var(--surface); stroke-width: 3; } #film .fknob.on { fill: var(--ink); }
+#film .fping { fill: none; stroke: var(--infectious); stroke-width: 4; }
+#film .fplay { stroke: var(--ink-3); stroke-width: 1.5; stroke-dasharray: 3 4; }
+#film .farr { fill: var(--hair-2); } #film .farr.on { fill: var(--infectious); }
+#film .fsp { fill: none; stroke-width: 1; opacity: .2; } #film .fsp.a { opacity: .34; } #film .fsp.a { stroke: var(--base); } #film .fsp.b { stroke: var(--lamp); }
+#film .fln { fill: none; stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; } #film .fln.a { stroke: var(--base); } #film .fln.b { stroke: var(--lamp); }
+#film .fln.avg { stroke-width: 5; }
+
+/* replay */
+.replayctl { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.replayctl input[type=range] { flex: 1 1 180px; min-width: 0; accent-color: var(--lamp); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--ink-2); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.legend i.sq { border-radius: 2px; }
+
+/* results */
+.progress { height: 3px; background: var(--hair); border-radius: 2px; overflow: hidden; }
+.progress i { display: block; height: 100%; width: 0; background: var(--lamp); transition: width .2s; }
+.sentence { font-size: 16px; line-height: 1.45; }
+.sentence b { font-weight: 600; }
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; border: 1px solid var(--hair); border-radius: 8px; }
+.tile { padding: 12px; min-width: 0; }
+.tile:nth-child(even) { border-left: 1px solid var(--hair); }
+.tile:nth-child(n+3) { border-top: 1px solid var(--hair); }
+.tile .k { font-size: 12px; color: var(--ink-2); line-height: 1.3; min-height: 2.6em; }
+.tile .v { font: 600 22px/1.2 var(--f-display); font-stretch: 105%; margin-top: 6px; display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.tile .v .was { color: var(--ink-3); font-weight: 500; }
+.tile .v .arr { color: var(--ink-3); font-size: 14px; }
+@media (max-width: 480px) { .tiles { grid-template-columns: 1fr; } .tiles .tile { border-left: 0; } .tile + .tile { border-top: 1px solid var(--hair); } .tile .k { min-height: 0; } }
+.chart { width: 100%; height: auto; display: block; overflow: visible; }
+.chart text { font-family: var(--f-text); font-size: 11px; fill: var(--ink-3); }
+.chart text.lab { fill: var(--ink-2); font-size: 12px; }
+.chart text.val { fill: var(--ink); font-size: 12px; font-weight: 500; }
+.chart .grid { stroke: var(--hair); stroke-width: 1; }
+.chart .axis { stroke: var(--hair-2); stroke-width: 1; }
+.chart .bar-a { fill: var(--base); }
+.chart .bar-b { fill: var(--lamp); }
+.chart .med { stroke: var(--ink); stroke-width: 1.5; }
+.chart .ln-a { stroke: var(--base); fill: none; stroke-width: 2; stroke-linejoin: round; }
+.chart .ln-b { stroke: var(--lamp); fill: none; stroke-width: 2; stroke-linejoin: round; }
+/* one season under each set of lamps: grey without, violet for the common areas, teal for common areas and bedrooms; any other choice is dashed */
+.chart .ln { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; } .chart .ln.on { stroke-width: 3.6; }
+.chart .k-none { stroke: var(--base); } .chart .k-common { stroke: var(--lamp); } .chart .k-both { stroke: var(--lamp-b); }
+.chart .k-bedrooms, .chart .k-custom { stroke: var(--ink-2); stroke-dasharray: 5 4; }
+.chart circle.k-none { fill: var(--base); } .chart circle.k-common { fill: var(--lamp); } .chart circle.k-both { fill: var(--lamp-b); } .chart circle.k-bedrooms, .chart circle.k-custom { fill: var(--ink-2); stroke-dasharray: none; }
+.chart circle.kdot { stroke: var(--surface); stroke-width: 2; }
+.chart text.lab.on { fill: var(--ink); font-weight: 600; }
+.chart .bar { stroke: none; } .chart .bar.k-none { fill: var(--base); } .chart .bar.k-common { fill: var(--lamp); } .chart .bar.k-both { fill: var(--lamp-b); } .chart .bar.k-bedrooms, .chart .bar.k-custom { fill: var(--ink-2); }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; flex: none; }
+.sw.k-none { background: var(--base); } .sw.k-common { background: var(--lamp); } .sw.k-both { background: var(--lamp-b); } .sw.k-bedrooms, .sw.k-custom { background: var(--ink-2); }
+/* the comparison at the top of the results: one column for no lamps and one for each set of lamps */
+.cmpwrap { overflow-x: auto; border: 1px solid var(--hair); border-radius: 8px; }
+.cmp { border-collapse: collapse; width: 100%; font-size: 13px; }
+.cmp th, .cmp td { padding: 9px 10px; text-align: right; vertical-align: top; border-top: 1px solid var(--hair); }
+.cmp thead th { border-top: 0; font: 500 12px/1.3 var(--f-text); color: var(--ink-2); vertical-align: bottom; }
+.cmp thead th .sw { display: block; margin: 0 0 5px auto; }
+.cmp tbody th { text-align: left; font-weight: 400; font-size: 12px; line-height: 1.35; color: var(--ink-2); min-width: 120px; }
+.cmp td { font: 600 17px/1.2 var(--f-display); font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+.cmp td small { display: block; font: 400 11px/1.3 var(--f-text); color: var(--ink-2); margin-top: 2px; }
+.cmp .on { background: var(--lamp-wash); } .cmp thead th.on { color: var(--ink); font-weight: 600; }
+.chart .dot-a { fill: var(--base); stroke: var(--surface); stroke-width: 2; }
+.chart .dot-b { fill: var(--lamp); stroke: var(--surface); stroke-width: 2; }
+.chart .link { stroke: var(--hair-2); stroke-width: 2; }
+.chart .r-air { fill: var(--air); } .chart .r-face { fill: var(--close); }
+.chart .r-ghost { fill: none; stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 3 3; }
+.chart text.r-val { fill: #fff; font-size: 12px; font-weight: 600; }
+.chart .cross { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 2 3; }
+.block { display: flex; flex-direction: column; gap: 8px; }
+.block > .cap { font-size: 13px; color: var(--ink-2); }
+.segbar { display: flex; height: 34px; gap: 2px; border-radius: 4px; overflow: hidden; }
+.segbar span { display: flex; align-items: center; justify-content: center; font: 500 12px/1 var(--f-text); color: var(--on-fill); min-width: 0; white-space: nowrap; overflow: hidden; }
+.segbar .s-close { background: var(--close); }
+.segbar .s-room { background: var(--air); }
+.segbar .s-out { background: var(--outside); color: var(--ink); }
+.rank { display: grid; grid-template-columns: minmax(0, 11em) minmax(0, 1fr) auto; gap: 6px 10px; align-items: center; font-size: 13px; }
+.rank .track { height: 14px; }
+.rank .track i { display: block; height: 100%; background: var(--air); border-radius: 0 4px 4px 0; min-width: 2px; }
+.rank .v { font: 400 12px/1 var(--f-mono); color: var(--ink-2); text-align: right; }
+details.tbl summary { cursor: pointer; font-size: 13px; color: var(--ink-2); }
+.tblscroll { overflow-x: auto; margin-top: 8px; }
+table { border-collapse: collapse; font-size: 13px; width: 100%; }
+th, td { text-align: left; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--hair); font-variant-numeric: tabular-nums; }
+th { font-weight: 500; color: var(--ink-2); }
+
+/* assumptions */
+.assume { display: flex; flex-direction: column; gap: 18px; }
+.assume .intro { max-width: 70ch; color: var(--ink-2); }
+.plist { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 0 32px; }
+.prow { padding: 14px 0; border-top: 1px solid var(--hair); display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.prow .l { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.prow .l label, .prow .l .lbl { font-weight: 500; font-size: 14px; }
+.prow .seg { align-self: flex-start; max-width: 100%; }
+.prow .seg button { padding: 8px 12px; }
+.prow .l output { font: 500 13px/1.2 var(--f-mono); white-space: nowrap; }
+.prow input[type=range] { width: 100%; accent-color: var(--lamp); margin: 0; }
+.prow .m { display: flex; justify-content: space-between; gap: 10px; font: 400 11px/1.4 var(--f-mono); color: var(--ink-3); }
+.prow .m button { border: 0; background: none; padding: 0; color: var(--lamp); font: inherit; cursor: pointer; text-decoration: underline; }
+.prow .n { font-size: 12.5px; color: var(--ink-2); }
+.prow .src { font-size: 12px; color: var(--ink-3); overflow-wrap: anywhere; }
+.prow.changed .l output { color: var(--lamp); }
+details.grp { border-top: 1px solid var(--hair-2); }
+details.grp > summary { cursor: pointer; padding: 14px 0; font: 600 15px/1.2 var(--f-display); font-stretch: 112%; display: flex; justify-content: space-between; gap: 12px; }
+details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-3); }
+.panel > .bd.limits { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 20px 40px; }
+.limits ul { margin: 8px 0 0; padding-left: 18px; color: var(--ink-2); }
+.limits li { margin: 4px 0; }
+.limits p { color: var(--ink-2); margin-top: 8px; max-width: 65ch; }
+#tip { position: fixed; z-index: 20; pointer-events: none; background: var(--ink); color: var(--surface); font: 400 12px/1.35 var(--f-text); padding: 6px 9px; border-radius: 6px; max-width: 240px; }
+@media (prefers-reduced-motion: reduce) { .progress i { transition: none; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Nursing Home Simulation</h1>
+      <p class="lede">A simulated nursing home of 112 residents and their staff, followed through 200 winters of <span id="ledepath">COVID-19</span> with and without far-UVC lamps. You can move the lamps and change every assumption.</p>
+      <p class="lede">Lamps clean the air a room shares, so in the model they act only on infections caught that way. How much infection spreads face to face or by touch has not been measured well, so results are given as a range.</p>
+    </div>
+    <div class="field" id="pathfield">
+      <span class="lab" id="lab-path">Infection</span>
+      <div class="seg" role="group" aria-labelledby="lab-path" id="pathogen"></div>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Views">
+    <button type="button" role="tab" id="tab-film" aria-controls="view-film" aria-selected="true">Explanation</button>
+    <button type="button" role="tab" id="tab-model" aria-controls="view-model" aria-selected="false" tabindex="-1">Model and simulator</button>
+  </div>
+
+  <div class="view" id="view-film" role="tabpanel" aria-labelledby="tab-film">
+  <section class="panel film">
+    <div class="hd">
+      <h2>Why have a simulation?</h2>
+    </div>
+    <div class="bd">
+      <div class="filmintro">
+        <p>There are good, reputable laboratory studies of how far-UVC light inactivates harmful pathogens. And these are great, but what an infection preventionist actually wants to know is "how well can this actually prevent sickness in my building? How many infections would I prevent by installing these lamps?"</p>
+        <p>It's hard to give a specific, reliable number for that, because sicknesses are both infrequent and very random; existing human studies are encouraging but have enormous error bars. It also depends on how many lamps you install, and where they go.</p>
+        <p>So: this is a simulated nursing home of 112 residents and their staff, followed through 200 winters of COVID-19 with and without far-UVC lamps. You can move the lamps and change every assumption that went into the model, from "how much virus an infected person exhales" to "how long does an infectious person do work before they realize it and go home".</p>
+      </div>
+      <div class="filmstage">
+        <svg id="film" viewBox="0 0 1200 675" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Animated explanation of the model. The text beneath it carries the same content."></svg>
+        <div class="filmposter" id="filmposter">
+          <button type="button" class="filmbig" id="filmbig" disabled>Preparing one simulated winter…</button>
+          <button type="button" class="filmquiet" id="filmquiet" hidden>Play without sound (about two minutes)</button>
+        </div>
+      </div>
+      <div class="filmcap">
+        <div class="filmcaphd">
+          <p class="eyebrow" id="filmchap">1 of 6 · One room</p>
+          <button type="button" class="linkbtn explainopen" title="The calculation step by step, with the numbers for this lunch and where each one comes from">How is the chance of infection worked out?</button>
+        </div>
+        <p id="filmtext" aria-live="polite">One room, one day, one winter, then 200 winters, and our best estimate of what lamps would do.</p>
+      </div>
+      <div class="filmctl">
+        <button type="button" class="btn primary" id="filmplay" disabled>Play</button>
+        <button type="button" class="btn" id="filmsound" aria-pressed="true" hidden>Sound on</button>
+        <label class="ratelab" id="filmratelab" hidden>Narration speed <select id="filmrate"></select></label>
+        <input type="range" id="filmseek" min="0" max="1050" value="0" aria-label="Position in the explanation">
+        <div class="seg wrapseg" role="group" aria-label="Chapters" id="filmchaps"></div>
+        <button type="button" class="btn" id="filmskip">Open the model</button>
+        <span class="small muted" id="filmnote" role="status" hidden></span>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <div class="view" id="view-model" role="tabpanel" aria-labelledby="tab-model" hidden>
+  <section class="stage">
+    <div class="col">
+    <div class="panel">
+      <div class="hd">
+        <div class="seg wrapseg" role="group" aria-label="Which lamps are installed" id="inst"></div>
+        <span class="count" id="lampcount"></span>
+      </div>
+      <div class="bd">
+        <div class="planscroll"><svg id="plan" viewBox="0 0 1200 640" role="group" aria-label="Floor plan of the care home"></svg></div>
+
+        <div id="replayUI" class="block" style="gap:14px">
+          <div class="replayctl">
+            <div class="seg" role="group" aria-label="What to show on the plan" id="view">
+              <button type="button" data-view="people" aria-pressed="true">People</button>
+              <button type="button" data-view="events" aria-pressed="false">Where infections happened</button>
+            </div>
+            <button type="button" class="btn" id="another">Another season</button>
+          </div>
+          <div class="replayctl">
+            <button type="button" class="btn primary" id="play">Play</button>
+            <div class="seg" role="group" aria-label="Playback speed" id="speed">
+              <button type="button" data-speed="x1" aria-pressed="true">1×</button>
+              <button type="button" data-speed="x3" aria-pressed="false">3×</button>
+              <button type="button" data-speed="x10" aria-pressed="false">10×</button>
+              <button type="button" data-speed="season" aria-pressed="false">Whole season</button>
+            </div>
+            <label class="small check"><input type="checkbox" id="skipnight" checked> Skip nights</label>
+            <input type="range" id="time" min="0" max="5759" value="14" aria-label="Time in the season">
+            <span class="num small" id="timelab"></span>
+          </div>
+          <div class="legend" id="legPeople"></div>
+          <div class="legend" id="legEvents" hidden>
+            <span><i style="background:var(--close)" class="sq"></i>Infected at close range</span>
+            <span><i style="background:var(--air)"></i>Infected through shared room air</span>
+          </div>
+          <p class="small muted num" id="outsidecount"></p>
+          <h3>Residents infected so far in this season</h3>
+          <svg class="chart" id="curve" viewBox="0 0 640 190" role="img" aria-label="Residents infected so far in this season: without lamps, with lamps in the common areas, and with lamps in the common areas and bedrooms"></svg>
+          <p class="small muted">The same building, people and arrivals of infection, run without lamps and with each set of lamps. The thicker line is the one shown on the plan. Every infection is counted, reported or not. The first season shown was picked because it has an outbreak; most seasons are smaller. People walk more slowly than in real life, and visitors are not drawn. Point at a person to see who they are. Click the chart to jump to a day.</p>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+    <div class="col">
+    <div class="panel" id="results">
+      <div class="hd">
+        <h2>What the model reports</h2>
+        <span class="small muted num" id="runstat"></span>
+      </div>
+      <div class="bd">
+        <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+        <p class="sentence" id="sentence">Simulating seasons…</p>
+        <div class="cmpwrap" id="tiles"></div>
+
+        <div class="block">
+          <h3>Reported resident infections per season</h3>
+          <svg class="chart" id="hist" viewBox="0 0 520 270" role="img" aria-label="Distribution of reported resident infections per season: without lamps, with lamps in the common areas, and with lamps in the common areas and bedrooms"></svg>
+          <p class="cap">Share of simulated seasons that ended with that many reported infections among residents, at the current settings. <span id="arrivecap">One infected staff member arrives every 5 days, on the same days in every season.</span></p>
+        </div>
+
+        <div class="block">
+          <h3>What the lamps can reach</h3>
+          <svg class="chart" id="reach" viewBox="0 0 520 190" role="img" aria-label="Reported resident infections by how they were caught, through room air or face to face: without lamps, with lamps in the common areas, and with lamps in the common areas and bedrooms"></svg>
+          <p class="cap">Reported infections among residents in an average season, by how they were caught, at the current settings. Lamps act on the air of shared rooms and on nothing else. The face-to-face side falls only because fewer people are infectious.</p>
+        </div>
+
+        <div class="block">
+          <h3>The range, and what sets its ends</h3>
+          <div class="legend" id="dumbleg"></div>
+          <svg class="chart" id="dumb" viewBox="0 0 520 188" role="img" aria-label="Average reported resident infections at the two ends of the range and at the central assumptions"></svg>
+          <p class="cap" id="dumbcap"></p>
+        </div>
+
+        <details class="tbl">
+          <summary>Show these numbers as a table</summary>
+          <div class="tblscroll"><table id="table"></table></div>
+        </details>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="hd"><h2>Where infection spreads when there are no lamps</h2></div>
+      <div class="bd">
+        <div class="block">
+          <h3>How people caught it</h3>
+          <div class="segbar" id="routes"></div>
+          <div class="legend">
+            <span><i class="sq" style="background:var(--close)"></i>At close range</span>
+            <span><i class="sq" style="background:var(--air)"></i>Shared room air</span>
+            <span><i class="sq" style="background:var(--outside)"></i>Outside the building</span>
+          </div>
+          <p class="cap">Room air cleaning, including lamps, acts only on the shared-room-air part.</p>
+        </div>
+
+        <div class="block">
+          <h3>Rooms where people caught it through shared air</h3>
+          <div class="rank" id="rank"></div>
+          <p class="cap">Average per season, all rooms of each type together.</p>
+        </div>
+
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <section class="panel" id="placepanel">
+    <div class="hd">
+      <h2>Place lamps room by room</h2>
+      <span class="count" id="placecount"></span>
+    </div>
+    <div class="bd">
+      <p class="intro">Start from one of the four standard choices, then add or remove lamps in any room. Once you change a room, your arrangement appears beside the standard choices above the plan as "Your placement", and everything on the page follows it.</p>
+      <div class="placegrid">
+        <div class="block" style="gap:12px">
+          <div class="planscroll"><svg id="plan2" viewBox="0 0 1200 640" role="group" aria-label="Floor plan for placing lamps: select a room to add or remove lamps"></svg></div>
+          <div class="inspector" id="inspector"></div>
+        </div>
+        <div class="block" style="gap:16px">
+          <div class="block">
+            <h3>Start from</h3>
+            <div class="seg wrapseg" role="group" aria-label="Start from a standard choice" id="presets"></div>
+            <p class="small muted" style="max-width:75ch">Common areas are every room except the bedrooms: dining rooms, activity room, wing lounges, therapy room, corridors, lobby, kitchen, office and staff break room. Each standard choice puts one lamp per 250 square feet of floor (23 square metres) in every room it covers, with at least one per room.</p>
+          </div>
+          <div class="block">
+            <h3>Lamps per room, by type of room</h3>
+            <div class="groups" id="groups"></div>
+          </div>
+          <div class="suggest">
+            <label for="budget" class="small">If you only had</label>
+            <input id="budget" type="number" min="1" max="120" value="12">
+            <span class="small">lamps:</span>
+            <button type="button" class="btn" id="suggest">Find the best rooms for them</button>
+            <span class="small muted" id="suggestmsg"></span>
+          </div>
+          <p class="small muted" style="max-width:75ch">Lamps are taken to be mounted high on the walls and angled down; a setting under Lamps points them straight across the room instead. How far their light travels through a room, and how much they must be dimmed to stay within exposure limits, come from Illuminate, the lamp-planning tool from OSLUV. A room takes at most four times one lamp per 250 square feet, which is as far as those figures go.</p>
+          <p class="small muted" style="max-width:75ch">Bedrooms are a special case. Exposure limits for far-UVC assume a person is exposed for 8 hours in a day. A report for NHS Scotland notes this, says the light may need to be turned down where people are exposed for longer, and says far-UVC may not be appropriate where the same person is exposed around the clock, because so little is known about that use (<a href="https://www.nss.nhs.scot/media/4634/assureresearch21-001-far-uvc-finalv2.pdf" target="_blank" rel="noopener">Wood et al., NHS Scotland Assure</a>, section 8.3.2). It does not mention bedrooms; they are the nearest case here. In the model, bedroom lamps are dimmed until the daily limit is met over the 20 hours a day residents spend in their rooms, which leaves them at about 40% of what the 8-hour check allows. A setting under Lamps changes this.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="hd">
+      <h2>Every assumption in the model</h2>
+      <div class="toolbar">
+        <button type="button" class="btn" id="resetall">Reset all to defaults</button>
+        <button type="button" class="btn" id="copy">Copy settings as JSON</button>
+      </div>
+    </div>
+    <div class="bd assume">
+      <p class="intro" id="assumeintro"></p>
+      <div class="plist" id="primary"></div>
+      <p class="small muted" id="fitted" style="max-width:80ch"></p>
+      <div id="groupsP"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="hd"><h2>Limits</h2></div>
+    <div class="bd limits">
+      <div>
+        <h3>What these numbers are</h3>
+        <p>These are results of a computer model: what follows from the assumptions above. They are not measurements of what lamps do in a real care home, and they say nothing about any one person's health. Hospital admissions are a fixed share of reported infections, taken from national reporting, so they add no evidence of their own.</p>
+        <p>We know of no completed randomised trial showing that far-UVC lamps reduce infections in care homes. The one randomised trial of ultraviolet air cleaning in care homes, which used a different kind of UV device in Australia, found no significant reduction in respiratory infections. The one study of far-UVC lamps in a care home was not randomised and was funded by a manufacturer. Whether these lamps reduce infections is an open question that this model cannot settle.</p>
+      </div>
+      <div>
+        <h3>Where it does not match real care homes</h3>
+        <ul id="mismatch"></ul>
+      </div>
+      <div>
+        <h3>Left out</h3>
+        <ul id="omissions"></ul>
+      </div>
+    </div>
+  </section>
+  </div>
+</div>
+<dialog id="explain" class="explain" aria-labelledby="explaintitle">
+  <div class="xhd"><h2 id="explaintitle">How the chance of infection is worked out</h2><button type="button" class="btn" id="explainclose">Close</button></div>
+  <div class="xbd" id="explainbody"><p>Preparing one simulated winter…</p></div>
+</dialog>
+<div id="tip" hidden></div>
+
+<script>
+function simBundle() {
+/*__SIM_SOURCE__*/
+}
+</script>
+<script>
+/*__APP_SOURCE__*/
+</script>

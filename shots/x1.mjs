@@ -1,0 +1,14 @@
+import { chromium, CHROME, PAGE } from './lib.mjs';
+const b = await chromium.launch({ ...CHROME, args: ['--no-sandbox'] }); const p = await b.newPage({ viewport: { width: 1440, height: 950 } });
+p.on('pageerror', (e) => console.log('PAGEERR', String(e.stack || e).slice(0, 900)));
+await p.goto(PAGE);
+await p.waitForFunction(() => window.__film && window.__film.ready(), null, { timeout: 60000 });
+await p.evaluate(() => window.__film.render(22)); await p.click('#filmplay'); await p.waitForTimeout(500);
+await p.click('.explainopen'); await p.waitForTimeout(400);
+console.log('open:', await p.evaluate(() => document.querySelector('#explain').open), '| film:', await p.textContent('#filmplay'));
+console.log(await p.evaluate(() => document.querySelector('#explainbody').innerText));
+await p.screenshot({ path: 'shots/x-1.png' });
+await p.evaluate(() => { document.querySelector('#explain').scrollTop = 1500; }); await p.waitForTimeout(200); await p.screenshot({ path: 'shots/x-2.png' });
+await p.keyboard.press('Escape'); await p.waitForTimeout(200); console.log('after Esc open:', await p.evaluate(() => document.querySelector('#explain').open));
+await p.setViewportSize({ width: 400, height: 800 }); await p.click('.explainopen'); await p.waitForTimeout(300); await p.screenshot({ path: 'shots/x-phone.png' }); console.log('phone scrollW', await p.evaluate(() => document.documentElement.scrollWidth));
+await b.close();

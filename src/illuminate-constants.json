@@ -1,0 +1,120 @@
+{
+ "source": "OSLUV Illuminate (guv_calcs 0.10.0), table \"UVC Inactivation Constants\": rows for the species in aerosol at 222 nm; lowest, median and highest of k1(1 - f) + k2 f",
+ "wavelength": 222.0,
+ "k": {
+  "covid": {
+   "species": "Human coronavirus",
+   "low": 2.62,
+   "central": 6.51,
+   "high": 15.85,
+   "rows": [
+    {
+     "k": 2.62,
+     "k1": 2.62,
+     "k2": 0.0,
+     "resistant": 0.0,
+     "strain": "SARS-CoV-2 (hCoV-19/46059T/2020)",
+     "condition": "",
+     "ref": "Kitagawa 2023, conference presentation",
+     "url": "https://www.youtube.com/watch?v=d0SKLqRgcWg"
+    },
+    {
+     "k": 4.11,
+     "k1": 4.11,
+     "k2": 0.0,
+     "resistant": 0.0,
+     "strain": "HCOV229E",
+     "condition": "RH50-70 %",
+     "ref": "Buonanno et al. 2020",
+     "url": "https://doi.org/10.1038/s41598-020-67211-2"
+    },
+    {
+     "k": 5.9,
+     "k1": 5.9,
+     "k2": 0.0,
+     "resistant": 0.0,
+     "strain": "HCOV-OC43",
+     "condition": "RH50-70 %",
+     "ref": "Buonanno et al. 2020",
+     "url": "https://doi.org/10.1038/s41598-020-67211-2"
+    },
+    {
+     "k": 6.51,
+     "k1": 6.51,
+     "k2": 0.0,
+     "resistant": 0.0,
+     "strain": "HCoV-OC43",
+     "condition": "RH30-40%",
+     "ref": "Romay et al. 2025",
+     "url": "https://doi.org/10.1007/s44408-025-00052-8"
+    },
+    {
+     "k": 12.37,
+     "k1": 12.4,
+     "k2": 1.6,
+     "resistant": 0.0031,
+     "strain": "HCoV-OC43",
+     "condition": "Modified Eagle's Medium (MEM)",
+     "ref": "Welch et al. 2022",
+     "url": "https://doi.org/10.3390/v14040684"
+    },
+    {
+     "k": 14.26,
+     "k1": 14.26,
+     "k2": 0.0,
+     "resistant": 0.0,
+     "strain": "HCoV-OC43",
+     "condition": "RH 65% +/- 3%",
+     "ref": "Lu et al. 2025",
+     "url": "https://doi.org/10.1016/j.jhazmat.2024.136666"
+    },
+    {
+     "k": 15.85,
+     "k1": 15.9,
+     "k2": 1.95,
+     "resistant": 0.0033,
+     "strain": "HCoV-OC43",
+     "condition": "Modified Eagle's Medium (MEM)",
+     "ref": "OSLUV reanalysis of Welch et al. 2022, unpublished",
+     "url": ""
+    }
+   ]
+  },
+  "flu": {
+   "species": "Influenza virus",
+   "low": 1.8,
+   "central": 10.4,
+   "high": 18.99,
+   "rows": [
+    {
+     "k": 1.8,
+     "k1": 1.8,
+     "k2": 0.0,
+     "resistant": 0.0,
+     "strain": "H1N1",
+     "condition": "RH55 %",
+     "ref": "Welch et al. 2018",
+     "url": "https://doi.org/10.1038/s41598-018-21058-w"
+    },
+    {
+     "k": 18.99,
+     "k1": 20.06,
+     "k2": 2.3,
+     "resistant": 0.06,
+     "strain": "H1N1 (A/PR/8/34)",
+     "condition": "RH 65%",
+     "ref": "Buonanno et al. 2024",
+     "url": "https://doi.org/10.1038/s41598-024-57441-z"
+    }
+   ]
+  }
+ },
+ "lamp": {
+  "name": "Aerolamp",
+  "outputMw": 98.2,
+  "wavelength": 222.0,
+  "skinLimit": 423.6,
+  "eyeLimit": 146.1,
+  "standard": "ANSI IES RP 27.1-22 (ACGIH Limits)"
+ }
+}

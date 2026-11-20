@@ -1,0 +1,21 @@
+outcome,design,facilities_per_arm_or_total,seasons,power,effect_mean,mean_control,mean_lamps
+resident infections per season,parallel,5,1,0.037,2.042,21.882,19.84
+resident infections per season,parallel,10,1,0.04,1.173,21.336,20.163
+resident infections per season,parallel,20,1,0.052,2.011,21.682,19.671
+resident infections per season,parallel,40,1,0.048,1.131,21.501,20.371
+resident infections per season,parallel,80,1,0.083,2.285,22.036,19.751
+resident infections per season,crossover,5,2,0,1.928,21.951,20.023
+resident infections per season,crossover,10,2,0.065,2.296,21.836,19.54
+resident infections per season,crossover,20,2,0.048,2.341,22.162,19.821
+resident infections per season,crossover,40,2,0.035,2.004,22.147,20.143
+residents infected per outbreak,parallel,5,1,0.005,3.576,NaN,NaN
+residents infected per outbreak,parallel,10,1,0.048,4.076,NaN,NaN
+residents infected per outbreak,parallel,20,1,0.045,2.324,35.264,32.94
+residents infected per outbreak,parallel,40,1,0.043,2.723,35.025,32.302
+residents infected per outbreak,parallel,80,1,0.045,3.101,35.207,32.106
+residents infected per outbreak,crossover,5,2,0,4.918,NaN,NaN
+residents infected per outbreak,crossover,10,2,0.007,3.642,NaN,NaN
+residents infected per outbreak,crossover,20,2,0.058,2.502,NaN,NaN
+residents infected per outbreak,crossover,40,2,0.037,2.437,36.069,33.632
+resident infections per season,"n for 80% power (normal approx., paired effect)",parallel 2077 per arm (95% CI 1512-2991); crossover 1755 total (95% CI 1264-2554),,,2.712,,
+residents infected per outbreak,"n for 80% power (normal approx., paired effect)",parallel 2116 per arm (95% CI 1409-3447); crossover 3137 total (95% CI 2101-5435),,,3.77,,

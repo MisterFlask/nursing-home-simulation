@@ -1,0 +1,34 @@
+[covid-central 14s] ranking done
+[covid-central 115s] confirmation done
+[covid-central 190s] placements done
+[covid-central 232s] pool 400/2000
+[covid-central 272s] pool 800/2000
+[covid-central 312s] pool 1200/2000
+[covid-central 353s] pool 1600/2000
+[covid-central 396s] pool 2000/2000
+[covid-central 400s] trials done
+[covid-cautious 13s] ranking done
+[covid-cautious 111s] confirmation done
+[covid-cautious 187s] placements done
+[covid-cautious 227s] pool 400/2000
+[covid-cautious 267s] pool 800/2000
+[covid-cautious 307s] pool 1200/2000
+[covid-cautious 347s] pool 1600/2000
+[covid-cautious 388s] pool 2000/2000
+[covid-cautious 391s] trials done
+[covid-favourable 13s] ranking done
+[covid-favourable 109s] confirmation done
+[covid-favourable 169s] placements done
+[covid-favourable 202s] pool 400/2000
+[covid-favourable 234s] pool 800/2000
+[covid-favourable 267s] pool 1200/2000
+[covid-favourable 300s] pool 1600/2000
+[covid-favourable 334s] pool 2000/2000
+[covid-favourable 337s] trials done
+[sensitivity 46s] as set (lounge 25 m², lounge 3/h, break room 1/h): 2.33 averted
+[sensitivity 90s] lounge 15 m²: 3.71 averted
+[sensitivity 132s] lounge 40 m²: 1.91 averted
+[sensitivity 175s] lounge ventilation 6/h: 1.91 averted
+[sensitivity 218s] break-room ventilation 4/h: 2.02 averted
+[sensitivity 262s] combined cautious (lounge 40 m², lounge 6/h, break room 4/h): 1.12 averted
+ALLDONE

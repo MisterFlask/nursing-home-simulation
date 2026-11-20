@@ -1,0 +1,4 @@
+share 0.55                         G   2.67 | out of reach 0.56 | residents true 38% reported share 0.50 | staff true 43% reported share 0.25 | weeks 1+ 24% 2+ 16% | lamps: 2.42 ± 0.59 reported infections fewer (11%) of 21.5
+share 0.7                          G   6.75 | out of reach 0.70 | residents true 65% reported share 0.28 | staff true 63% reported share 0.17 | weeks 1+ 25% 2+ 18% | lamps: 0.93 ± 0.27 reported infections fewer (5%) of 20.0
+share 0.86                         G  68.80 | out of reach 0.86 | residents true 99% reported share 0.19 | staff true 87% reported share 0.12 | weeks 1+ 16% 2+ 13% | lamps: 0.01 ± 0.01 reported infections fewer (0%) of 20.9
+CAUTIOUS 0.86, lamps low           G  68.80 | out of reach 0.86 | residents true 99% reported share 0.19 | staff true 87% reported share 0.12 | weeks 1+ 16% 2+ 13% | lamps: 0.01 ± 0.01 reported infections fewer (0%) of 20.9

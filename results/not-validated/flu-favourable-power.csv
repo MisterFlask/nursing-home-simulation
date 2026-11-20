@@ -1,0 +1,10 @@
+design,facilities_per_arm_or_total,seasons,power,effect_mean,relative_effect_median,mean_control,mean_lamps
+parallel,5,1,0.258,23.384,0.359,65.041,41.658
+parallel,10,1,0.465,23.247,0.361,65.28,42.034
+parallel,20,1,0.728,22.577,0.352,64.538,41.961
+parallel,40,1,0.958,22.266,0.345,64.297,42.03
+parallel,80,1,1,22.58,0.352,64.358,41.778
+crossover,5,2,0.003,22.762,0.356,64.315,41.553
+crossover,10,2,0.575,22.869,0.348,64.725,41.857
+crossover,20,2,0.868,21.868,0.345,64.007,42.14
+crossover,40,2,0.998,22.988,0.358,64.743,41.756

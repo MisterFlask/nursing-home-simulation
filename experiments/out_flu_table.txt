@@ -1,0 +1,12 @@
+{"closeShare":0.3274,"G":1.2,"emissionMedian":0.507,"trueAR":0.0682,"staffAR":0.1641,"weeksWithCase":0.129}
+{"closeShare":0.2655,"G":0.8,"emissionMedian":0.588,"trueAR":0.0696,"staffAR":0.1684,"weeksWithCase":0.13}
+{"closeShare":0.5151,"G":2.6,"emissionMedian":0.343,"trueAR":0.0691,"staffAR":0.1575,"weeksWithCase":0.134}
+{"closeShare":0.4302,"G":1.8,"emissionMedian":0.42,"trueAR":0.0689,"staffAR":0.1602,"weeksWithCase":0.134}
+{"closeShare":0.5873,"G":3.6,"emissionMedian":0.284,"trueAR":0.0702,"staffAR":0.1556,"weeksWithCase":0.137}
+{"closeShare":0.6576,"G":5,"emissionMedian":0.221,"trueAR":0.0685,"staffAR":0.1527,"weeksWithCase":0.137}
+{"closeShare":0.775,"G":10,"emissionMedian":0.13,"trueAR":0.0687,"staffAR":0.1484,"weeksWithCase":0.137}
+{"closeShare":0.7167,"G":7,"emissionMedian":0.172,"trueAR":0.0683,"staffAR":0.1504,"weeksWithCase":0.137}
+{"closeShare":0.8844,"G":24,"emissionMedian":0.0613,"trueAR":0.0692,"staffAR":0.1464,"weeksWithCase":0.14}
+{"closeShare":0.8357,"G":15,"emissionMedian":0.0921,"trueAR":0.0701,"staffAR":0.1481,"weeksWithCase":0.14}
+{"closeShare":0.9223,"G":40,"emissionMedian":0.0372,"trueAR":0.0679,"staffAR":0.1448,"weeksWithCase":0.139}
+{"closeShare":0.9514,"G":70,"emissionMedian":0.0219,"trueAR":0.0683,"staffAR":0.144,"weeksWithCase":0.138}

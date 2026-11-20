@@ -1,0 +1,86 @@
+{
+ "pathogen": "covid",
+ "scenario": "central",
+ "placement": {
+  "breakroom": 2,
+  "dining-1": 3,
+  "w3-lounge": 1,
+  "w0-lounge": 1,
+  "w2-lounge": 1,
+  "w1-lounge": 1,
+  "w0-station": 1,
+  "office": 1,
+  "dining-2": 1
+ },
+ "poolSize": 2000,
+ "rows": [
+  {
+   "outcome": "resident infections per season",
+   "meanControl": 21.85925,
+   "meanLamps": 19.769,
+   "effect": 2.090250000000001,
+   "relativeEffect": 0.09562313437103291,
+   "sd": 31.187897660131984,
+   "shareOfSeasonsWithValue": 1,
+   "parallelPerArmFor80": 3495,
+   "crossoverTotalFor80": 2955,
+   "simulatedParallelPower": {
+    "20": 0.0425,
+    "40": 0.075,
+    "80": 0.0575,
+    "160": 0.09
+   }
+  },
+  {
+   "outcome": "log(1 + resident infections per season)",
+   "meanControl": 1.8496970863254552,
+   "meanLamps": 1.7463841256457031,
+   "effect": 0.10331296067975204,
+   "relativeEffect": 0.055853988982050046,
+   "sd": 1.688379893561457,
+   "shareOfSeasonsWithValue": 1,
+   "parallelPerArmFor80": 4193,
+   "crossoverTotalFor80": 3200,
+   "simulatedParallelPower": {
+    "20": 0.0375,
+    "40": 0.085,
+    "80": 0.07,
+    "160": 0.0875
+   }
+  },
+  {
+   "outcome": "season has an outbreak of 10+ residents (yes/no)",
+   "meanControl": 0.37,
+   "meanLamps": 0.33725,
+   "effect": 0.03275,
+   "relativeEffect": 0.08851351351351351,
+   "sd": 0.477873738112261,
+   "shareOfSeasonsWithValue": 1,
+   "parallelPerArmFor80": 3343,
+   "crossoverTotalFor80": 2835,
+   "simulatedParallelPower": {
+    "20": 0.06,
+    "40": 0.08,
+    "80": 0.0725,
+    "160": 0.095
+   }
+  },
+  {
+   "outcome": "residents infected per detected outbreak",
+   "meanControl": 34.94424804831345,
+   "meanLamps": 32.644728682170545,
+   "effect": 2.2995193661429028,
+   "relativeEffect": 0.06580537555032286,
+   "sd": 32.82442991543315,
+   "shareOfSeasonsWithValue": 0.551625,
+   "parallelPerArmFor80": 5799,
+   "crossoverTotalFor80": 10594,
+   "simulatedParallelPower": {
+    "20": 0.0525,
+    "40": 0.0775,
+    "80": 0.0725,
+    "160": 0.0925
+   }
+  }
+ ]
+}

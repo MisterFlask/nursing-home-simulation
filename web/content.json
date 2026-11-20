@@ -1,0 +1,202 @@
+{
+  "PRIMARY": [
+    "transmission.closeShare",
+    "lamp.susceptibility",
+    "lamp.realWorldFactor",
+    "importation.arrivalEveryDays",
+    "ventilation.scale",
+    "control.maskCompliance"
+  ],
+  "LAMP_M2": 23.2258,
+  "OMISSIONS": [
+    "Spread by hands and surfaces. It is counted inside the share that room air cleaning cannot reach.",
+    "Infections that spread mainly by hands and surfaces, such as norovirus. Lamps would not be expected to affect them.",
+    "Air moving between rooms through corridors and ducts.",
+    "New residents arriving, and residents going out.",
+    "How ill people become, beyond a fixed share of reported infections ending in a hospital admission. Deaths are not counted, and a resident in hospital stays in the building.",
+    "Catching the same infection twice in one season.",
+    "Ozone and other by-products that far-UVC lamps add to indoor air.",
+    "People behaving differently because lamps are installed."
+  ],
+  "MISMATCH": [
+    "Two published numbers are held fixed: how much virus an infected person breathes out (Mikszewski et al. 2022) and the rate of COVID-19 infections reported by US nursing homes in winter 2023-24 (18.7% of residents in 120 days, CDC). With both fixed, the model infects more residents than homes report unless little spread is at close range. The gap is closed by assuming some resident infections go unreported: about three in ten at the default setting, about half at the cautious one. That share has not been measured well.",
+    "The virus figure is in quanta, a unit that contains an assumed infectious dose. It is uncertain by a factor of 3 to 10 either way, and the range for the out-of-reach share moves with it.",
+    "The out-of-reach share is limited to 25%-55% because outside that range the model matches the CDC figure only with implausible under-reporting. Other models put the share at about 45% to over 70%; values above 55% would mean smaller effects than any shown here.",
+    "The model infects three to four times as many staff as homes report: 34% to 48% in a season, against about 11%. Either staff infections are heavily under-reported or the model overstates them. Staff counts are shown unadjusted.",
+    "One infected staff member arrives every 5 days, on a fixed beat. That rate is our estimate, not a measurement. It was chosen so that the model has a reported resident infection in about as many weeks as US nursing homes did in winter 2023-24: 23% of weeks here, against 15% to 26% of homes in any one week (CDC). Real arrivals are irregular, and visitors and new residents bring infection too. With rarer arrivals the model has fewer, larger outbreaks and lamps prevent more; a slider sets the rate.",
+    "An earlier version produced outbreaks that were too short: about three weeks from first to last case, against about eight in published reports. This has not been rechecked.",
+    "Rooms are treated as evenly mixed and sealed from one another, which tends to flatter air cleaning in small rooms.",
+    "Lamp figures are Illuminate's: how easily far-UVC inactivates the virus, the lamp's output, how far its light travels and how much it must be dimmed. Illuminate works them out for empty rooms of ordinary proportions, here with one to four times one lamp per 250 square feet. Long corridors, odd-shaped rooms and room sizes between those in the table are approximate. On top of that the model counts only three-quarters of the clean air Illuminate computes, which is our judgment.",
+    "RSV is not offered: nursing homes have reported it for too short a time, and no one has measured how much of the virus people breathe out."
+  ],
+  "NOTES": [
+    [
+      "transmission.closeShare",
+      "Face-to-face spread plus spread by hands and surfaces, which is not simulated separately. Moving this re-fits the strength of face-to-face spread. It also changes how many residents the model infects, and so how many infections must go unreported to match CDC's rate: none at 0.23, about half at 0.55, almost three quarters at 0.70. Below 0.23 the model infects fewer residents than homes report. We treat 0.25 to 0.55 as the range the evidence allows. Lamps help less when this share is higher."
+    ],
+    [
+      "emission.median",
+      "From the estimate for SARS-CoV-2 at rest by Mikszewski et al. 2022, whose final paper gives 0.55; the model uses 0.52, from an earlier version. A dose here infects about 63% of people who take it in. Uncertain by a factor of 3 to 10 either way. The out-of-reach range and the share of infections reported were worked out at 0.52 and are not re-fitted when you move this."
+    ],
+    [
+      "emission.activity.social",
+      "Speaking releases about five times as much virus as quiet breathing (Mikszewski et al. 2022). Set to 2 because residents in shared rooms speak only part of the time, and so that the published virus output and the CDC infection rate can both hold. Applies to residents outside their room, visitors and staff on break."
+    ],
+    [
+      "emission.activity.work",
+      "Set to 5, the same as continuous talking: care work is light activity with intermittent talking."
+    ],
+    [
+      "immune.protection",
+      "Set to 0.5, the top of our range, so that the published virus output and the CDC infection rate can both hold. Past infection protected about 36-45% against reinfection, waning over months (COVID-19 Forecasting Team 2023); fewer than a third of residents had the latest vaccine."
+    ],
+    [
+      "immune.protectionStaff",
+      "Set to 0.5, as for residents."
+    ],
+    [
+      "severity.pHospital",
+      "US nursing homes reported 5.8 COVID-19 hospital admissions for every 109.3 reported infections in winter 2023-24: 5.3% (Franklin et al. 2024). Other estimates run from about 4% (English care homes, early 2022) to about 6.5% (US, October 2024). Applied to reported infections only, however the resident was infected."
+    ],
+    [
+      "lamp.pathFactor",
+      "Illuminate, the lamp-planning tool from OSLUV, gives the average distance a wall-mounted lamp's light travels through a room's air. Angled down, that is about 3.6 metres in a single bedroom and 6.2 in a dining room; pointed straight across, about 2.4 and 5.3. This slider scales the figure, since furniture and people may shorten or lengthen it."
+    ],
+    [
+      "lamp.followMountingRule",
+      "Illuminate's exposure check (ANSI/IES RP-27.1-22, with the ACGIH limits) finds how far each room's lamps must be dimmed so that no point at head height gets more than the limit in 8 hours. It allows a lamp angled down full output under ceilings of 2.7 m or more, about 90% at 2.6 m, about half at 2.4 m and about 30% at 2.3 m. That agrees with the maker's mounting rule once the lamp is taken to hang 10 cm below the ceiling. Pointed straight across the room, a lamp may run at about 90% at 2.4 m and about 60% at 2.3 m. More lamps in a room mean a little more dimming for each. Turning this off overstates what a compliant installation delivers."
+    ],
+    [
+      "ventilation.scale",
+      "Outdoor air plus filtered air supplied to a room, counted in room-volumes an hour. This slider moves every room together. At the default, bedrooms get 1.5, corridors and nurses' stations 2, dining rooms and lounges 3, the therapy room 4 and the staff break room 1. Those defaults are our judgment. They sit below the design minimums (2 for bedrooms, 4 for most shared rooms; ASHRAE 170) because older buildings often fall short. Each kind of room has its own slider under Building."
+    ],
+    [
+      "control.maskCompliance",
+      "Staff wear no masks day to day. All working staff wear surgical masks while outbreak measures are in force, except in the break room: from the day after the first person with symptoms on any wing until 14 days after the latest. In a default COVID-19 winter that is about three days in four. This slider scales the mask's effect during those periods. 0.7 is within the 50-90% range used in transmission studies; masks slip down to talk, eat or drink."
+    ]
+  ],
+  "LABELS": [
+    [
+      "lamp.pathFactor",
+      "How far a lamp's light travels, compared with Illuminate's figure",
+      "times Illuminate's figure"
+    ],
+    [
+      "lamp.aimAcross",
+      "Where the wall lamps point",
+      "",
+      [
+        "Angled down",
+        "Straight across the room"
+      ]
+    ],
+    [
+      "lamp.followMountingRule",
+      "Dim lamps to stay within exposure limits",
+      "",
+      [
+        "No",
+        "Yes"
+      ]
+    ],
+    [
+      "ventilation.scale",
+      "Ventilation, in air changes an hour",
+      ""
+    ],
+    [
+      "control.maskCompliance",
+      "During outbreak measures, share of the time staff wear their masks",
+      "share (0 to 1)"
+    ],
+    [
+      "lamp.susceptibility",
+      "How easily far-UV light kills the virus in the air",
+      "cm²/mJ"
+    ]
+  ],
+  "NOTES_FLU": [
+    [
+      "transmission.closeShare",
+      "Face-to-face spread plus spread by hands, surfaces and large droplets, which are not simulated separately and are thought to matter more for influenza than for COVID-19. Moving this re-fits both the strength of face-to-face spread and the virus breathed out, so the model still infects about 6.9% of residents a season. Range 35% to 85%: a hospital study of ultraviolet air disinfection in the 1957-58 pandemic points to the low end (McLean, in Tellier 2006), a risk model of the routes to the high end (Nicas & Jones 2009), and a household study put about half of spread in aerosols (Cowling et al. 2013)."
+    ],
+    [
+      "emission.activity.social",
+      "Speaking releases about five times as much virus as quiet breathing (Mikszewski et al. 2022). Set to 2, as for COVID-19, because residents in shared rooms speak only part of the time. Applies to residents outside their room, visitors and staff on break."
+    ],
+    [
+      "emission.activity.work",
+      "Set to 5, the same as continuous talking: care work is light activity with intermittent talking."
+    ],
+    [
+      "immune.protection",
+      "About 58% of residents were vaccinated in 2025-26, and the vaccine was about 30% effective in people over 65 that season (CDC). A little is added for past infection."
+    ],
+    [
+      "immune.protectionStaff",
+      "About 40% of nursing home staff were vaccinated in 2025-26, and the vaccine was about 35% effective in working-age adults (CDC). Some is added for past infection."
+    ],
+    [
+      "severity.pHospital",
+      "US nursing homes reported about one hospital admission for every five reported influenza infections in both 2024-25 and 2025-26 (CDC NHSN). That is about four times the COVID-19 figure; part of the gap is that milder influenza is tested for less often. Applied to reported infections only, however the resident was infected."
+    ],
+    [
+      "disease.latent.mean",
+      "0.9 days in US households (Chan et al. 2025)."
+    ],
+    [
+      "disease.presymptomatic.mean",
+      "0.7 days in US households. About 16% of influenza spread happens before symptoms, against about half for COVID-19 (Chan et al. 2025)."
+    ],
+    [
+      "disease.infectious.mean",
+      "Infectiousness falls from the first day of symptoms, so 3 days here is worth about 2 days at full strength, the figure fitted to US household data (Chan et al. 2025). Virus can be detected for nearly 5 days (Carrat et al. 2008), but the tail spreads little. No one has measured this in frail older people."
+    ],
+    [
+      "disease.asymRelInf",
+      "In 727 Hong Kong households during the 2009 pandemic, infected people without symptoms were 0.57 times as infectious as those with symptoms. The 95% interval runs from 0.11 to 1.54, so the study cannot rule out that they are equally infectious (Tsang et al. 2023)."
+    ],
+    [
+      "disease.pSymptomatic.resident",
+      "No study of influenza without symptoms in older adults was found. Set as for COVID-19."
+    ],
+    [
+      "disease.pSymptomatic.staff",
+      "Among healthcare workers, about 40% of influenza infections in the unvaccinated and 75% in the vaccinated had symptoms (Kuster et al. 2011). One hospital study found far fewer with clear symptoms (Bénet et al. 2021). In Hong Kong households in 2009, 60% of infected adults had at least one symptom (Tsang et al. 2023)."
+    ],
+    [
+      "control.staffExclusion.exclusionDays",
+      "CDC advises that staff with influenza stay off work until at least a day after their fever ends. Five days is our allowance for that."
+    ],
+    [
+      "control.outbreakMode.outbreakDays",
+      "CDC advises keeping outbreak measures for at least 7 days after the latest confirmed case."
+    ],
+    [
+      "emission.gsd",
+      "In the published estimate, influenza varies less between people than SARS-CoV-2 (Mikszewski et al. 2022). The heaviest shedder measured (Bueno de Mesquita et al. 2020) is far beyond what this spread allows, so it may be too narrow."
+    ],
+    [
+      "control.maskCompliance",
+      "Staff wear no masks day to day. All working staff wear surgical masks while outbreak measures are in force, except in the break room: from the day after the second case within three days on a wing until 7 days after the latest. In a default influenza winter that is under a tenth of days. This slider scales the mask's effect during those periods. 0.7 is within the 50-90% range used in transmission studies; masks slip down to talk, eat or drink."
+    ]
+  ],
+  "INTRO": [
+    "Where studies support a range, the slider spans it. Otherwise the value and its range are our judgment, and the source line says so. The first six matter most. Three settings were moved to make the model fit. With the published figure for the virus a person breathes out, the model infects more residents than nursing homes report to CDC. To close part of that gap, residents are taken to talk less than studies suggest (2 times their resting output, not 5), staff at work to breathe out less (5 times, the bottom of our range) and existing immunity to protect more (0.5, the top of our range)."
+  ],
+  "INTRO_FLU": [
+    "Where studies support a range, the slider spans it. Otherwise the value and its range are our judgment, and the source line says so. The first six matter most. Influenza rests on weaker ground than COVID-19. Nursing homes have reported it to CDC only since 2025, and the published figure for the virus a person breathes out is too low to produce the influenza they report, so the model fits that figure."
+  ],
+  "MISMATCH_FLU": [
+    "Two things are held fixed: the rate of influenza infections reported by US nursing homes in winter 2025-26 (2.3% of residents in 120 days; our calculation from CDC's NHSN data, the first complete season of reporting) and one infected staff member arriving every 8 days. The winter before was worse, at about 4%.",
+    "The published estimate of the virus a person with influenza breathes out (0.035 quanta an hour at rest, Mikszewski et al. 2022) gives the model less than a third of the infections homes report. So the model fits that number: 0.27 at the default share, about eight times the published figure. Published estimates run from 0.035 to 0.17 for a typical person and into the hundreds for the heaviest shedders. The published figure fits the reported infections only if about 92% of spread is out of the lamps' reach, in which case lamps would do little.",
+    "The model assumes one influenza infection in three is reported. No study has measured this in nursing homes; 3 is our choice from a range of 2 to 5.",
+    "The out-of-reach share is less certain for influenza than for COVID-19: 35% to 85%, with 60% as our central value. Hands, surfaces and large droplets are thought to matter more for influenza. A hospital study of ultraviolet air disinfection in the 1957-58 pandemic points to the low end; a risk model of the routes points to the high end.",
+    "How easily far-UVC inactivates airborne influenza has been measured twice, and the results differ eleven-fold (1.8 and 19 in Illuminate's table). The default, 10.4, is their midpoint, following Illuminate's rule of taking the median. No measurement sits near it.",
+    "Antiviral prophylaxis is not modelled. CDC advises oseltamivir for the residents of a unit once two cases are confirmed there. Where that is done promptly it prevents some of the same infections lamps would, so the lamp effect is overstated for those homes. In usual practice it is given in a minority of seasons.",
+    "In the model about a quarter of seasons see a tenth or more of residents infected, and a typical one of those reaches 14%. Published outbreak reports give 33%, but they favour large outbreaks.",
+    "With about 2.6 reported infections a season among 112 residents, 200 simulated seasons leave the percentages uncertain by a few points.",
+    "Rooms are treated as evenly mixed and sealed from one another, which tends to flatter air cleaning in small rooms.",
+    "Lamp figures are Illuminate's: how easily far-UVC inactivates the virus, the lamp's output, how far its light travels and how much it must be dimmed. Illuminate works them out for empty rooms of ordinary proportions, here with one to four times one lamp per 250 square feet. Long corridors, odd-shaped rooms and room sizes between those in the table are approximate. On top of that the model counts only three-quarters of the clean air Illuminate computes, which is our judgment."
+  ]
+}
