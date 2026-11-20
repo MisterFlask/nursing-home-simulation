@@ -736,7 +736,7 @@ function splitModel() {
     P(`Influenza uses the same face-to-face strength as COVID-19 in each case, and the virus breathed out is fitted to the influenza infections homes report. Its non-room-air spread then comes out at ${three([fl.low, fl.central, fl.high])}. The model's influenza differs from its COVID-19 in how long people are infectious, how much they differ from one another and how homes respond, and the split follows from all of that.`));
 }
 function splitOpen() {
-  filmPlay(false); setPlaying(false); splitModel();
+  filmPlay(false); setPlaying(false); splitModel(); if ($('#note').open) $('#note').close();
   const d = $('#split'); if (d.open) return;
   if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
   d.scrollTop = 0;

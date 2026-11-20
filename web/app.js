@@ -70,6 +70,30 @@ const hidden = (path) => HIDE.includes(path) || (HIDE_FOR[state.pathogen] || [])
 const NOTES = Object.fromEntries(/*__NOTES__*/[]);
 const NOTES_FLU = Object.fromEntries(/*__NOTES_FLU__*/[]);   // the same, where influenza needs its own wording
 const LABELS = Object.fromEntries((/*__LABELS__*/[]).map(([path, label, units, choices]) => [path, { label, units, choices }]));   // the page's wording where the lamp model differs from the engine's default
+const BRIEF = Object.fromEntries(/*__BRIEF__*/[]);   // one or two sentences saying what a setting is, for those whose full note is longer; the full note then opens in a dialog
+// What sits under a slider: the short description with a link to the full note, or the note itself where it is short.
+function noteBlock(p) {
+  const full = noteFor(p), short = BRIEF[p.path];
+  if (!full && !short) return [];
+  if (!short || !full) return [el('div', { class: 'n' }, short || full)];
+  return [el('div', { class: 'n' }, short), el('div', { class: 'n' }, el('button', { type: 'button', class: 'linkbtn noteopen', 'data-path': p.path }, 'More about this setting'))];
+}
+// The full note, in a dialog: the reasoning, the range and the source.
+function noteOpen(path) {
+  const p = Sim.PARAMS.find((x) => x.path === path); if (!p) return;
+  const lab = LABELS[p.path] || p, src = sourceFor(p), { lo, hi, def } = paramBounds(p), body = $('#notebody');
+  $('#notetitle').textContent = lab.label; body.textContent = '';
+  if (BRIEF[path] && !noteFor(p).startsWith(BRIEF[path].slice(0, 40))) body.append(el('p', {}, BRIEF[path]));   // not twice, where the note opens with the same words
+  body.append(el('p', {}, noteFor(p)));
+  if (path === 'transmission.closeShare') body.append(el('p', {}, el('button', { type: 'button', class: 'linkbtn splitopen' }, 'How were these numbers chosen?')));
+  if (!lab.choices) body.append(el('p', { class: 'small muted' }, path === 'ventilation.scale' ? `Range: ${fmt(lo)} to ${fmt(hi)} times the default.` : `Range: ${fmt(lo)} to ${fmt(hi)}${lab.units ? ' ' + lab.units : ''}. Default: ${fmt(def)}.`));
+  if (src && src.text) body.append(el('p', { class: 'small muted' }, 'Source: ', src.url ? el('a', { href: src.url, target: '_blank', rel: 'noopener' }, src.text) : src.text));
+  const d = $('#note'); if (!d.open) { if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', ''); }
+  d.scrollTop = 0;
+}
+document.addEventListener('click', (e) => { const b = e.target.closest && e.target.closest('.noteopen'); if (b) noteOpen(b.dataset.path); });
+$('#noteclose').addEventListener('click', () => $('#note').close());
+$('#note').addEventListener('click', (e) => { if (e.target === $('#note')) $('#note').close(); });   // a click on the backdrop closes it
 // The note under a slider. A judgment value already says so on its source line, so the note keeps only the reasoning.
 function noteFor(p) {
   const by = state.pathogen !== 'covid' && p.byPathogen && p.byPathogen[state.pathogen];
@@ -977,7 +1001,7 @@ function sliderRow(p) {
   row.append(...[
     el('div', { class: 'l' }, el('label', { for: id }, lab.label), out), range,
     el('div', { class: 'm' }, el('span', {}, p.path === 'ventilation.scale' ? `range ${fmt(lo)}–${fmt(hi)} times the default` : `range ${fmt(lo)}–${fmt(hi)} · default ${fmt(def)}`), reset),
-    noteFor(p) ? el('div', { class: 'n' }, noteFor(p)) : null,
+    ...noteBlock(p),
     p.path === 'transmission.closeShare' ? el('div', { class: 'n' }, el('button', { type: 'button', class: 'linkbtn splitopen' }, 'How were these numbers chosen?')) : null,
     src && src.text ? el('div', { class: 'src' }, 'Source: ', src.url ? el('a', { href: src.url, target: '_blank', rel: 'noopener' }, src.text) : src.text) : null].filter(Boolean));
   return row;
@@ -995,7 +1019,7 @@ function choiceRow(p, lab, id, def) {
   row.append(...[
     el('div', { class: 'l' }, el('span', { class: 'lbl', id: id + '-l' }, lab.label)), seg,
     el('div', { class: 'm' }, el('span', {}, 'default: ' + lab.choices[def].toLowerCase()), el('button', { type: 'button', onclick: () => set(def) }, 'reset')),
-    noteFor(p) ? el('div', { class: 'n' }, noteFor(p)) : null,
+    ...noteBlock(p),
     sourceFor(p) && sourceFor(p).text ? el('div', { class: 'src' }, 'Source: ', sourceFor(p).url ? el('a', { href: sourceFor(p).url, target: '_blank', rel: 'noopener' }, sourceFor(p).text) : sourceFor(p).text) : null].filter(Boolean));
   paint();
   return row;

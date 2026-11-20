@@ -208,5 +208,115 @@
     "With about 2.6 reported infections a season among 112 residents, 200 simulated seasons leave the percentages uncertain by a few points.",
     "Rooms are treated as evenly mixed and sealed from one another, which tends to flatter air cleaning in small rooms.",
     "Lamp figures are Illuminate's: how easily far-UVC inactivates the virus, the lamp's output, how far its light travels and how much it must be dimmed. Illuminate works them out for empty rooms of ordinary proportions, here with one to four times one lamp per 250 square feet. Long corridors, odd-shaped rooms and room sizes between those in the table are approximate. On top of that the model counts only three-quarters of the clean air Illuminate computes, which is our judgment."
+  ],
+  "BRIEF": [
+    [
+      "transmission.closeShare",
+      "Spread that reaches a person up close or by hands and surfaces, before far-UVC can act. The rest is room-air spread, which lamps and ventilation remove."
+    ],
+    [
+      "emission.median",
+      "Counted in infectious doses an hour, for a typical infected person breathing quietly. One dose infects about 63% of the people who take it in."
+    ],
+    [
+      "emission.gsd",
+      "A few people breathe out most of the virus. A larger number here means a wider gap between a typical person and the heaviest emitters."
+    ],
+    [
+      "emission.activity.social",
+      "How many times more virus a person breathes out while talking than at rest. It applies to residents outside their room, visitors and staff on break."
+    ],
+    [
+      "transmission.beta.care",
+      "How fast the pocket of air between a carer and a resident is flushed. Lower values mean riskier close contact."
+    ],
+    [
+      "transmission.roommateHours",
+      "Time each day that roommates are close enough to count as face to face, on top of sharing their room's air."
+    ],
+    [
+      "air.decay",
+      "The rate at which airborne virus loses its ability to infect by itself, before lamps or ventilation are counted."
+    ],
+    [
+      "importation.arrivalEveryDays",
+      "One staff member, infected outside work, arrives on a fixed beat. This is how infection enters the home in the model."
+    ],
+    [
+      "lamp.susceptibility",
+      "How much of the airborne virus a given amount of far-UVC light inactivates. A higher value means lamps clean the air faster."
+    ],
+    [
+      "lamp.aimAcross",
+      "Lamps are mounted high on the walls. They can be angled down into the room or pointed straight across it."
+    ],
+    [
+      "lamp.pathFactor",
+      "Scales the average distance a lamp's light travels through a room's air. A longer path means more air is cleaned."
+    ],
+    [
+      "lamp.followMountingRule",
+      "Whether each room's lamps are dimmed so that no point at head height gets more than the exposure limit in 8 hours."
+    ],
+    [
+      "lamp.bedroomShare",
+      "How far bedroom lamps are turned down because residents spend much longer than 8 hours a day there. At 1 they run as in any other room."
+    ],
+    [
+      "lamp.realWorldFactor",
+      "The lamp calculation assumes an empty, evenly mixed room. This is the share of that clean air counted in a real one."
+    ],
+    [
+      "transmission.nearFieldUV",
+      "How much lamps reduce the dose passed directly between two people who are face to face. Zero means not at all."
+    ],
+    [
+      "ventilation.scale",
+      "Outdoor air plus filtered air supplied to a room, counted in room-volumes an hour. This slider moves every room together."
+    ],
+    [
+      "facility.ach.bedroom",
+      "Outdoor air plus filtered air supplied to each bedroom, counted in room-volumes an hour."
+    ],
+    [
+      "people.mobility.communal",
+      "Residents who leave their rooms for meals and activities. The three resident shares are scaled to add up to one."
+    ],
+    [
+      "staff.careMinutes",
+      "How long a carer stays with a resident on each visit for washing, dressing and similar help."
+    ],
+    [
+      "disease.presymptomatic.mean",
+      "The average time an infected person can pass the virus on before they feel ill."
+    ],
+    [
+      "disease.infectious.mean",
+      "The average time a person stays infectious once their symptoms have started."
+    ],
+    [
+      "disease.pSymptomatic.resident",
+      "Of the residents who are infected, the share who feel ill. The rest are infected without symptoms."
+    ],
+    [
+      "disease.pSymptomatic.staff",
+      "Of the staff who are infected, the share who feel ill. The rest are infected without symptoms."
+    ],
+    [
+      "disease.asymRelInf",
+      "An infected person who never has symptoms breathes out this fraction of the virus that a person with symptoms does."
+    ],
+    [
+      "severity.pHospital",
+      "The share of reported resident infections that end in a hospital admission. It is the same however the resident was infected."
+    ],
+    [
+      "immune.protection",
+      "How much protection from past infection and vaccines lowers the dose that counts for a resident. At 0.5 the dose is halved."
+    ],
+    [
+      "control.maskCompliance",
+      "Staff wear surgical masks only while outbreak measures are in force. This slider scales the mask's effect during those periods."
+    ]
   ]
 }

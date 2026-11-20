@@ -173,6 +173,7 @@ a:hover { text-decoration-color: currentColor; }
 .linkbtn:hover { color: var(--ink); }
 .linkbtn:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 3px; }
 dialog.explain { width: min(780px, calc(100vw - 32px)); max-height: min(88vh, 920px); padding: 0; border: 1px solid var(--hair-2); border-radius: 10px; background: var(--surface); color: var(--ink); box-shadow: 0 24px 70px rgba(20, 22, 31, .4); }
+dialog#note { width: min(620px, calc(100vw - 32px)); }
 dialog.explain::backdrop { background: rgba(20, 22, 31, .5); }
 .explain .xhd { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 20px; background: var(--surface); border-bottom: 1px solid var(--hair); }
 .explain .xhd h2 { font: 650 18px/1.2 var(--f-display); font-stretch: 108%; text-wrap: balance; }
@@ -614,6 +615,10 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
 <dialog id="explain" class="explain" aria-labelledby="explaintitle">
   <div class="xhd"><h2 id="explaintitle">How the chance of infection is worked out</h2><button type="button" class="btn" id="explainclose">Close</button></div>
   <div class="xbd" id="explainbody"><p>Preparing one simulated winter…</p></div>
+</dialog>
+<dialog id="note" class="explain" aria-labelledby="notetitle">
+  <div class="xhd"><h2 id="notetitle">About this setting</h2><button type="button" class="btn" id="noteclose">Close</button></div>
+  <div class="xbd" id="notebody"></div>
 </dialog>
 <dialog id="split" class="explain" aria-labelledby="splittitle">
   <div class="xhd"><h2 id="splittitle">Room-air spread and non-room-air spread: how the numbers were chosen</h2><button type="button" class="btn" id="splitclose">Close</button></div>

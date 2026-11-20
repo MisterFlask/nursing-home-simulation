@@ -16,7 +16,7 @@ decision and experiment; read its last few sections before changing anything. `S
 | `src/analysis.js` | Cautious / central / favourable scenarios, lamp allocation |
 | `web/app.html`, `web/app.js` | Page shell (with the owner's document on non-room-air spread, dialog `#split`) and the Model tab |
 | `web/film.js` | The film, the "How is the chance of infection worked out?" explainer, and the simulator's section of the second explainer |
-| `web/content.json` | Page text injected at build: slider labels, notes, limits, intro |
+| `web/content.json` | Page text injected at build: slider labels, notes (`NOTES`), their one-or-two-sentence descriptions (`BRIEF`), limits, intro |
 | `web/film*.json`, `web/captions.json`, `web/narration.json` | Generated film data, captions and audio (committed) |
 | `web/build.mjs` | Builds `dist/index.html`, `dist/publish/index.html` and `shots/page.html` |
 | `test/` | Unit tests, including agreement with Illuminate (`illuminate-check.json`) |
@@ -36,6 +36,7 @@ node shots/err.mjs            # page loads without errors (needs Playwright, see
 node shots/v1.mjs             # tabs, with and without a worker, phone width
 node shots/a2.mjs             # arrival-rate slider drives the results
 node shots/s1.mjs             # the "how the numbers were chosen" explainer opens and fits a phone
+node shots/n5.mjs             # slider text is short; the full note opens in a dialog
 node shots/f1.mjs 20 64 118   # film frames at those seconds -> shots/f-<t>.png
 ```
 
@@ -86,6 +87,9 @@ a link (the owner asked for this on 20 November 2026).
 - **`web/content.json` keys need placeholders.** Every key must have a matching `/*__KEY__*/[]` (or `''`) in
   `web/app.js` or `web/film.js`, or the build stops.
 - **Every film frame is a pure function of film time.** No state carried between frames; the narration is the clock.
+- **Slider text stays short.** Under a slider goes one or two sentences saying what the setting is. A note longer than
+  that needs a `BRIEF` entry in `web/content.json`; the full note then opens from "More about this setting"
+  (`node shots/n5.mjs` reports the longest text under any slider).
 - **Page text is plain language**, in complete sentences, for a reader who is not a modeller. Citations name the
   source and what it says; they never describe how the text was found. Say plainly when a value is our judgment.
 - **Claims.** The owner's stance: state true facts about what we believe and why, including the unflattering ones
