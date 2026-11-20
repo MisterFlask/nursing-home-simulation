@@ -398,7 +398,7 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
   <div class="view" id="view-film" role="tabpanel" aria-labelledby="tab-film">
   <section class="panel film">
     <div class="hd">
-      <h2>Why have a simulation?</h2>
+      <h2>Introduction</h2>
     </div>
     <div class="bd">
       <div class="filmintro">
@@ -483,7 +483,7 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
     <div class="col">
     <div class="panel" id="results">
       <div class="hd">
-        <h2>What the model reports</h2>
+        <h2>Results</h2>
         <span class="small muted num" id="runstat"></span>
       </div>
       <div class="bd">
@@ -498,13 +498,13 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
         </div>
 
         <div class="block">
-          <h3>What the lamps can reach</h3>
+          <h3>Infections by route</h3>
           <svg class="chart" id="reach" viewBox="0 0 520 190" role="img" aria-label="Reported resident infections by how they were caught, through room air or face to face: without lamps, with lamps in the common areas, and with lamps in the common areas and bedrooms"></svg>
           <p class="cap">Reported infections among residents in an average season, by how they were caught, at the current settings. Lamps act on the air of shared rooms and on nothing else. The face-to-face side falls only because fewer people are infectious. <button type="button" class="linkbtn splitopen">How was the split between the two chosen?</button></p>
         </div>
 
         <div class="block">
-          <h3>The range, and what sets its ends</h3>
+          <h3>Sensitivity analysis</h3>
           <div class="legend" id="dumbleg"></div>
           <svg class="chart" id="dumb" viewBox="0 0 520 188" role="img" aria-label="Average reported resident infections at the two ends of the range and at the central assumptions"></svg>
           <p class="cap" id="dumbcap"></p>
@@ -517,10 +517,10 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
       </div>
     </div>
     <div class="panel">
-      <div class="hd"><h2>Where infection spreads when there are no lamps</h2></div>
+      <div class="hd"><h2>Baseline: where infection spreads</h2></div>
       <div class="bd">
         <div class="block">
-          <h3>How people caught it</h3>
+          <h3>Transmission routes</h3>
           <div class="segbar" id="routes"></div>
           <div class="legend">
             <span><i class="sq" style="background:var(--close)"></i>At close range</span>
@@ -531,7 +531,7 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
         </div>
 
         <div class="block">
-          <h3>Rooms where people caught it through shared air</h3>
+          <h3>Room-air infections by room type</h3>
           <div class="rank" id="rank"></div>
           <p class="cap">Average per season, all rooms of each type together.</p>
         </div>
@@ -543,7 +543,7 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
 
   <section class="panel" id="placepanel">
     <div class="hd">
-      <h2>Place lamps room by room</h2>
+      <h2>Lamp placement</h2>
       <span class="count" id="placecount"></span>
     </div>
     <div class="bd">
@@ -555,7 +555,7 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
         </div>
         <div class="block" style="gap:16px">
           <div class="block">
-            <h3>Start from</h3>
+            <h3>Presets</h3>
             <div class="seg wrapseg" role="group" aria-label="Start from a standard choice" id="presets"></div>
             <p class="small muted" style="max-width:75ch">Common areas are every room except the bedrooms: dining rooms, activity room, wing lounges, therapy room, corridors, lobby, kitchen, office and staff break room. Each standard choice puts one lamp per 250 square feet of floor (23 square metres) in every room it covers, with at least one per room.</p>
           </div>
@@ -578,7 +578,7 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
   </section>
   <section class="panel">
     <div class="hd">
-      <h2>Every assumption in the model</h2>
+      <h2>Model assumptions</h2>
       <div class="toolbar">
         <button type="button" class="btn" id="resetall">Reset all to defaults</button>
         <button type="button" class="btn" id="copy">Copy settings as JSON</button>
@@ -593,19 +593,19 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
   </section>
 
   <section class="panel">
-    <div class="hd"><h2>Limits</h2></div>
+    <div class="hd"><h2>Limitations</h2></div>
     <div class="bd limits">
       <div>
-        <h3>What these numbers are</h3>
+        <h3>Interpretation</h3>
         <p>These are results of a computer model: what follows from the assumptions above. They are not measurements of what lamps do in a real care home, and they say nothing about any one person's health. Hospital admissions are a fixed share of reported infections, taken from national reporting, so they add no evidence of their own.</p>
         <p>We know of no completed randomised trial showing that far-UVC lamps reduce infections in care homes. The one randomised trial of ultraviolet air cleaning in care homes, which used a different kind of UV device in Australia, found no significant reduction in respiratory infections. The one study of far-UVC lamps in a care home was not randomised and was funded by a manufacturer. Whether these lamps reduce infections is an open question that this model cannot settle.</p>
       </div>
       <div>
-        <h3>Where it does not match real care homes</h3>
+        <h3>Known discrepancies</h3>
         <ul id="mismatch"></ul>
       </div>
       <div>
-        <h3>Left out</h3>
+        <h3>Not modelled</h3>
         <ul id="omissions"></ul>
       </div>
     </div>
@@ -613,7 +613,7 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
   </div>
 </div>
 <dialog id="explain" class="explain" aria-labelledby="explaintitle">
-  <div class="xhd"><h2 id="explaintitle">How the chance of infection is worked out</h2><button type="button" class="btn" id="explainclose">Close</button></div>
+  <div class="xhd"><h2 id="explaintitle">Infection risk calculation</h2><button type="button" class="btn" id="explainclose">Close</button></div>
   <div class="xbd" id="explainbody"><p>Preparing one simulated winter…</p></div>
 </dialog>
 <dialog id="note" class="explain" aria-labelledby="notetitle">
@@ -677,7 +677,7 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
       <li><b>The calculation is untested.</b> It treats each room as evenly mixed, and no experiment has measured this split in a nursing home.</li>
       <li><b>The same multiple is applied in every setting.</b> The roommate and common-room droplet and contact doses were scaled by the same factor as hands-on care. That is an assumption.</li>
     </ul>
-    <h3>How the simulator uses these numbers</h3>
+    <h3>Implementation in the simulator</h3>
     <div id="splitmodel" class="splitmodel"></div>
     <h3>Sources</h3>
     <ul class="pts">

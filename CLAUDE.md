@@ -90,6 +90,8 @@ a link (the owner asked for this on 20 November 2026).
 - **Slider text stays short.** Under a slider goes one or two sentences saying what the setting is. A note longer than
   that needs a `BRIEF` entry in `web/content.json`; the full note then opens from "More about this setting"
   (`node shots/n5.mjs` reports the longest text under any slider).
+- **Headings are short conventional labels** (Results, Sensitivity analysis, Limitations, Not modelled), not
+  descriptions of the section. The plain-language rule below is for body text.
 - **Page text is plain language**, in complete sentences, for a reader who is not a modeller. Citations name the
   source and what it says; they never describe how the text was found. Say plainly when a value is our judgment.
 - **Claims.** The owner's stance: state true facts about what we believe and why, including the unflattering ones
