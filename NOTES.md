@@ -1092,3 +1092,9 @@ https://claude.ai/artifact/J6LQJE4TpgcXPqo7qNByad) replaces the earlier proposal
   areas and 72 in the bedrooms). The totals were there before in small grey type. No caption changed, so the narration
   is still valid; the totals are shown, not spoken.
 - Not published and not on `main`. The owner has not yet said whether either picture stays.
+- **Hover on the plan** (`personTip` in `web/app.js`). A resident's tip now says which of the three types they are
+  (mobile, room-oriented, bedbound) and whether they share a bedroom. Once a person is infected in the run being
+  shown, it adds what the model drew for them: when, how, from whom and where they caught it, the days they are
+  infectious, whether and when symptoms start, how much virus they breathe out against the typical amount, and
+  whether immunity cut their dose. The replay message from the worker carries `mobility`, `roommate`, `traits` and,
+  per run, `how`.

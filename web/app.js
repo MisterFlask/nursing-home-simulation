@@ -493,7 +493,9 @@ function workerMain(post, tick, chunk) {
       const g = e.day * 48 + e.slot;
       tE[e.person] = g; tI[e.person] = g + tr.latent[e.person]; tR[e.person] = tI[e.person] + tr.presym[e.person] + tr.infDur[e.person];
     }
-    return { events: r.events.map((e) => ({ g: e.day * 48 + e.slot, route: e.route, roomId: e.roomId })), newResident: Array.from(r.daily.newResident), loc, tE, tI, tR, conc: withAir ? r.frames.conc : null };
+    const how = new Array(N).fill(null);   // how each person was infected in this run, for the plan's hover text
+    for (const e of r.events) if (e.person != null && e.person < N) how[e.person] = { route: e.route, roomId: e.roomId, source: e.source };
+    return { how, events: r.events.map((e) => ({ g: e.day * 48 + e.slot, route: e.route, roomId: e.roomId })), newResident: Array.from(r.daily.newResident), loc, tE, tI, tR, conc: withAir ? r.frames.conc : null };
   }
   return async (ev) => {
     const m = ev.data;
@@ -507,6 +509,8 @@ function workerMain(post, tick, chunk) {
         const T = m.config.days * 48;
         post({ type: 'replay', seed, N: world.people.length, T, roomIds: world.rooms.map((r) => r.id),
           staff: world.people.map((p) => p.role !== 'resident'), home: world.people.map((p) => p.homeRoom), roles: world.people.map((p) => p.role), wings: world.people.map((p) => p.wing), outside: world.outside,
+          mobility: world.people.map((p) => p.mobility || null), roommate: world.people.map((p) => (p.roommate >= 0 ? 1 : 0)),
+          traits: { q: Array.from(world.traits.q), symptomatic: Array.from(world.traits.symptomatic), immune: Array.from(world.traits.immune), s: Array.from(world.traits.s), presym: Array.from(world.traits.presym) }, qMedian: m.config.emission.median,
           arms: Object.fromEntries(Object.entries(m.arms).map(([k, lamps]) => [k, replayArm(world, lamps, T)])) });
       } else if (m.type === 'film') {
         // The film's season: as a replay, plus the air in every room and who sits at which table.
@@ -867,10 +871,25 @@ function buildPeople() {
   Object.assign(walkers, { x: new Float32Array(N), y: new Float32Array(N), room: new Int16Array(N), queued: new Int16Array(N).fill(-1), depart: new Float32Array(N), path: new Array(N).fill(null), seg: new Int16Array(N), vis: new Uint8Array(N), slot: -1 });
 }
 function personState(p, g) { const D = armNow(); return g < D.tE[p] ? 'st-s' : g < D.tI[p] ? 'st-e' : g < D.tR[p] ? 'st-i' : 'st-r'; }
+// What the plan says about a person under the pointer: who they are, what kind of resident, and, once they are
+// infected in the run being shown, the traits the model drew for them and how they caught it.
+const MOBILITY_TIP = { communal: 'Mobile: eats in the dining room and joins group activities', limited: 'Room-oriented: eats in their own room and rarely leaves it', roombound: 'Bedbound: stays in their own room' };
 function personTip(p) {
-  const role = ROLE_LABEL[replayData.roles[p]] || 'Staff', w = replayData.wings[p];
-  const st = { 'st-s': 'not infected', 'st-e': 'infected, not yet infectious', 'st-i': 'infectious', 'st-r': 'recovered' }[personState(p, state.g)];
-  return role + (w >= 0 ? ' · Wing ' + 'ABCD'[w] : '') + ' · ' + st;
+  const D = replayData, A = armNow(), g = state.g, role = ROLE_LABEL[D.roles[p]] || 'Staff', w = D.wings[p], cls = personState(p, g);
+  const st = { 'st-s': 'not infected', 'st-e': 'infected, not yet infectious', 'st-i': 'infectious', 'st-r': 'recovered' }[cls];
+  const lines = [role + (w >= 0 ? ' · Wing ' + 'ABCD'[w] : '') + ' · ' + st];
+  if (D.mobility && D.mobility[p]) lines.push(MOBILITY_TIP[D.mobility[p]] + (D.roommate[p] ? '. Shares a bedroom.' : '. Has a single bedroom.'));
+  if (cls === 'st-s' || !D.traits) return lines.join('\n');
+  const day = (t) => 'day ' + (Math.floor(t / 48) + 1), h = A.how && A.how[p], T = D.traits, rel = T.q[p] / D.qMedian;
+  if (h) {
+    const from = h.source >= 0 && h.source < D.N ? (ROLE_LABEL[D.roles[h.source]] || 'staff member').toLowerCase().replace(/,.*/, '') : h.source >= 0 ? 'visitor' : null, room = roomById[h.roomId];
+    lines.push('Caught it on ' + day(A.tE[p]) + (h.route === 'community' ? ', outside the building' : (h.route === 'close' ? ', face to face' : ', through room air') + (from ? ' from a ' + from : '') + (room ? ', in ' + room.name : '')) + '.');
+  }
+  lines.push('Infectious from ' + day(A.tI[p]) + ' to ' + day(A.tR[p]) + '.');
+  lines.push(T.symptomatic[p] ? 'Symptoms from ' + day(A.tI[p] + T.presym[p]) + '.' : 'Never has symptoms.');
+  lines.push('Breathes out ' + (rel >= 10 ? Math.round(rel) + ' times' : rel >= 1.5 ? rel.toFixed(1) + ' times' : rel > 0.67 ? 'about' : rel >= 0.15 ? rel.toFixed(1) + ' times' : rel >= 0.095 ? 'about a tenth of' : 'under a tenth of') + ' the typical amount of virus.');
+  lines.push(T.immune[p] ? 'Had some immunity: only ' + pct(T.s[p]) + ' of each dose counted.' : 'Had no immunity from earlier infection or vaccination.');
+  return lines.join('\n');
 }
 // Put everyone at their place for slot g, with no walking (used when jumping in time).
 function snapPeople(g) {
