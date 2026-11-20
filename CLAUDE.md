@@ -72,7 +72,7 @@ The file to publish is `dist/publish/index.html`, to the existing artifact (slug
 current version first and pass it as the base version. Only publish when the owner asks.
 
 The page is also a GitHub Pages site. `.github/workflows/pages.yml` runs the unit tests, builds, and publishes
-`dist/publish/` on every push to `main` (the repository's Pages source must be set to "GitHub Actions"). Nothing is
+`dist/publish/` on every push to `main` (the repository must be public and its Pages source set to "GitHub Actions"; a session cannot re-run the workflow, only a push to `main` starts it). Nothing is
 built by hand for it; merging to `main` is what publishes. The site is https://misterflask.github.io/nursing-home-simulation/.
 
 After every push to `main`, tell the owner in these words, "PUSH TO MASTER OCCURRED", and give the site's address as

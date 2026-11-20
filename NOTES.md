@@ -1051,3 +1051,27 @@ https://claude.ai/artifact/J6LQJE4TpgcXPqo7qNByad) replaces the earlier proposal
   5, immunity 0.5) now overshoot at 30%; they were left alone. (3) The document's calculation itself is not in this
   repository, so its tables are reproduced, not recomputed.
 
+## 2026-11-20 (evening): page changes at the owner's request, and GitHub Pages
+
+- **GitHub Pages.** The page is published at https://misterflask.github.io/nursing-home-simulation/ by
+  `.github/workflows/pages.yml` on every push to `main` (unit tests, build, deploy `dist/publish/`). The repository
+  must be public and its Pages source set to "GitHub Actions": while it was briefly private the deploy failed with
+  "Not Found". This session cannot re-run a workflow; only a push to `main` starts one.
+- **Slider text.** Under each slider there are now one or two sentences saying what the setting is. The 27 settings
+  with longer notes got a short description (`BRIEF` in `web/content.json`); the full note, range and source open in a
+  dialog from "More about this setting" (`noteOpen` in `web/app.js`, dialog `#note`). `shots/n5.mjs` checks it.
+- **Intro above the film** reworded by the owner. Two of its claims were discussed and kept as the owner wrote them:
+  "replicable" for the laboratory studies (the lamp constants on the page span six-fold), and "no study has attempted
+  to answer what the appropriate arrangement of lamps is" (Kristensen et al. 2026 compared two arrangements,
+  inconclusively).
+- **Headings** are now conventional labels: Introduction, Results, Infections by route, Sensitivity analysis,
+  Baseline: where infection spreads, Transmission routes, Room-air infections by room type, Lamp placement, Presets,
+  Model assumptions, Limitations, Interpretation, Known discrepancies, Not modelled, Infection risk calculation,
+  Implementation in the simulator. The earlier ones described their sections in a clause because the plain-language
+  rule had been applied to headings too. The headings inside the owner's document are unchanged.
+- **The film is a standard video player.** A large play button sits over the picture whenever it is not playing; a
+  click on the picture plays or pauses; the bar under the picture has play/pause, a clock, the scrubber, a sound button
+  and the narration speed; K or space, the arrows and M work from the keyboard. The clock runs in narration time
+  (4:33) with sound on and film time (2:08) with it off. No fullscreen: the captions sit below the picture.
+  `shots/p2.mjs` checks it; `shots/f1.mjs` hides the play button when it takes frames.
+
