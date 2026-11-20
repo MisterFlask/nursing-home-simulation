@@ -13,17 +13,22 @@ export function base(dark) {
   for (const [p, v] of dark.extra || []) set(c, p, v);
   return c;
 }
+// share: non-room-air spread, the share caught face to face among infections passed to or from a resident (care,
+// roommates, dining and other shared rooms). shareAll counts every infection inside the home, staff to staff included;
+// the fit tables used that until 20 Nov 2026.
 export function evaluate(c, n, seed0, rho = 1, lamps = null) {
-  let res = 0, staff = 0, close = 0, room = 0, w1 = 0, w2 = 0, weeks = 0, averted = 0; const nW = Math.floor(c.days / 7), D = [];
+  let res = 0, staff = 0, close = 0, room = 0, closeAll = 0, roomAll = 0, w1 = 0, w2 = 0, weeks = 0, averted = 0; const nW = Math.floor(c.days / 7), D = [];
   for (let s = 0; s < n; s++) {
     const w = buildWorld(c, seed0 + s), r = runSeason(w, { lamps: {} }), wk = new Array(nW).fill(0);
     res += r.totals.residentInfected; staff += r.totals.staffInfected;
-    for (const e of r.events) { if (e.route === 'close') close++; else if (e.route === 'room') room++; if (e.role === 'resident' && h(s * 100003 + e.person) < rho) { const k = Math.floor(e.day / 7); if (k < nW) wk[k]++; } }
+    for (const e of r.events) { if (e.route === 'close') closeAll++; else if (e.route === 'room') roomAll++;
+      if ((e.route === 'close' || e.route === 'room') && (e.role === 'resident' || (e.source >= 0 && e.source < w.people.length && w.people[e.source].role === 'resident'))) { if (e.route === 'close') close++; else room++; }
+      if (e.role === 'resident' && h(s * 100003 + e.person) < rho) { const k = Math.floor(e.day / 7); if (k < nW) wk[k]++; } }
     for (const t of wk) { weeks++; if (t >= 1) w1++; if (t >= 2) w2++; }
     if (lamps) D.push(r.totals.residentInfected - runSeason(w, { lamps }).totals.residentInfected);
   }
   const m = D.length ? D.reduce((a, b) => a + b, 0) / D.length : 0, sd = D.length ? Math.sqrt(D.reduce((a, b) => a + (b - m) ** 2, 0) / (D.length - 1)) : 0;
-  return { AR: res / n / 112, staffAR: staff / n / 131, share: close / (close + room), w1: w1 / weeks, w2: w2 / weeks, eff: m, ci: 1.96 * sd / Math.sqrt(D.length || 1), mean: res / n };
+  return { AR: res / n / 112, staffAR: staff / n / 131, share: close / (close + room), shareAll: closeAll / (closeAll + roomAll), w1: w1 / weeks, w2: w2 / weeks, eff: m, ci: 1.96 * sd / Math.sqrt(D.length || 1), mean: res / n };
 }
 if (process.argv[1].endsWith('anchored.mjs')) {
   for (const dark of [{ social: 2, work: 5, prot: 0.5 }, { social: 1, work: 5, prot: 0.5 }, { social: 2, work: 5, prot: 0.4 }, { social: 3, work: 7, prot: 0.5 }]) {

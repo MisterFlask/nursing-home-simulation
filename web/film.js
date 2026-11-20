@@ -671,7 +671,7 @@ function explainBuild() {
       el('li', {}, el('b', {}, 'Virus into each room. '), 'For every room, add up what the infectious people in it breathe out: each person\'s output, times the talking factor for who they are and where (section 2), less whatever a mask stops. Someone there for part of the tick, such as a carer on a ten-minute visit, counts for that part.'),
       el('li', {}, el('b', {}, 'Each room\'s air. '), 'The room starts the tick with what the last tick left. Over the half hour its level moves toward the point where clearing balances what is breathed out (section 3). The model keeps two numbers: the average over the tick, which people breathe, and the level at the end, which the next tick starts from. This is how virus lingers after an infectious person leaves.'),
       el('li', {}, el('b', {}, 'Dose from room air. '), 'Every person adds to their running total: the air they breathe, times the room\'s average level, times the time they were there, scaled by their susceptibility and any mask (section 4).'),
-      el('li', {}, el('b', {}, 'Dose face to face. '), 'For every face-to-face contact on the timetable for this tick (tablemates at a meal, a carer and a resident, a medicine round, a therapy session, a visit, staff at a break table), each of the two adds a second dose from the other (section 6). Lamps and ventilation do not enter this one.'),
+      el('li', {}, el('b', {}, 'Dose face to face. '), 'For every face-to-face contact on the timetable for this tick (tablemates at a meal, a carer and a resident, a medicine round, a therapy session, a visit, staff at a break table, roommates for part of the day), each of the two adds a second dose from the other (section 6). Lamps and ventilation do not enter this one.'),
       el('li', {}, el('b', {}, 'Who is infected. '), 'Anyone whose running total has now passed their threshold becomes infected at the end of the tick, and their illness clock starts. The model records which way they caught it by drawing between room air and face to face in proportion to how much of their total came each way. Totals run from the start of the winter and never reset.')),
     P(`At the end of each day the model counts the people whose symptoms began. That drives the responses on later days: ${fPct(c.control.staffExclusion.staysHomeShare)} of staff with symptoms stay home for ${c.control.staffExclusion.exclusionDays} days, a resident with symptoms is isolated in their room after ${c.control.residentIsolation.isolationDelayDays} day${c.control.residentIsolation.isolationDelayDays === 1 ? '' : 's'}, and ${c.control.outbreakMode.trigger === 1 ? 'the first case with symptoms' : c.control.outbreakMode.trigger + ' cases with symptoms'} on a wing ${c.control.outbreakMode.trigger === 1 ? 'starts' : 'start'} outbreak measures there, which last until ${c.control.outbreakMode.outbreakDays} days after the latest case. While any wing is under them, working staff wear surgical masks.`),
     P('A winter is run once without lamps and once with each set of lamps, from the same timetable, traits and arrivals. Lamps change one thing, in step (e): how fast each room\'s air is cleared.'),
@@ -706,9 +706,9 @@ function explainBuild() {
     P(`The steady level falls to ${fPct(m.ratio)} of what it was. Over the hour the dose falls to ${fPct(doseRatio)}, a chance of ${oneIn(ch.air(1, lamL, 1))}.`),
     h('Where the numbers come from'),
     el('div', { class: 'tablewrap' }, el('table', {}, el('thead', {}, el('tr', {}, ...['Input', 'Value', 'Source', 'How sure'].map((t) => el('th', {}, t)))), el('tbody', {}, ...rows.map((r) => el('tr', {}, ...r.map((t) => el('td', {}, t))))))),
-    P('All of these are sliders in the simulator, except the fitted strength, which follows the slider for the share of spread out of the lamps\' reach.'),
+    P('All of these are sliders in the simulator, except the fitted strength, which follows the slider for non-room-air spread.'),
     h('What this leaves out'),
-    P('The room\'s air is treated as evenly mixed, so where someone sits makes no difference and a lamp cleans the whole room equally. Lamps are given no effect on the face-to-face dose. Spread by hands and surfaces is not simulated.'));
+    P('The room\'s air is treated as evenly mixed, so where someone sits makes no difference and a lamp cleans the whole room equally. Lamps are given no effect on the face-to-face dose. Spread by droplets, hands and surfaces is not simulated separately: it is counted inside the face-to-face dose.'));
 }
 function explainOpen() {
   filmPlay(false); setPlaying(false);
@@ -717,6 +717,33 @@ function explainOpen() {
   d.scrollTop = 0;
 }
 for (const b of document.querySelectorAll('.explainopen')) b.addEventListener('click', explainOpen);
+
+// ---------- the second explainer: how the split between room-air and non-room-air spread was chosen ----------
+// The text is the owner's document, in web/app.html. This fills its one section about the simulator, from the
+// figures in src/params.js (NON_ROOM_AIR), so it follows the fit.
+function splitModel() {
+  const box = $('#splitmodel'); if (!box || box.childElementCount) return;
+  const N = Sim.NON_ROOM_AIR, P = (...k) => el('p', {}, ...k), pc = (v) => (v < 0.095 ? (v * 100).toFixed(v < 0.0095 ? 1 : 0).replace(/\.0$/, '') : Math.round(v * 100)) + '%', three = (a) => `${pc(a[0])}, ${pc(a[1])} and ${pc(a[2])}`;
+  const KEYS = ['low', 'central', 'high'], G = KEYS.map((k) => Sim.anchoredAt(N.cases[k], 'covid').G), sig = (x) => Number(x.toPrecision(2)), M = N.model.covid, F = N.model.flu, fl = Sim.ANCHORS.flu.shares;
+  const row = (name, key) => el('tr', {}, el('td', {}, name), ...[0, 1, 2].map((i) => el('td', {}, `${pc(M[key][i])} (calculation: ${pc(N.bySetting[key][i])})`)));
+  box.append(
+    P(`The simulator takes the three cases as given. Its slider for non-room-air spread starts at ${pc(N.cases.central)}, and the range around each result runs from ${pc(N.cases.low)} to ${pc(N.cases.high)}. The share is counted over infections passed to or from a resident, which covers the three settings above. Spread among staff in their own rooms, such as the break room, is outside those settings.`),
+    P(`The simulator has one kind of non-room-air dose: an extra dose between two people who are face to face. That is a carer and a resident, people at the same table, or roommates for ${Sim.defaultConfig('covid').transmission.roommateHours} hours a day. Droplets, hands and surfaces are not simulated separately; they are counted inside that dose. One number sets its strength, and it is fitted so that the home-wide share comes out at the chosen value: ${sig(G[0])}, ${sig(G[1])} and ${sig(G[2])} for the three cases.`),
+    P('The simulator does not take a separate value for each setting. The split in each setting follows from its rooms, its timetable and that one strength. It comes out close to the calculation:'),
+    el('div', { class: 'tablewrap' }, el('table', {}, el('thead', {}, el('tr', {}, ...['Setting, in the simulator', 'Optimistic', 'Central', 'Cautious'].map((t) => el('th', {}, t)))),
+      el('tbody', {}, row('Hands-on care in a bedroom', 'care'), row('Roommates sharing a bedroom', 'roommates'), row('Dining or activity room', 'dining')))),
+    P(`These are shares of the infections caught in each setting over ${N.model.seasons.toLocaleString('en-US')} simulated winters without lamps. With spread among staff counted as well, non-room-air spread is ${three(M.all)} of all spread inside the home.`),
+    P(`Influenza uses the same face-to-face strength as COVID-19 in each case, and the virus breathed out is fitted to the influenza infections homes report. Its non-room-air spread then comes out at ${three([fl.low, fl.central, fl.high])}. The model's influenza differs from its COVID-19 in how long people are infectious, how much they differ from one another and how homes respond, and the split follows from all of that.`));
+}
+function splitOpen() {
+  filmPlay(false); setPlaying(false); splitModel();
+  const d = $('#split'); if (d.open) return;
+  if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
+  d.scrollTop = 0;
+}
+document.addEventListener('click', (e) => { if (e.target.closest && e.target.closest('.splitopen')) splitOpen(); });   // delegated: the slider rows are redrawn
+$('#splitclose').addEventListener('click', () => $('#split').close());
+$('#split').addEventListener('click', (e) => { if (e.target === $('#split')) $('#split').close(); });
 $('#explainclose').addEventListener('click', () => $('#explain').close());
 $('#explain').addEventListener('click', (e) => { if (e.target === $('#explain')) $('#explain').close(); });   // a click on the backdrop closes it
 

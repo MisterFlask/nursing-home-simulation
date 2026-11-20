@@ -229,7 +229,7 @@ const BEDROOM_SHARE = [0.33, 0.4, 1];
 const ANCHOR_ARRIVALS = { covid: 5, flu: 8 };
 export const PARAMS = [
   // ===== Transmission =====
-  P('transmission.closeShare', 'Share of spread inside the home that room-air cleaning cannot reach', 'Transmission', 'share (0 to 1)', [0.24, 0.55, 0.86],
+  P('transmission.closeShare', 'Non-room-air spread: the share of spread that room-air cleaning cannot act on', 'Transmission', 'share (0 to 1)', [0.24, 0.55, 0.86],   // the page uses ANCHORS[pathogen].shares (20%, 30%, 50% for COVID-19); this row's range belongs to the earlier fit (CALIBRATION)
     { note: 'Set by judgment. Counts face-to-face spread plus spread by hands and surfaces. The middle value combines half of airborne spread being face to face with about 10% of all spread by hands and surfaces; the low and high values combine 20% with 5%, and 80% with 30%. Hands-and-surfaces spread is not simulated separately but is counted inside this share. Moving this re-fits how infectious people are and how often infection arrives from outside, so the number of residents infected without lamps stays the same. Lamps help less when this share is higher. Informed by the Diamond Princess analysis (Azimi et al. 2021) and studies that disagree with it.' }),
   P('transmission.G', 'How much riskier it is to be face to face than to share the room', 'Transmission', 'times', gRange('covid'),
     { scale: 'log', source: FITTED, note: 'Not measured. Fitted so the model matches US nursing-home COVID-19 infection rates in winter 2023-24 and typical outbreak sizes at the chosen unreachable share. Informed by, not taken from, Franklin et al. 2024 (a calibration target, not a source). At the cautious setting (0.86 out of reach of room-air cleaning) the fitted value, about 28, is the same as a close-contact dilution figure of about 1.5 for personal care, five times below the lowest value considered plausible below (8); the cautious setting therefore needs breath to stay more concentrated face to face than the dilution research supports. At the middle setting (about 2.9) it corresponds to about 14, inside the range. Zero switches face-to-face spread off; lamps do not reduce it.',
@@ -261,8 +261,8 @@ export const PARAMS = [
     ['roommate', 'between roommates (only if face-to-face hours are set above zero)', [17, 85, 1130], 'Treated like a dining table.'],
   ].map(([k, where, v, why]) => P(`transmission.beta.${k}`, `How quickly breath disperses ${where}`, 'Transmission', 'cubic metres per hour', v,
     { scale: 'log', note: k === 'care' ? `Set by judgment, informed by how fast a breath dilutes: to about 3% of its starting strength by 2 metres (Bazant & Bush 2021). Lower values mean riskier close contact. ${why} The face-to-face settings below rest on the same basis.` : `Set by judgment. ${why}` })),
-  P('transmission.roommateHours', 'Hours a day roommates spend face to face', 'Transmission', 'hours per day', [0, 0, 2],
-    { note: 'Set by judgment. Off by default because roommates already share their room air.' }),
+  P('transmission.roommateHours', 'Hours a day roommates spend face to face', 'Transmission', 'hours per day', [0, 1.5, 3],
+    { note: 'Set by judgment. Roommates share their room\'s air for many hours and spend little of that time face to face. An hour and a half a day makes about 4% of the spread between roommates face to face in the central case, which is the figure our calculation gives for roommates.' }),
   P('air.decay', 'How fast the virus dies once in the air', 'Transmission', 'per hour', [0.3, 0.63, 7],
     { scale: 'log', source: SRC.vanDoremalen, note: 'SARS-CoV-2 in airborne droplets lost half its infectivity in about an hour (van Doremalen et al. 2020). Some later work suggests much faster loss in the first minutes.',
       byPathogen: { flu: { low: 0.2, central: 0.44, high: 1.5, source: SRC.nicasJones, note: 'Measured for influenza in dry air (Nicas & Jones 2009).' }, rsv: { low: 0.3, central: 0.6, high: 3, source: JUDGMENT, note: 'No RSV measurement found; set by judgment.' } } }),
@@ -270,7 +270,7 @@ export const PARAMS = [
     { source: SRC.buonanno2020a, note: 'Typical settling rate for exhaled particles (Buonanno et al. 2020); depends strongly on particle size.',
       byPathogen: { flu: { low: 0.1, central: 0.29, high: 1.0, source: SRC.nicasJones }, rsv: { low: 0.1, central: 0.24, high: 1.0, source: SRC.buonanno2020a } } }),
   P('importation.arrivalEveryDays', 'Days between one infected staff member arriving and the next', 'Transmission', 'days', [3, ANCHOR_ARRIVALS.covid, 14],
-    { integer: true, anchoredOnly: true, note: 'Set by judgment. One staff member, infected outside work, arrives on a fixed beat. Five days is our estimate for a winter like 2023-24, and it is not a measurement. It means 18% of staff catch the virus outside work over the winter. It also gives the model a reported resident infection in 23% of weeks and two or more in 15%; in CDC\'s data 15% to 26% of nursing homes reported one in any week that winter and 9% to 17% reported two or more (Franklin et al. 2024), and this home is larger than most. That check is loose: rates from about 4 to 14 days all pass it. Rarer arrivals mean fewer, larger outbreaks, and lamps then prevent more: an outbreak that is stopped stays stopped. The model has no infectious visitors or new residents, so this stands in for those too. Moving it does not re-fit the model.',
+    { integer: true, anchoredOnly: true, note: 'Set by judgment. One staff member, infected outside work, arrives on a fixed beat. Five days is our estimate for a winter like 2023-24, and it is not a measurement. It means 18% of staff catch the virus outside work over the winter. It also gives the model a reported resident infection in 21% of weeks and two or more in 13%; in CDC\'s data 15% to 26% of nursing homes reported one in any week that winter and 9% to 17% reported two or more (Franklin et al. 2024), and this home is larger than most. That check is loose: rates from about 4 to 14 days all pass it. Rarer arrivals mean fewer, larger outbreaks, and lamps then prevent more: an outbreak that is stopped stays stopped. The model has no infectious visitors or new residents, so this stands in for those too. Moving it does not re-fit the model.',
       byPathogen: { flu: { low: 3, central: ANCHOR_ARRIVALS.flu, high: 14, source: JUDGMENT, note: 'Set by judgment. One staff member, infected outside work, arrives on a fixed beat; eight days was chosen when influenza was fitted and has not been checked against data as the COVID-19 value has. Rarer arrivals mean fewer, larger outbreaks, and lamps then prevent more. Moving it does not re-fit the model.' } } }),
   P('importation.staffDailyHazard', 'Chance a staff member catches it outside work on a given day', 'Transmission', 'chance per day', hazRange('covid'),
     { scale: 'log', source: FITTED, note: 'Community estimates range from 0.02% to 0.3% a day in season. The COVID-19 default is fitted together with how infectious people are, so the model matches both how many residents get infected and how large outbreaks are; Franklin et al. 2024 and Rodríguez Campelo et al. 2023 are the targets of that fit, not sources for this number. The fitted values (0.014% to 0.021% a day, depending on the unreachable share) sit at or a little below the bottom of the community range.',
@@ -507,32 +507,64 @@ export function paramRange(param, pathogen = 'covid') {
 }
 
 // ---------------------------------------------------------------------------
+// Non-room-air spread: the figures of the owner's document "Room-air spread and non-room-air spread: how the numbers
+// were chosen" (20 Nov 2026; reproduced on the page as an explainer, web/app.html #split). Non-room-air spread is
+// what reaches a person up close or by hands and surfaces, before far-UVC can act; the rest is room-air spread.
+//   cases:     home-wide, for COVID-19. low is the case best for lamps ("optimistic"), high the cautious one.
+//   bySetting: the document's value for each setting, [optimistic, central, cautious].
+//   model:     what this model gives in each setting once G is fitted to the home-wide case, same order
+//              (node experiments/settings.mjs covid|flu 1000; "all" also counts staff-to-staff spread).
+// ---------------------------------------------------------------------------
+export const NON_ROOM_AIR = {
+  cases: { low: 0.20, central: 0.30, high: 0.50 },
+  bySetting: { care: [0.30, 0.40, 0.60], roommates: [0.03, 0.04, 0.09], dining: [0.20, 0.25, 0.45] },
+  model: {
+    seasons: 1000,
+    covid: { care: [0.267, 0.387, 0.61], roommates: [0.025, 0.044, 0.106], dining: [0.151, 0.241, 0.445], home: [0.2, 0.299, 0.5], all: [0.137, 0.216, 0.398] },
+    flu: { care: [0.26, 0.381, 0.621], roommates: [0.034, 0.043, 0.122], dining: [0.105, 0.179, 0.344], home: [0.164, 0.257, 0.465], all: [0.108, 0.173, 0.342] },
+  },
+};
+
+// ---------------------------------------------------------------------------
 // The anchored fit (the one the page uses). Well-measured numbers are held at
 // their published values; poorly known ones sit inside their plausible ranges:
 //   held:  virus breathed out at rest 0.52 quanta/h (published), one infected
-//          staff member arriving each week, 18.7% of residents reported
+//          staff member arriving every 5 days, 18.7% of residents reported
 //          infected in a season (CDC).
 //   set:   speech multipliers 2 (residents, social) and 5 (staff, working),
-//          protection from past infection and vaccines 0.5.
-//   fitted: close-range intensity G, to give the chosen out-of-reach share.
+//          protection from past infection and vaccines 0.5, roommates face to
+//          face for 1.5 hours a day.
+//   fitted: close-range intensity G, to give the chosen non-room-air spread.
 // Whatever the model then infects beyond 18.7% is taken to go unreported.
-// Rows: experiments/emission_row.mjs 0.52 <G> 400 5 (400 seasons each; one infected staff member arriving every 5 days,
-// our estimate for a winter like 2023-24: see NOTES.md, 19 Nov 2026). The rows at one arrival every 7 days, used until
-// then, are in experiments/out_table_extended.txt.
+//
+// Non-room-air spread (closeShare) is the share caught face to face among infections passed to or from a resident:
+// hands-on care, roommates, dining and other shared rooms. Those are the settings of the owner's document "Room-air
+// spread and non-room-air spread: how the numbers were chosen" (NON_ROOM_AIR below), which sets the three cases:
+// 20% (best for lamps), 30% (central) and 50% (cautious). Staff-to-staff spread is outside those settings; with it
+// counted the share is lower (shareAll in each row, the definition the table used until 20 Nov 2026).
+// Rows: experiments/emission_row.mjs 0.52 <G> 1000 5 (1,000 seasons each; one infected staff member arriving every 5 days,
+// our estimate for a winter like 2023-24: see NOTES.md, 19 Nov 2026), in experiments/out_table_nonroomair.txt.
 // ---------------------------------------------------------------------------
 export const ANCHORED = {
   emissionMedian: 0.52, social: 2, work: 5, protection: 0.5, arrivalEveryDays: 5, reportedAR: 0.187,
-  shares: { low: 0.25, central: 0.40, high: 0.55, min: 0.12, max: 0.70 },
+  shares: { ...NON_ROOM_AIR.cases, min: 0.11, max: 0.70 },
   table: [
-    { closeShare: 0.1165, G: 0.18, trueAR: 0.1523, staffAR: 0.3163 },
-    { closeShare: 0.1733, G: 0.3, trueAR: 0.1678, staffAR: 0.3248 },
-    { closeShare: 0.2494, G: 0.51, trueAR: 0.1921, staffAR: 0.3407 },
-    { closeShare: 0.3269, G: 0.8, trueAR: 0.2253, staffAR: 0.363 },
-    { closeShare: 0.4154, G: 1.23, trueAR: 0.278, staffAR: 0.3966 },
-    { closeShare: 0.4924, G: 1.8, trueAR: 0.3367, staffAR: 0.438 },
-    { closeShare: 0.5654, G: 2.67, trueAR: 0.4194, staffAR: 0.4935 },
-    { closeShare: 0.6387, G: 4.2, trueAR: 0.5475, staffAR: 0.584 },
-    { closeShare: 0.705, G: 6.75, trueAR: 0.717, staffAR: 0.6931 },
+    { closeShare: 0.1045, G: 0.1, trueAR: 0.1306, staffAR: 0.3009, shareAll: 0.069 },
+    { closeShare: 0.1464, G: 0.15, trueAR: 0.1373, staffAR: 0.3049, shareAll: 0.0979 },
+    { closeShare: 0.1806, G: 0.2, trueAR: 0.1436, staffAR: 0.3089, shareAll: 0.1232 },
+    { closeShare: 0.2268, G: 0.27, trueAR: 0.1539, staffAR: 0.3148, shareAll: 0.1577 },
+    { closeShare: 0.2713, G: 0.35, trueAR: 0.1611, staffAR: 0.3196, shareAll: 0.1922 },
+    { closeShare: 0.3049, G: 0.43, trueAR: 0.1714, staffAR: 0.3274, shareAll: 0.2199 },
+    { closeShare: 0.3448, G: 0.52, trueAR: 0.1822, staffAR: 0.3344, shareAll: 0.2536 },
+    { closeShare: 0.3863, G: 0.65, trueAR: 0.1993, staffAR: 0.3457, shareAll: 0.2904 },
+    { closeShare: 0.4292, G: 0.8, trueAR: 0.2157, staffAR: 0.3567, shareAll: 0.3283 },
+    { closeShare: 0.4759, G: 1, trueAR: 0.2395, staffAR: 0.3713, shareAll: 0.3742 },
+    { closeShare: 0.5227, G: 1.25, trueAR: 0.2661, staffAR: 0.3896, shareAll: 0.4191 },
+    { closeShare: 0.5716, G: 1.6, trueAR: 0.3026, staffAR: 0.4146, shareAll: 0.4698 },
+    { closeShare: 0.6144, G: 2, trueAR: 0.3434, staffAR: 0.444, shareAll: 0.5156 },
+    { closeShare: 0.6605, G: 2.6, trueAR: 0.4005, staffAR: 0.482, shareAll: 0.5661 },
+    { closeShare: 0.701, G: 3.4, trueAR: 0.4842, staffAR: 0.5396, shareAll: 0.6128 },
+    { closeShare: 0.7429, G: 4.5, trueAR: 0.571, staffAR: 0.5979, shareAll: 0.6608 },
   ],
 };
 // <anchored-flu> table rows from experiments/flu_table.sh 0.069 8 0.2 400 (pasted by experiments/flu_install.py)
@@ -541,30 +573,45 @@ export const ANCHORED = {
 //            season of reporting; research/influenza_anchor.md), one infected staff member arriving every 8 days.
 //   set:     one infection in three reported (so 6.9% of residents truly infected), speech multipliers as for
 //            COVID-19, protection from vaccines and past infection 0.2.
-//   fitted:  the virus breathed out and the close-range intensity G, to give that attack rate at the chosen
-//            out-of-reach share. The published emission (0.035 quanta/h at rest) gives the model under a third of
-//            the reported infections, so it cannot be held as COVID-19's is.
+//   fitted:  the virus breathed out, to give that attack rate at each close-range intensity G. The published
+//            emission (0.035 quanta/h at rest) gives the model under a third of the reported infections, so it
+//            cannot be held as COVID-19's is.
+// Influenza has no non-room-air figure of its own. Each case uses the close-range intensity G that COVID-19 has in
+// that case (the same non-room-air dose), and influenza's split is whatever the model then gives: shares.low,
+// central and high are read off this table at those G, just below.
 export const ANCHORED_FLU = {
   social: 2, work: 5, protection: 0.2, arrivalEveryDays: 8, reportedAR: 0.023, underReport: 3, publishedEmission: 0.035,
-  shares: { low: 0.35, central: 0.60, high: 0.85, min: 0.3, max: 0.92 },
+  shares: { min: 0.08, max: 0.85 },
   table: [
-    { closeShare: 0.2655, G: 0.8, emissionMedian: 0.588, trueAR: 0.0696, staffAR: 0.1684 },
-    { closeShare: 0.3274, G: 1.2, emissionMedian: 0.507, trueAR: 0.0682, staffAR: 0.1641 },
-    { closeShare: 0.4302, G: 1.8, emissionMedian: 0.42, trueAR: 0.0689, staffAR: 0.1602 },
-    { closeShare: 0.5151, G: 2.6, emissionMedian: 0.343, trueAR: 0.0691, staffAR: 0.1575 },
-    { closeShare: 0.5873, G: 3.6, emissionMedian: 0.284, trueAR: 0.0702, staffAR: 0.1556 },
-    { closeShare: 0.6576, G: 5, emissionMedian: 0.221, trueAR: 0.0685, staffAR: 0.1527 },
-    { closeShare: 0.7167, G: 7, emissionMedian: 0.172, trueAR: 0.0683, staffAR: 0.1504 },
-    { closeShare: 0.775, G: 10, emissionMedian: 0.13, trueAR: 0.0687, staffAR: 0.1484 },
-    { closeShare: 0.8357, G: 15, emissionMedian: 0.0921, trueAR: 0.0701, staffAR: 0.1481 },
-    { closeShare: 0.8844, G: 24, emissionMedian: 0.0613, trueAR: 0.0692, staffAR: 0.1464 },
-    { closeShare: 0.9223, G: 40, emissionMedian: 0.0372, trueAR: 0.0679, staffAR: 0.1448 },
-    { closeShare: 0.9514, G: 70, emissionMedian: 0.0219, trueAR: 0.0683, staffAR: 0.144 },
+    { closeShare: 0.0795, G: 0.1, emissionMedian: 0.835, trueAR: 0.0691, staffAR: 0.1782 },
+    { closeShare: 0.1095, G: 0.15, emissionMedian: 0.81, trueAR: 0.0689, staffAR: 0.1777 },
+    { closeShare: 0.1593, G: 0.23, emissionMedian: 0.785, trueAR: 0.0691, staffAR: 0.1769 },
+    { closeShare: 0.1945, G: 0.3, emissionMedian: 0.749, trueAR: 0.0695, staffAR: 0.1744 },
+    { closeShare: 0.2368, G: 0.4, emissionMedian: 0.703, trueAR: 0.07, staffAR: 0.1727 },
+    { closeShare: 0.3081, G: 0.55, emissionMedian: 0.64, trueAR: 0.0694, staffAR: 0.1705 },
+    { closeShare: 0.3831, G: 0.8, emissionMedian: 0.574, trueAR: 0.0689, staffAR: 0.1673 },
+    { closeShare: 0.4566, G: 1.11, emissionMedian: 0.515, trueAR: 0.07, staffAR: 0.1651 },
+    { closeShare: 0.5472, G: 1.6, emissionMedian: 0.44, trueAR: 0.07, staffAR: 0.1616 },
+    { closeShare: 0.6371, G: 2.4, emissionMedian: 0.343, trueAR: 0.0685, staffAR: 0.1564 },
+    { closeShare: 0.7171, G: 3.6, emissionMedian: 0.275, trueAR: 0.0691, staffAR: 0.1533 },
+    { closeShare: 0.766, G: 5, emissionMedian: 0.214, trueAR: 0.0684, staffAR: 0.1512 },
+    { closeShare: 0.8186, G: 7, emissionMedian: 0.167, trueAR: 0.0679, staffAR: 0.1485 },
+    { closeShare: 0.8595, G: 10, emissionMedian: 0.126, trueAR: 0.0694, staffAR: 0.1467 },
   ],
 };
 // </anchored-flu>
 export const ANCHORS = { covid: ANCHORED, flu: ANCHORED_FLU };
-// Fitted and implied values at an out-of-reach share: { G, emissionMedian, trueAR, staffAR, reportShare }.
+// Rows either side of a value in a fit table, and how far between them it sits.
+function tableAt(t, key, v, log) {
+  const x = Math.max(t[0][key], Math.min(t[t.length - 1][key], v)); let i = 1; while (i < t.length - 1 && x > t[i][key]) i++;
+  const a = t[i - 1], b = t[i]; return { a, b, f: log ? Math.log(x / a[key]) / Math.log(b[key] / a[key]) : (x - a[key]) / (b[key] - a[key]) };
+}
+// Influenza's three cases: its non-room-air spread at COVID-19's close-range intensity in each case, to the nearest 1%.
+for (const k of ['low', 'central', 'high']) {
+  const { a, b, f } = tableAt(ANCHORED_FLU.table, 'G', anchoredAt(ANCHORED.shares[k], 'covid').G, true);
+  ANCHORED_FLU.shares[k] = Math.round(100 * (a.closeShare + f * (b.closeShare - a.closeShare))) / 100;
+}
+// Fitted and implied values at a chosen non-room-air spread (closeShare): { G, emissionMedian, trueAR, staffAR, reportShare }.
 // reportShare = share of resident infections that must be reported for the model to agree with the
 // surveillance figure (1 when the model infects fewer).
 export function anchoredAt(closeShare, pathogen = 'covid') {

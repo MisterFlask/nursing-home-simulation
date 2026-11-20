@@ -1,3 +1,3 @@
-cautious {"share":0.55,"reported":0.465,"k":2.62,"none":19.98,"allNone":42.48,"common":17.89,"commonCut":10.5,"both":17.56,"bothCut":12.1,"bedrooms":19.37,"bedroomsCut":3.1}
-central {"share":0.4,"reported":0.696,"k":6.51,"none":19.11,"allNone":27.23,"common":14.93,"commonCut":21.9,"both":12.55,"bothCut":34.3,"bedrooms":16.23,"bedroomsCut":15}
-favourable {"share":0.25,"reported":0.972,"k":15.85,"none":19.34,"allNone":19.94,"common":11.48,"commonCut":40.6,"both":5.79,"bothCut":70.1,"bedrooms":12.18,"bedroomsCut":37}
+cautious {"share":0.5,"reported":0.739,"k":2.62,"none":20.19,"allNone":27.18,"common":17.7,"commonCut":12.4,"both":17.1,"bothCut":15.3,"bedrooms":19.51,"bedroomsCut":3.4}
+central {"share":0.3,"reported":1,"k":6.51,"none":19.2,"allNone":19.2,"common":12.97,"commonCut":32.4,"both":9.39,"bothCut":51.1,"bedrooms":14.98,"bedroomsCut":21.9}
+favourable {"share":0.2,"reported":1,"k":15.85,"none":16.55,"allNone":16.55,"common":8.84,"commonCut":46.6,"both":3.65,"bothCut":77.9,"bedrooms":9.04,"bedroomsCut":45.4}

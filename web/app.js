@@ -61,7 +61,7 @@ const PRIMARY = /*__PRIMARY__*/[];
 // What the two ends of the range are, for the infection in view.
 function dumbCap() {
   const sh = shares(), covid = state.pathogen === 'covid';
-  return `The two ends combine the two things that have not been measured well. At one, ${pct(sh.high)} of spread is out of the lamps' reach${covid ? ', the most the model can hold while matching CDC\'s reported infection rate' : ''}, and lamps act at the low end of the evidence: how easily far-UVC inactivates the virus, and how much of that a real room delivers. At the other, ${pct(sh.low)} is out of reach and lamps act at the high end. Central is the current settings. The lamp's output is the figure in Illuminate's lamp file in all three.` +
+  return `The two ends combine the two things that have not been measured well. At one, non-room-air spread, which lamps cannot act on, is ${pct(sh.high)} of spread to and from residents, and lamps act at the low end of the evidence: how easily far-UVC inactivates the virus, and how much of that a real room delivers. At the other, it is ${pct(sh.low)} and lamps act at the high end. Central is the current settings. The lamp's output is the figure in Illuminate's lamp file in all three.` +
     (covid ? ' Each case is held to the CDC rate of reported infections' + (Sim.anchoredAt(sh.low, 'covid').reportShare >= 1 ? ', except the last, which starts lower because at that setting the model infects fewer residents than homes report.' : ', so all three start from about the same number.') : '');
 }
 const HIDE = ['facility.wings', 'transmission.G', 'importation.staffDailyHazard', 'importation.visitorInfectiousProb'];
@@ -98,7 +98,7 @@ const state = { pathogen: 'covid', overrides: {}, lamps: {}, inst: 'common', cus
 let rooms = [], roomById = {}, layout = {}, nRes = 120, nStaff = 80, days = 120;
 
 // The page runs the anchored fit (src/params.js ANCHORED): published virus output, one infected
-// staff member arriving every few days (a slider), and close-range intensity fitted to the out-of-reach share.
+// staff member arriving every few days (a slider), and close-range intensity fitted to the chosen non-room-air spread.
 const shares = () => Sim.ANCHORS[state.pathogen].shares;
 const shareNow = () => (state.overrides['transmission.closeShare'] != null ? state.overrides['transmission.closeShare'] : shares().central);
 function config() {
@@ -547,12 +547,12 @@ function drawFitted(c) {
   const box = $('#fitted'); if (!box) return;
   if (state.pathogen === 'flu') {
     const at = Sim.anchoredAt(shareNow(), 'flu'), A = Sim.ANCHORS.flu;
-    box.textContent = 'Held fixed: the share of residents with a reported influenza infection in a season (' + fmt1(A.reportedAR * 100) + '%, CDC, winter 2025-26) and one infected staff member arriving every ' + A.arrivalEveryDays + ' days. Assumed: one infection in ' + fmt(A.underReport) + ' is reported, so the model should infect about ' + fmt1(A.reportedAR * A.underReport * 100) + '% of residents. Fitted: the virus an infected person breathes out at rest (now ' + fmt(c.emission.median) + ' quanta per hour; the published estimate, ' + A.publishedEmission + ', gives the model under a third of the influenza homes report) and the strength of face-to-face spread (a multiplier, now ' + fmt(c.transmission.G) + '), so that ' + pct(shareNow()) + ' of spread is out of the lamps\' reach. The resident counts above are the model\'s infections multiplied by the share reported.';
+    box.textContent = 'Held fixed: the share of residents with a reported influenza infection in a season (' + fmt1(A.reportedAR * 100) + '%, CDC, winter 2025-26) and one infected staff member arriving every ' + A.arrivalEveryDays + ' days. Assumed: one infection in ' + fmt(A.underReport) + ' is reported, so the model should infect about ' + fmt1(A.reportedAR * A.underReport * 100) + '% of residents. Fitted: the virus an infected person breathes out at rest (now ' + fmt(c.emission.median) + ' quanta per hour; the published estimate, ' + A.publishedEmission + ', gives the model under a third of the influenza homes report) and the strength of face-to-face spread (a multiplier, now ' + fmt(c.transmission.G) + '), so that non-room-air spread is ' + pct(shareNow()) + '. The resident counts above are the model\'s infections multiplied by the share reported.';
     return;
   }
   const at = Sim.anchoredAt(shareNow()), A = Sim.ANCHORED;
   const moved = c.importation.arrivalEveryDays !== A.arrivalEveryDays;
-  box.textContent = 'Held fixed: the virus an infected person breathes out at rest (' + fmt(A.emissionMedian) + ' quanta per hour) and the share of residents with a reported infection in a season (' + fmt1(A.reportedAR * 100) + '%, CDC). Set by us: one infected staff member arriving every ' + A.arrivalEveryDays + ' days' + (moved ? ' (you have set ' + c.importation.arrivalEveryDays + '; the fit is not redone)' : '') + '. Fitted: the strength of face-to-face spread (a multiplier, now ' + fmt(c.transmission.G) + '), so that ' + pct(shareNow()) + ' of spread is out of the lamps\' reach. With arrivals every ' + A.arrivalEveryDays + ' days the model then infects about ' + pct(at.trueAR) + ' of residents in a season, '
+  box.textContent = 'Held fixed: the virus an infected person breathes out at rest (' + fmt(A.emissionMedian) + ' quanta per hour) and the share of residents with a reported infection in a season (' + fmt1(A.reportedAR * 100) + '%, CDC). Set by us: one infected staff member arriving every ' + A.arrivalEveryDays + ' days' + (moved ? ' (you have set ' + c.importation.arrivalEveryDays + '; the fit is not redone)' : '') + '. Fitted: the strength of face-to-face spread (a multiplier, now ' + fmt(c.transmission.G) + '), so that non-room-air spread is ' + pct(shareNow()) + '. With arrivals every ' + A.arrivalEveryDays + ' days the model then infects about ' + pct(at.trueAR) + ' of residents in a season, '
     + (at.reportShare < 1 ? 'which matches the CDC figure only if about ' + pct(at.reportShare) + ' of resident infections are reported. The resident counts above are the model\'s infections multiplied by that share.' : 'which is ' + (at.trueAR < A.reportedAR - 0.01 ? 'short of' : 'in line with') + ' the CDC figure, so every infection is counted as reported.');
 }
 worker.onmessage = (ev) => {
@@ -978,6 +978,7 @@ function sliderRow(p) {
     el('div', { class: 'l' }, el('label', { for: id }, lab.label), out), range,
     el('div', { class: 'm' }, el('span', {}, p.path === 'ventilation.scale' ? `range ${fmt(lo)}–${fmt(hi)} times the default` : `range ${fmt(lo)}–${fmt(hi)} · default ${fmt(def)}`), reset),
     noteFor(p) ? el('div', { class: 'n' }, noteFor(p)) : null,
+    p.path === 'transmission.closeShare' ? el('div', { class: 'n' }, el('button', { type: 'button', class: 'linkbtn splitopen' }, 'How were these numbers chosen?')) : null,
     src && src.text ? el('div', { class: 'src' }, 'Source: ', src.url ? el('a', { href: src.url, target: '_blank', rel: 'noopener' }, src.text) : src.text) : null].filter(Boolean));
   return row;
 }

@@ -14,8 +14,8 @@ decision and experiment; read its last few sections before changing anything. `S
 | `src/engine.js` | The model: building, timetable, room air, doses, infection, responses, lamp arithmetic |
 | `src/params.js` | Every input with range, source and note; the fitted tables; generated Illuminate blocks |
 | `src/analysis.js` | Cautious / central / favourable scenarios, lamp allocation |
-| `web/app.html`, `web/app.js` | Page shell and the Model tab |
-| `web/film.js` | The film and the "How is the chance of infection worked out?" explainer |
+| `web/app.html`, `web/app.js` | Page shell (with the owner's document on non-room-air spread, dialog `#split`) and the Model tab |
+| `web/film.js` | The film, the "How is the chance of infection worked out?" explainer, and the simulator's section of the second explainer |
 | `web/content.json` | Page text injected at build: slider labels, notes, limits, intro |
 | `web/film*.json`, `web/captions.json`, `web/narration.json` | Generated film data, captions and audio (committed) |
 | `web/build.mjs` | Builds `dist/index.html`, `dist/publish/index.html` and `shots/page.html` |
@@ -30,11 +30,12 @@ decision and experiment; read its last few sections before changing anything. `S
 Run everything from the repository root. Node 22 or later.
 
 ```
-npm test                      # 51 unit tests, about a minute
+npm test                      # 52 unit tests, about a minute
 node web/build.mjs            # dist/index.html, dist/publish/index.html, shots/page.html
 node shots/err.mjs            # page loads without errors (needs Playwright, see shots/lib.mjs)
 node shots/v1.mjs             # tabs, with and without a worker, phone width
 node shots/a2.mjs             # arrival-rate slider drives the results
+node shots/s1.mjs             # the "how the numbers were chosen" explainer opens and fits a phone
 node shots/f1.mjs 20 64 118   # film frames at those seconds -> shots/f-<t>.png
 ```
 
@@ -87,14 +88,27 @@ current version first and pass it as the base version. Only publish when the own
 
 ## Where things stand (20 November 2026)
 
-Headline, 200 winters, reported resident infections: lamps in the common areas 22% fewer (10% to 41%); common areas
-and bedrooms 34% (12% to 70%). Defaults: out-of-reach share 40% (25% to 55%), lamp constant 6.51 (2.62 to 15.85, from
-Illuminate), one infected staff member arriving every 5 days, bedroom lamps dimmed for 20 hours a day.
+Headline, 200 winters, reported resident infections: lamps in the common areas 32% fewer (12% to 47%); common areas
+and bedrooms 51% (15% to 78%). Defaults: non-room-air spread 30% (20% to 50%, from the owner's document, see below),
+lamp constant 6.51 (2.62 to 15.85, from Illuminate), one infected staff member arriving every 5 days, bedroom lamps
+dimmed for 20 hours a day, roommates face to face for 1.5 hours a day.
+
+Non-room-air spread is what reaches a person up close or by hands and surfaces before far-UVC can act; the model
+passes all of it face to face. The three cases and the by-setting table come from the owner's document "Room-air
+spread and non-room-air spread: how the numbers were chosen" (https://claude.ai/artifact/J6LQJE4TpgcXPqo7qNByad),
+held in `src/params.js` as `NON_ROOM_AIR` and reproduced on the page as the dialog `#split` in `web/app.html`. If the
+document changes, change both, refit (`experiments/emission_row.mjs 0.52 <G> 1000 5` for each G in
+`experiments/out_table_nonroomair.txt`, then `bash experiments/flu_table.sh 0.069 8 0.2 400 && python3
+experiments/flu_install.py`), rerun `node experiments/settings.mjs covid 1000` and `flu 1000` into
+`NON_ROOM_AIR.model`, and regenerate the film. The share is counted over infections passed to or from a resident.
+Influenza has no figure of its own: it uses COVID-19's face-to-face strength in each case (16 / 25 / 46%).
 
 Decisions waiting on the owner, with trial figures in `NOTES.md`:
 
-1. Refit at the published virus output 0.55 (the model holds 0.52). Moves results by noise only.
-2. The owner's proposed out-of-reach shares (COVID-19 35 / 55 / 75%, influenza 40 / 70 / 85%). Needs COVID-19 fitted
-   the way influenza is (`experiments/covid_fit_emission.mjs`). Central common-area figure would fall to about 16%.
+1. Refit at the published virus output 0.55 (the model holds 0.52). At 30% non-room-air spread the model infects 17.0%
+   of residents against 18.7% reported; at 0.55 it would infect 18.1%.
+2. Whether to relax the three settings that were moved to hold infections down (talking 2 and 5, immunity 0.5), now
+   that the model infects fewer residents than homes report at the central case.
 3. Whether the arrival rate joins the range; today it is a slider only. Influenza's 8 days is unchecked.
-4. Papers not read in full (Angel 2025, van Doremalen 2020, Sah 2021, McLean 1961, Kitagawa 2023, Weimer 2022).
+4. Papers not read in full (Angel 2025, van Doremalen 2020, Sah 2021, McLean 1961, Kitagawa 2023, Weimer 2022), and the
+   breath-sampling studies the document names as the way to narrow 20% to 50% (for example Coleman et al. 2022).

@@ -1,17 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ANCHORED, anchoredAt, anchoredConfig } from '../src/params.js';
+import { ANCHORED, NON_ROOM_AIR, anchoredAt, anchoredConfig } from '../src/params.js';
 import { anchoredScenarios } from '../src/analysis.js';
 
-test('anchored fit: published emission, an arrival every 5 days, G rises with the out-of-reach share', () => {
+test('anchored fit: published emission, an arrival every 5 days, G rises with non-room-air spread', () => {
   const c = anchoredConfig();
   assert.equal(c.emission.median, 0.52);
   assert.equal(c.importation.arrivalEveryDays, 5); assert.equal(c.importation.arrivalEveryDays, ANCHORED.arrivalEveryDays);
   assert.equal(c.transmission.closeShare, ANCHORED.shares.central);
   let last = 0;
-  for (const s of [0.12, 0.25, 0.4, 0.55, 0.7]) { const at = anchoredAt(s); assert.ok(at.G > last); last = at.G; assert.ok(at.reportShare > 0 && at.reportShare <= 1); }
-  assert.ok(anchoredAt(0.25).reportShare > 0.95 && anchoredAt(0.2).reportShare === 1);
-  assert.ok(Math.abs(anchoredAt(0.55).reportShare - 0.47) < 0.03);
+  for (const s of [0.12, 0.2, 0.3, 0.5, 0.7]) { const at = anchoredAt(s); assert.ok(at.G > last); last = at.G; assert.ok(at.reportShare > 0 && at.reportShare <= 1); }
+  // at 20% and 30% the model infects no more residents than homes report, so every infection counts as reported
+  assert.ok(anchoredAt(0.2).reportShare === 1 && anchoredAt(0.3).reportShare === 1);
+  assert.ok(Math.abs(anchoredAt(0.5).reportShare - 0.74) < 0.03);
+});
+
+test('non-room-air spread: the three cases are the document\'s, and the model\'s settings sit near its table', () => {
+  assert.deepEqual([ANCHORED.shares.low, ANCHORED.shares.central, ANCHORED.shares.high], [0.2, 0.3, 0.5]);
+  assert.deepEqual(NON_ROOM_AIR.cases, { low: 0.2, central: 0.3, high: 0.5 });
+  assert.deepEqual(NON_ROOM_AIR.bySetting, { care: [0.3, 0.4, 0.6], roommates: [0.03, 0.04, 0.09], dining: [0.2, 0.25, 0.45] });
+  const M = NON_ROOM_AIR.model.covid, want = [0.2, 0.3, 0.5];
+  for (let i = 0; i < 3; i++) {
+    assert.ok(Math.abs(M.home[i] - want[i]) < 0.02, 'home-wide share at case ' + i);   // the fit's own target, on other seeds
+    for (const k of ['care', 'roommates', 'dining']) assert.ok(Math.abs(M[k][i] - NON_ROOM_AIR.bySetting[k][i]) < 0.06, k + ' at case ' + i);
+    assert.ok(M.all[i] < M.home[i]);   // staff-to-staff spread is mostly through room air
+  }
 });
 
 test('anchored scenarios: cautious and favourable sit at the ends of the share range and of lamp strength', () => {
@@ -63,6 +76,8 @@ test('influenza has its own fit: reported infections held, virus output and face
     assert.ok(Math.abs(at.trueAR - A.reportedAR * A.underReport) < 0.006); assert.ok(Math.abs(at.reportShare - 1 / A.underReport) < 0.04);
     assert.ok(at.emissionMedian > A.publishedEmission);
   }
+  // no figure of its own: each case uses COVID-19's face-to-face strength (the share is rounded to 1%, so nearly)
+  for (const k of ['low', 'central', 'high']) { const g = anchoredAt(A.shares[k], 'flu').G, gc = anchoredAt(ANCHORED.shares[k]).G; assert.ok(Math.abs(g / gc - 1) < 0.08, k); }
   const sc = anchoredScenarios(c);
   assert.equal(sc.cautious.transmission.closeShare, A.shares.high); assert.equal(sc.favourable.transmission.closeShare, A.shares.low);
   assert.ok(sc.cautious.emission.median < c.emission.median && c.emission.median < sc.favourable.emission.median);

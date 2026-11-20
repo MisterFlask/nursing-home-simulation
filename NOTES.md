@@ -1003,3 +1003,51 @@ Not installed, each tried on today's model (200 seasons, common areas / common a
   for page tests), from the fixed outer wrapper in `web/publish-head.html`. Checked: the build reproduces the
   published page byte for byte.
 - `CLAUDE.md` is the orientation for a new session; `web/parts/` (old backups) and screenshots are not tracked.
+
+## 2026-11-20 (later): non-room-air spread from the owner's document, 20 / 30 / 50%
+
+The owner's document "Room-air spread and non-room-air spread: how the numbers were chosen" (Claude Docs,
+https://claude.ai/artifact/J6LQJE4TpgcXPqo7qNByad) replaces the earlier proposal (35 / 55 / 75%). Installed:
+
+- **The three cases.** Non-room-air spread for COVID-19 is 20% (best for lamps), 30% (central) and 50% (cautious);
+  was 25 / 40 / 55%. The document's figures are in `src/params.js` as `NON_ROOM_AIR` (cases and its by-setting table).
+- **What the share is counted over.** The fit tables' `closeShare` is now the share caught face to face among
+  infections passed to or from a resident (care, roommates, dining and other shared rooms), which is what the
+  document's three settings cover. Until today it counted every infection in the home; staff-to-staff spread (stations,
+  break room, office: about a third of all infections) is almost all room air in the model and pulled the figure down.
+  Each COVID-19 row keeps the old figure as `shareAll`: 14 / 22 / 40% at the three cases. `experiments/anchored.mjs`
+  `evaluate()` returns both.
+- **By setting.** The document says a model that can take a value per setting should use its table (care 30/40/60,
+  roommates 3/4/9, dining or activity 20/25/45). The model has one face-to-face strength G, not one per setting. With G
+  fitted to the home-wide case, `experiments/settings.mjs` (1,000 seasons) gives care 27 / 39 / 61, roommates
+  2.5 / 4.4 / 10.6, dining or activity 15 / 24 / 45. That is within 5 points everywhere, so no per-setting strengths
+  were added. The model's values are stored in `NON_ROOM_AIR.model` and shown beside the document's in the explainer.
+- **Roommates.** `transmission.roommateHours` default 0 → 1.5 (range 0 to 3), so roommates have the small face-to-face
+  share the document gives them. At 1 hour the central figure was 2.7%; at 1.5 it is 4.4%.
+- **COVID-19 table** refitted (`experiments/emission_row.mjs 0.52 <G> 1000 5`, `experiments/out_table_nonroomair.txt`),
+  now 1,000 seasons a row because 400 left the residents-infected column uncertain by over a point. G 0.23 / 0.42 / 1.12.
+  The model infects 14.8% / 17.0% / 25.3% of residents, against 18.7% reported to CDC: at 20% and 30% it infects fewer
+  than homes report and every infection counts as reported; at 50% about a quarter go unreported (at the old cautious 55%, about half did).
+  The model matches CDC exactly at a share of about 0.36.
+- **Influenza** has no figure of its own, as the document says. Each case uses COVID-19's G; the virus breathed out
+  is fitted to 6.9% of residents as before (`experiments/flu_table.sh 0.069 8 0.2 400`, rows now at G 0.1 to 10), and
+  `ANCHORED_FLU.shares` is read off the table at COVID-19's G: 16 / 25 / 46% (was 35 / 60 / 85%). Fitted virus output
+  at the central case is 0.69 quanta an hour, 20 times the published 0.035 (was 0.27, 8 times).
+- **Headline, 200 seasons, reported resident infections.** COVID-19: common areas 32% fewer (12% to 47%), was 22% (10%
+  to 41%); common areas and bedrooms 51% (15% to 78%), was 34% (12% to 70%); bedrooms only 22% (3% to 45%). Averages
+  19.2 → 13.0 → 9.4. Influenza: common areas 48% (17% to 60%), was 24%; with bedrooms 68% (18% to 86%), was 32%.
+- **Checks redone.** Weeks with a reported resident infection 21%, two or more 13% (CDC 15-26% and 9-17%); staff
+  infected 31% to 38%; staff masked on 76% of days (COVID-19) and 8% (influenza); influenza: a quarter of seasons reach
+  a tenth of residents, median 16% among those (`experiments/flu_outbreaks.mjs`). With the values studies suggest for
+  talking and immunity (5, 10, 0.3) the model infects 51% of residents at the central G, so the intro's claim stands.
+- **The page.** The document is reproduced as a second explainer (dialog `#split` in `web/app.html`), opened from the
+  film tab, from the first slider and from "What the lamps can reach". Its section "How the simulator uses these
+  numbers" is ours and is filled from `NON_ROOM_AIR` (`splitModel` in `web/film.js`). Page text says "non-room-air
+  spread" where it said "out of the lamps' reach"; the model's mechanism is still called face to face. Film data,
+  captions and narration regenerated (Kokoro af_heart). The film's season is now seed-picked afresh: lunch with 45 people.
+- **Not done, for the owner.** (1) At the published virus output 0.55 the model infects 15.9% / 18.1% / 26.7% at the
+  three cases, so the central case would sit at CDC's 18.7% where 0.52 leaves it 1.7 points short. That decision is
+  now worth more than noise. (2) The three settings moved to hold infections down when the share was 40% (talking 2 and
+  5, immunity 0.5) now overshoot at 30%; they were left alone. (3) The document's calculation itself is not in this
+  repository, so its tables are reproduced, not recomputed.
+

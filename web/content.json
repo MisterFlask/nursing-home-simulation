@@ -9,7 +9,7 @@
   ],
   "LAMP_M2": 23.2258,
   "OMISSIONS": [
-    "Spread by hands and surfaces. It is counted inside the share that room air cleaning cannot reach.",
+    "Droplets, hands and surfaces as separate routes. They are counted inside non-room-air spread, all of which the model passes face to face.",
     "Infections that spread mainly by hands and surfaces, such as norovirus. Lamps would not be expected to affect them.",
     "Air moving between rooms through corridors and ducts.",
     "New residents arriving, and residents going out.",
@@ -19,11 +19,12 @@
     "People behaving differently because lamps are installed."
   ],
   "MISMATCH": [
-    "Two published numbers are held fixed: how much virus an infected person breathes out (Mikszewski et al. 2022) and the rate of COVID-19 infections reported by US nursing homes in winter 2023-24 (18.7% of residents in 120 days, CDC). With both fixed, the model infects more residents than homes report unless little spread is at close range. The gap is closed by assuming some resident infections go unreported: about three in ten at the default setting, about half at the cautious one. That share has not been measured well.",
-    "The virus figure is in quanta, a unit that contains an assumed infectious dose. It is uncertain by a factor of 3 to 10 either way, and the range for the out-of-reach share moves with it.",
-    "The out-of-reach share is limited to 25%-55% because outside that range the model matches the CDC figure only with implausible under-reporting. Other models put the share at about 45% to over 70%; values above 55% would mean smaller effects than any shown here.",
-    "The model infects three to four times as many staff as homes report: 34% to 48% in a season, against about 11%. Either staff infections are heavily under-reported or the model overstates them. Staff counts are shown unadjusted.",
-    "One infected staff member arrives every 5 days, on a fixed beat. That rate is our estimate, not a measurement. It was chosen so that the model has a reported resident infection in about as many weeks as US nursing homes did in winter 2023-24: 23% of weeks here, against 15% to 26% of homes in any one week (CDC). Real arrivals are irregular, and visitors and new residents bring infection too. With rarer arrivals the model has fewer, larger outbreaks and lamps prevent more; a slider sets the rate.",
+    "Two published numbers are held fixed: how much virus an infected person breathes out (Mikszewski et al. 2022) and the rate of COVID-19 infections reported by US nursing homes in winter 2023-24 (18.7% of residents in 120 days, CDC). With both fixed, how many residents the model infects depends on how much of the spread is non-room-air. At the default, 30%, it infects about 17% of residents, slightly fewer than homes report, and every infection is counted as reported. In the case best for lamps (20%) it infects about 15%. In the cautious case (50%) it infects about 25%, and the gap is closed by assuming that about a quarter of resident infections go unreported. How many infections go unreported has not been measured well.",
+    "The virus figure is in quanta, a unit that contains an assumed infectious dose. It is uncertain by a factor of 3 to 10 either way, and the number of infections the model produces moves with it.",
+    "Non-room-air spread, the part lamps cannot act on, is set at 30%, with 20% and 50% as the ends of the range. These values come from a calculation and a judgment, not a measurement: no study has measured this split in a nursing home. Published models of a hospital room and a cruise ship put it at 55% and above. Our calculation adjusts them for the lower ventilation of nursing-home bedrooms, which leaves more virus in the room's air. If the true share is above 50%, lamps would do less than any figure shown here. The reasoning and sources are under \"How were these numbers chosen?\", beside the first slider.",
+    "The simulator does not take a separate value of non-room-air spread for each setting, as our calculation does. One strength of face-to-face spread is fitted to the home-wide figure, and the split in each setting follows. At the default it gives 39% for hands-on care in a bedroom, 4% for roommates and 24% for dining and activity rooms, against 40%, 4% and 25% in the calculation.",
+    "The model infects about three times as many staff as homes report: 31% to 38% in a season, against about 11%. Either staff infections are heavily under-reported or the model overstates them. Staff counts are shown unadjusted.",
+    "One infected staff member arrives every 5 days, on a fixed beat. That rate is our estimate, not a measurement. It was chosen so that the model has a reported resident infection in about as many weeks as US nursing homes did in winter 2023-24: 21% of weeks here, against 15% to 26% of homes in any one week (CDC). Real arrivals are irregular, and visitors and new residents bring infection too. With rarer arrivals the model has fewer, larger outbreaks and lamps prevent more; a slider sets the rate.",
     "An earlier version produced outbreaks that were too short: about three weeks from first to last case, against about eight in published reports. This has not been rechecked.",
     "Rooms are treated as evenly mixed and sealed from one another, which tends to flatter air cleaning in small rooms.",
     "Lamp figures are Illuminate's: how easily far-UVC inactivates the virus, the lamp's output, how far its light travels and how much it must be dimmed. Illuminate works them out for empty rooms of ordinary proportions, here with one to four times one lamp per 250 square feet. Long corridors, odd-shaped rooms and room sizes between those in the table are approximate. On top of that the model counts only three-quarters of the clean air Illuminate computes, which is our judgment.",
@@ -31,12 +32,16 @@
   ],
   "NOTES": [
     [
+      "transmission.roommateHours",
+      "Roommates share their room's air for many hours and spend little of that time face to face. An hour and a half a day makes about 4% of the spread between roommates face to face at the default, which is the figure our calculation gives for roommates."
+    ],
+    [
       "transmission.closeShare",
-      "Face-to-face spread plus spread by hands and surfaces, which is not simulated separately. Moving this re-fits the strength of face-to-face spread. It also changes how many residents the model infects, and so how many infections must go unreported to match CDC's rate: none at 0.23, about half at 0.55, almost three quarters at 0.70. Below 0.23 the model infects fewer residents than homes report. We treat 0.25 to 0.55 as the range the evidence allows. Lamps help less when this share is higher."
+      "Spread that reaches a person up close or by hands and surfaces, before far-UVC can act. The rest is room-air spread, which lamps and ventilation remove. The share is counted over infections passed to or from a resident. Our estimate for a nursing home is 30%, with 20% as the case best for lamps and 50% as the cautious one. These come from a calculation and a judgment, not a measurement. In the simulator all of it is passed face to face, and moving this slider re-fits the strength of that. It also changes how many residents the model infects: about 15% at 0.20, 17% at 0.30 and 25% at 0.50, against the 18.7% that homes report to CDC. Above about 0.36 the model infects more than homes report and the extra is taken to go unreported; below it the model infects slightly fewer. Lamps help less when this share is higher."
     ],
     [
       "emission.median",
-      "From the estimate for SARS-CoV-2 at rest by Mikszewski et al. 2022, whose final paper gives 0.55; the model uses 0.52, from an earlier version. A dose here infects about 63% of people who take it in. Uncertain by a factor of 3 to 10 either way. The out-of-reach range and the share of infections reported were worked out at 0.52 and are not re-fitted when you move this."
+      "From the estimate for SARS-CoV-2 at rest by Mikszewski et al. 2022, whose final paper gives 0.55; the model uses 0.52, from an earlier version. A dose here infects about 63% of people who take it in. Uncertain by a factor of 3 to 10 either way. The strength of face-to-face spread and the share of infections reported were worked out at 0.52 and are not re-fitted when you move this."
     ],
     [
       "emission.activity.social",
@@ -76,6 +81,11 @@
     ]
   ],
   "LABELS": [
+    [
+      "transmission.closeShare",
+      "Non-room-air spread: the share of spread that lamps cannot act on",
+      "share (0 to 1)"
+    ],
     [
       "lamp.pathFactor",
       "How far a lamp's light travels, compared with Illuminate's figure",
@@ -118,7 +128,7 @@
   "NOTES_FLU": [
     [
       "transmission.closeShare",
-      "Face-to-face spread plus spread by hands, surfaces and large droplets, which are not simulated separately and are thought to matter more for influenza than for COVID-19. Moving this re-fits both the strength of face-to-face spread and the virus breathed out, so the model still infects about 6.9% of residents a season. Range 35% to 85%: a hospital study of ultraviolet air disinfection in the 1957-58 pandemic points to the low end (McLean, in Tellier 2006), a risk model of the routes to the high end (Nicas & Jones 2009), and a household study put about half of spread in aerosols (Cowling et al. 2013)."
+      "Influenza has no figure of its own. Each case uses the same strength of face-to-face spread as COVID-19, and the split is what the model then gives: 25% at the default, 16% in the case best for lamps and 46% in the cautious one. Moving this re-fits both that strength and the virus breathed out, so the model still infects about 6.9% of residents a season. Hands, surfaces and large droplets are thought to matter more for influenza than for COVID-19, and one risk model of the routes leaves little of influenza's spread to room air (Nicas & Jones 2009). If that is right, the share is well above this range and lamps would do much less than shown. A hospital study of ultraviolet air disinfection in the 1957-58 pandemic points the other way (McLean, in Tellier 2006), and a household study put about half of spread in aerosols (Cowling et al. 2013)."
     ],
     [
       "emission.activity.social",
@@ -182,19 +192,19 @@
     ]
   ],
   "INTRO": [
-    "Where studies support a range, the slider spans it. Otherwise the value and its range are our judgment, and the source line says so. The first six matter most. Three settings were moved to make the model fit. With the published figure for the virus a person breathes out, the model infects more residents than nursing homes report to CDC. To close part of that gap, residents are taken to talk less than studies suggest (2 times their resting output, not 5), staff at work to breathe out less (5 times, the bottom of our range) and existing immunity to protect more (0.5, the top of our range)."
+    "Where studies support a range, the slider spans it. Otherwise the value and its range are our judgment, and the source line says so. The first six matter most. Three settings were moved to make the model fit. With the published figure for the virus a person breathes out and the values studies suggest for these three, the model would infect more residents than nursing homes report to CDC. To close that gap, residents are taken to talk less than studies suggest (2 times their resting output, not 5), staff at work to breathe out less (5 times, the bottom of our range) and existing immunity to protect more (0.5, the top of our range). With these settings the model infects about as many residents as homes report at the default, or slightly fewer."
   ],
   "INTRO_FLU": [
     "Where studies support a range, the slider spans it. Otherwise the value and its range are our judgment, and the source line says so. The first six matter most. Influenza rests on weaker ground than COVID-19. Nursing homes have reported it to CDC only since 2025, and the published figure for the virus a person breathes out is too low to produce the influenza they report, so the model fits that figure."
   ],
   "MISMATCH_FLU": [
     "Two things are held fixed: the rate of influenza infections reported by US nursing homes in winter 2025-26 (2.3% of residents in 120 days; our calculation from CDC's NHSN data, the first complete season of reporting) and one infected staff member arriving every 8 days. The winter before was worse, at about 4%.",
-    "The published estimate of the virus a person with influenza breathes out (0.035 quanta an hour at rest, Mikszewski et al. 2022) gives the model less than a third of the infections homes report. So the model fits that number: 0.27 at the default share, about eight times the published figure. Published estimates run from 0.035 to 0.17 for a typical person and into the hundreds for the heaviest shedders. The published figure fits the reported infections only if about 92% of spread is out of the lamps' reach, in which case lamps would do little.",
+    "The published estimate of the virus a person with influenza breathes out (0.035 quanta an hour at rest, Mikszewski et al. 2022) gives the model less than a third of the infections homes report. So the model fits that number: 0.69 at the default, about 20 times the published figure. Published estimates run from 0.035 to 0.17 for a typical person and into the hundreds for the heaviest shedders. The published figure fits the reported infections only if more than nine-tenths of spread is non-room-air, in which case lamps would do little.",
     "The model assumes one influenza infection in three is reported. No study has measured this in nursing homes; 3 is our choice from a range of 2 to 5.",
-    "The out-of-reach share is less certain for influenza than for COVID-19: 35% to 85%, with 60% as our central value. Hands, surfaces and large droplets are thought to matter more for influenza. A hospital study of ultraviolet air disinfection in the 1957-58 pandemic points to the low end; a risk model of the routes points to the high end.",
+    "Influenza has no separate figure for non-room-air spread. It uses the same strength of face-to-face spread as COVID-19, which gives 25% at the default and 16% to 46% across the range. That rests on weaker ground than the COVID-19 figure. Hands, surfaces and large droplets are thought to matter more for influenza, and a risk model of the routes puts most of its spread there (Nicas & Jones 2009); if so, lamps would do much less than shown. A hospital study of ultraviolet air disinfection in the 1957-58 pandemic points the other way.",
     "How easily far-UVC inactivates airborne influenza has been measured twice, and the results differ eleven-fold (1.8 and 19 in Illuminate's table). The default, 10.4, is their midpoint, following Illuminate's rule of taking the median. No measurement sits near it.",
     "Antiviral prophylaxis is not modelled. CDC advises oseltamivir for the residents of a unit once two cases are confirmed there. Where that is done promptly it prevents some of the same infections lamps would, so the lamp effect is overstated for those homes. In usual practice it is given in a minority of seasons.",
-    "In the model about a quarter of seasons see a tenth or more of residents infected, and a typical one of those reaches 14%. Published outbreak reports give 33%, but they favour large outbreaks.",
+    "In the model about a quarter of seasons see a tenth or more of residents infected, and a typical one of those reaches 16%. Published outbreak reports give 33%, but they favour large outbreaks.",
     "With about 2.6 reported infections a season among 112 residents, 200 simulated seasons leave the percentages uncertain by a few points.",
     "Rooms are treated as evenly mixed and sealed from one another, which tends to flatter air cleaning in small rooms.",
     "Lamp figures are Illuminate's: how easily far-UVC inactivates the virus, the lamp's output, how far its light travels and how much it must be dimmed. Illuminate works them out for empty rooms of ordinary proportions, here with one to four times one lamp per 250 square feet. Long corridors, odd-shaped rooms and room sizes between those in the table are approximate. On top of that the model counts only three-quarters of the clean air Illuminate computes, which is our judgment."

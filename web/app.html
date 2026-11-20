@@ -182,6 +182,13 @@ dialog.explain::backdrop { background: rgba(20, 22, 31, .5); }
 .explain ol.ticks { margin: 0; padding-left: 1.6em; display: flex; flex-direction: column; gap: 8px; list-style: lower-alpha; }
 .explain ol.ticks li { padding-left: 4px; max-width: 70ch; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
 .explain ol.ticks b { font-weight: 600; color: var(--ink); }
+.explain ul.pts { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 8px; }
+.explain ul.pts li, .explain td { max-width: 70ch; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+.explain td { font-size: 14px; line-height: 1.4; }
+.explain ul.pts b { font-weight: 600; color: var(--ink); }
+.explain a { color: var(--lamp); text-underline-offset: 3px; }
+.explain table { border-collapse: collapse; min-width: 100%; }
+.explain .splitmodel { display: flex; flex-direction: column; gap: 10px; }
 .explain .calc { padding: 8px 12px; border-radius: 6px; background: var(--page); color: var(--ink); font: 500 13.5px/1.5 var(--f-mono); overflow-wrap: anywhere; }
 .explain .tablewrap { overflow-x: auto; }
 .explain th, .explain td { padding: 7px 10px 7px 0; border-bottom: 1px solid var(--hair); text-align: left; vertical-align: top; }
@@ -409,6 +416,7 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
         <div class="filmcaphd">
           <p class="eyebrow" id="filmchap">1 of 6 · One room</p>
           <button type="button" class="linkbtn explainopen" title="The calculation step by step, with the numbers for this lunch and where each one comes from">How is the chance of infection worked out?</button>
+          <button type="button" class="linkbtn splitopen" title="How the split between room-air spread and non-room-air spread was chosen, with the reasoning and sources">How much spread can lamps act on?</button>
         </div>
         <p id="filmtext" aria-live="polite">One room, one day, one winter, then 200 winters, and our best estimate of what lamps would do.</p>
       </div>
@@ -491,7 +499,7 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
         <div class="block">
           <h3>What the lamps can reach</h3>
           <svg class="chart" id="reach" viewBox="0 0 520 190" role="img" aria-label="Reported resident infections by how they were caught, through room air or face to face: without lamps, with lamps in the common areas, and with lamps in the common areas and bedrooms"></svg>
-          <p class="cap">Reported infections among residents in an average season, by how they were caught, at the current settings. Lamps act on the air of shared rooms and on nothing else. The face-to-face side falls only because fewer people are infectious.</p>
+          <p class="cap">Reported infections among residents in an average season, by how they were caught, at the current settings. Lamps act on the air of shared rooms and on nothing else. The face-to-face side falls only because fewer people are infectious. <button type="button" class="linkbtn splitopen">How was the split between the two chosen?</button></p>
         </div>
 
         <div class="block">
@@ -606,6 +614,74 @@ details.grp > summary span { font: 400 12px/1.2 var(--f-mono); color: var(--ink-
 <dialog id="explain" class="explain" aria-labelledby="explaintitle">
   <div class="xhd"><h2 id="explaintitle">How the chance of infection is worked out</h2><button type="button" class="btn" id="explainclose">Close</button></div>
   <div class="xbd" id="explainbody"><p>Preparing one simulated winter…</p></div>
+</dialog>
+<dialog id="split" class="explain" aria-labelledby="splittitle">
+  <div class="xhd"><h2 id="splittitle">Room-air spread and non-room-air spread: how the numbers were chosen</h2><button type="button" class="btn" id="splitclose">Close</button></div>
+  <div class="xbd">
+    <h3>The numbers</h3>
+    <p>In a nursing home, an estimated 70% of COVID-19 spread is room-air spread, which far-UVC lamps can act on. The remaining 30% is non-room-air spread: it reaches a person up close or by hands and surfaces, before the light can act. The optimistic case for non-room-air spread in a nursing home is 20% and the cautious case is 50%.</p>
+    <p>Non-room-air spread is close to what studies call short-range spread plus spread by contact. The difference is that ordinary room air breathed while standing close counts as room-air spread here, because lamps do reach it.</p>
+    <div class="tablewrap"><table><thead><tr><th>Case</th><th>Non-room-air spread</th><th>Room-air spread</th><th>What it assumes</th></tr></thead><tbody><tr><td>Optimistic</td><td>20%</td><td>80%</td><td>Infected people breathe out a lot of virus in fine particles</td></tr><tr><td>Central</td><td>30%</td><td>70%</td><td>They breathe out a middling amount in fine particles</td></tr><tr><td>Cautious</td><td>50%</td><td>50%</td><td>They breathe out very little in fine particles, so droplets dominate up close</td></tr></tbody></table></div>
+    <p>"Optimistic" means best for lamps, so it has the least non-room-air spread. These values come from a calculation and a judgment, not a measurement. No study has measured this split in a nursing home.</p>
+    <p>Influenza has no separate figure. It uses the same non-room-air dose as COVID-19, and its split follows from how influenza behaves in the model.</p>
+    <h3>Two doses</h3>
+    <p>A person who shares space with someone infected takes in virus in two ways, and lamps can only reduce one of them.</p>
+    <ul class="pts">
+      <li><b>Room-air dose.</b> This is virus that has built up in the room's air over minutes and hours. Everyone in the room breathes it, near or far. Lamps and ventilation both remove it.</li>
+      <li><b>Non-room-air dose.</b> This is everything else, and it arrives while the two people are close: air inhaled seconds after the other person exhaled it, droplets landing on the face, and virus picked up by contact with hands and surfaces. Far-UVC needs a few minutes to inactivate virus in air, so this dose arrives before the light can act.</li>
+    </ul>
+    <p>Cigarette smoke is a fair picture. Standing next to a smoker, you get the puff directly. Anywhere else in the room, you get the haze.</p>
+    <div class="calc">non-room-air spread = non-room-air dose ÷ (non-room-air dose + room-air dose)</div>
+    <h3>Why the split depends on the room</h3>
+    <p>The split is set by the room as much as by the virus, because ventilation changes only the room-air dose. Halve the clean air and the room-air dose roughly doubles. The non-room-air dose stays the same.</p>
+    <p>So in a stuffy room the haze dominates and non-room-air spread is a small share. In a well-ventilated room little haze is left, and the non-room-air dose is most of what remains.</p>
+    <p>Ventilation is counted in air changes an hour: how many times an hour the room's air is replaced. The table shows a carer at a resident's bedside, using the central case from the next section.</p>
+    <div class="tablewrap"><table><thead><tr><th>Room</th><th>Air changes an hour</th><th>Room-air dose for each unit of non-room-air dose</th><th>Non-room-air spread</th></tr></thead><tbody><tr><td>Nursing-home bedroom, door closed (<a href="https://stacks.cdc.gov/view/cdc/207993" target="_blank" rel="noopener">measured</a>)</td><td>0.67</td><td>3.8</td><td>21%</td></tr><tr><td>Nursing-home bedroom at the design minimum</td><td>2</td><td>1.8</td><td>35%</td></tr><tr><td>Nursing-home bedroom, door open (<a href="https://stacks.cdc.gov/view/cdc/207993" target="_blank" rel="noopener">measured</a>)</td><td>3.87</td><td>1.1</td><td>48%</td></tr><tr><td>Hospital room in the <a href="https://www.tandfonline.com/doi/full/10.1080/15459624.2020.1784427" target="_blank" rel="noopener">published model</a></td><td>9</td><td>0.5</td><td>67%</td></tr></tbody></table></div>
+    <p>The table assumes a 35 m³ room and a carer who is within about 1.2 m for 75% of the visit.</p>
+    <p>This is why published figures of 55% and above do not carry over. They were worked out for a <a href="https://www.tandfonline.com/doi/full/10.1080/15459624.2020.1784427" target="_blank" rel="noopener">hospital room</a> at 9 air changes an hour and a <a href="https://www.pnas.org/doi/full/10.1073/pnas.2015482118" target="_blank" rel="noopener">cruise ship</a> at 9 to 12. Resident rooms in <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC13315534/" target="_blank" rel="noopener">15 Toronto care sites</a> had a median of 3.5.</p>
+    <h3>Estimates of droplet spread</h3>
+    <p>The three cases differ in one thing: how much of the non-room-air dose comes from droplets and contact (which we bundle into "non-room-air"). The inhaled part of the non-room-air dose can be estimated from airflow: near an infected person, the air carries about 9% more virus than the rest of a typical nursing-home bedroom. The droplet and contact part cannot be estimated that way. It comes from a <a href="https://www.tandfonline.com/doi/full/10.1080/15459624.2020.1784427" target="_blank" rel="noopener">published model</a>, and it depends on how much virus an infected person breathes out in fine particles.</p>
+    <p>The model's <a href="https://www.tandfonline.com/doi/full/10.1080/15459624.2020.1864992" target="_blank" rel="noopener">own chart</a> shows how its split moves with that amount. The multiple in the last column is the droplet and contact dose divided by the inhaled part.</p>
+    <div class="tablewrap"><table><thead><tr><th>Virus breathed out in fine particles (copies a minute)</th><th>Inhalation / droplet in the model</th><th>Droplet and contact dose, as a multiple of the inhaled part of the non-room-air dose</th></tr></thead><tbody><tr><td>1</td><td>18% / 80%</td><td>About 23</td></tr><tr><td>About 10 (matches the model's baseline)</td><td>30% / 60%</td><td>About 10</td></tr><tr><td>100</td><td>42% / 58%</td><td>About 7</td></tr><tr><td>1,000</td><td>55% / 45%</td><td>About 4</td></tr><tr><td>10,000</td><td>68% / 32%</td><td>About 2.5</td></tr></tbody></table></div>
+    <p>The published model is a 2020 study of a healthcare worker caring for a patient (<a href="https://www.tandfonline.com/doi/full/10.1080/15459624.2020.1784427" target="_blank" rel="noopener">Jones 2020</a>). It splits spread into contact, droplet and inhalation. The journal <a href="https://www.tandfonline.com/doi/full/10.1080/15459624.2020.1864992" target="_blank" rel="noopener">corrected the paper in 2021</a>: the doses stood, but the step that turned dose into infection risk had been wrong. The corrected baseline is 60% droplet, 30% inhalation and 1.4% contact (Table 3 of the correction). The other rows are read off the correction's Figure 4, so they are approximate. A copy is one unit of the virus's genetic material, the usual way of counting virus in a sample.</p>
+    <p>The droplet figure itself is partly an assumption. It depends on how much virus large droplets carry and how well virus that lands on the eyes, nose or mouth goes on to infect. A 2022 review co-written by the model's author lists both as open questions (<a href="https://pdfs.semanticscholar.org/59a6/b25003acb58d4e16e7417730bab2b00a2b49.pdf" target="_blank" rel="noopener">Wilson et al. 2022</a>).</p>
+    <h3>So how much viral spread can far-UVC light act on?</h3>
+    <p>Each case is what one part of that range gives when averaged over a whole home. A home is a mix of three settings: hands-on care in a bedroom, roommates sharing a bedroom, and dining or activity rooms. The calculation runs each setting across a range of room sizes, ventilation rates and time spent close, then combines them.</p>
+    <div class="tablewrap"><table><thead><tr><th>Virus breathed out in fine particles (copies a minute)</th><th>Non-room-air spread, with bedrooms mostly at 2 air changes an hour</th><th>Non-room-air spread, with bedrooms mostly at 3.5</th></tr></thead><tbody><tr><td>1</td><td>40% to 54%</td><td>44% to 59%</td></tr><tr><td>About 10 (matches the model's baseline)</td><td>27% to 38%</td><td>31% to 44%</td></tr><tr><td>100</td><td>23% to 32%</td><td>26% to 37%</td></tr><tr><td>1,000</td><td>17% to 24%</td><td>20% to 30%</td></tr><tr><td>10,000</td><td>14% to 19%</td><td>16% to 23%</td></tr></tbody></table></div>
+    <p>Each range covers five different weightings of the three settings, from mostly care to mostly common rooms.</p>
+    <ul class="pts">
+      <li><b>Optimistic, 20%.</b> The 1,000 and 10,000 rows: infected people breathe out a lot of virus in fine particles.</li>
+      <li><b>Central, 30%.</b> The 100 row.</li>
+      <li><b>Cautious, 50%.</b> Between the baseline row and the top row: very little virus in fine particles, better ventilation, and a home where most contact is hands-on care.</li>
+    </ul>
+    <p>So far-UVC can act on about 80%, 70% and 50% of spread in the three cases.</p>
+    <p>The calculation leans cautious in one respect. It gives lamps no credit for any air inhaled at short range, although some of the air near an infected person is old enough for the light to have acted on.</p>
+    <h3>Reconciling this with the Diamond Princess cruise ship study</h3>
+    <p>A separate model, fitted to a real outbreak, lands near 30% once it is adjusted for nursing-home ventilation. It is a study of the Diamond Princess cruise ship (<a href="https://www.pnas.org/doi/full/10.1073/pnas.2015482118" target="_blank" rel="noopener">Azimi et al. 2021</a>), and it does not use the <a href="https://www.tandfonline.com/doi/full/10.1080/15459624.2020.1784427" target="_blank" rel="noopener">healthcare-worker model</a> at all.</p>
+    <p>Its median estimates were 36% short-range, 41% long-range and 21% surfaces. Short-range plus surfaces makes 57% non-room-air spread, on a ship at 9 to 12 air changes an hour.</p>
+    <p>Applying the rule from above, the room-air dose grows as ventilation falls and the rest stays fixed. At 2 to 3.5 air changes an hour, the ship's 57% becomes 24% to 33%. Its higher mean estimate of 65% becomes 30% to 41%.</p>
+    <h3>By setting</h3>
+    <p>Non-room-air spread differs far more between settings than between cases, so a model that can take a value per setting should use these.</p>
+    <div class="tablewrap"><table><thead><tr><th>Setting</th><th>Optimistic</th><th>Central</th><th>Cautious</th></tr></thead><tbody><tr><td>Hands-on care in a bedroom</td><td>30%</td><td>40%</td><td>60%</td></tr><tr><td>Roommates sharing a bedroom</td><td>3%</td><td>4%</td><td>9%</td></tr><tr><td>Dining or activity room</td><td>20%</td><td>25%</td><td>45%</td></tr></tbody></table></div>
+    <p>Roommates are low because they share air for many hours and spend little of that time face to face. Almost all of their dose comes through room air, which lamps reach.</p>
+    <h3>What is not settled</h3>
+    <p>Four things could move these numbers.</p>
+    <ul class="pts">
+      <li><b>Where real patients sit on the fine-particle scale.</b> This sets the whole gap between 20% and 50%. It can be measured, and breath-sampling studies exist (for example <a href="https://doi.org/10.1093/cid/ciab691" target="_blank" rel="noopener">Coleman et al. 2022</a>), but they have not been checked for this document. They would narrow the range more than anything else.</li>
+      <li><b>The 60% droplet figure is an average of very different simulations.</b> In the middle half of the model's runs, droplets account for anywhere from 24% to 100%. A few high-dose runs carry most of the infections, and <a href="https://www.tandfonline.com/doi/full/10.1080/15459624.2020.1864992" target="_blank" rel="noopener">the correction's table</a> does not show how those split.</li>
+      <li><b>The calculation is untested.</b> It treats each room as evenly mixed, and no experiment has measured this split in a nursing home.</li>
+      <li><b>The same multiple is applied in every setting.</b> The roommate and common-room droplet and contact doses were scaled by the same factor as hands-on care. That is an assumption.</li>
+    </ul>
+    <h3>How the simulator uses these numbers</h3>
+    <div id="splitmodel" class="splitmodel"></div>
+    <h3>Sources</h3>
+    <ul class="pts">
+      <li><b>The healthcare-worker model.</b> <a href="https://www.tandfonline.com/doi/full/10.1080/15459624.2020.1784427" target="_blank" rel="noopener">Jones 2020</a>, Journal of Occupational and Environmental Hygiene, with its <a href="https://www.tandfonline.com/doi/full/10.1080/15459624.2020.1864992" target="_blank" rel="noopener">2021 correction</a>. The corrected split is Table 3 of the correction, and the fine-particle chart is its Figure 4. The open questions about droplets are from a <a href="https://pdfs.semanticscholar.org/59a6/b25003acb58d4e16e7417730bab2b00a2b49.pdf" target="_blank" rel="noopener">2022 review in the Annual Review of Public Health</a> (Wilson et al.).</li>
+      <li><b>The Diamond Princess study.</b> <a href="https://www.pnas.org/doi/full/10.1073/pnas.2015482118" target="_blank" rel="noopener">Azimi et al. 2021, PNAS.</a></li>
+      <li><b>Ventilation with the door open and closed.</b> <a href="https://stacks.cdc.gov/view/cdc/207993" target="_blank" rel="noopener">Srikanth et al. 2024</a>, Journal of Occupational and Environmental Hygiene.</li>
+      <li><b>Ventilation in Toronto care sites.</b> <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC13315534/" target="_blank" rel="noopener">Chan et al. 2026</a>, Infection Control &amp; Hospital Epidemiology.</li>
+    </ul>
+  </div>
 </dialog>
 <div id="tip" hidden></div>
 

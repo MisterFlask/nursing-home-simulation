@@ -190,9 +190,9 @@ export function scenarios(config) {
   return { cautious: make('cautious'), central: mergeConfig(config, { scenario: 'central' }), favourable: make('favourable') };
 }
 
-// Scenarios for the anchored fit. Cautious: the largest out-of-reach share the
-// fit allows, with the low end of the lamp-side evidence. Favourable: the
-// smallest share, with the high end. Central: the config as given. reportShare
+// Scenarios for the anchored fit. Cautious: the cautious case for non-room-air
+// spread (params.js NON_ROOM_AIR), with the low end of the lamp-side evidence.
+// Favourable: the case best for lamps, with the high end. Central: the config as given. reportShare
 // gives, for each, the share of resident infections taken to be reported.
 export function anchoredScenarios(config) {
   const pathogen = ANCHORS[config.pathogen] ? config.pathogen : 'covid', A = ANCHORS[pathogen];
